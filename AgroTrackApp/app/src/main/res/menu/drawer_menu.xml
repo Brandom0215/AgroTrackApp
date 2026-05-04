@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item android:id="@+id/drawer_inicio"            android:title="Inicio" />
+        <item android:id="@+id/drawer_gestion_ganado"    android:title="Gestión de ganado" />
+        <item android:id="@+id/drawer_control_sanitario" android:title="Control sanitario" />
+        <item android:id="@+id/drawer_produccion"        android:title="Producción" />
+        <item android:id="@+id/drawer_pesaje"            android:title="Pesaje" />
+        <item android:id="@+id/drawer_mortalidad"        android:title="Mortalidad" />
+        <item android:id="@+id/drawer_gestion_insumos"   android:title="Gestión de insumos" />
+        <item android:id="@+id/drawer_contabilidad"      android:title="Contabilidad" />
+    </group>
+</menu>
