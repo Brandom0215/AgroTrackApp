@@ -1,0 +1,33 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="120dp"
+    android:height="120dp"
+    android:viewportWidth="100"
+    android:viewportHeight="100">
+    
+    <!-- Círculo de fondo -->
+    <path
+        android:pathData="M50,10 A40,40 0 1,1 49.9,10"
+        android:strokeColor="#F5F5F0"
+        android:strokeWidth="10"/>
+    
+    <!-- Segmento Hembras (60%) -->
+    <path
+        android:pathData="M50,10 A40,40 0 1,1 26.5,82.3"
+        android:strokeColor="#1B5E20"
+        android:strokeWidth="12"
+        android:strokeLineCap="butt"/>
+        
+    <!-- Segmento Machos (25%) -->
+    <path
+        android:pathData="M26.5,82.3 A40,40 0 0,1 17.6,26.5"
+        android:strokeColor="#795548"
+        android:strokeWidth="12"
+        android:strokeLineCap="butt"/>
+        
+    <!-- Segmento Terneros (15%) -->
+    <path
+        android:pathData="M17.6,26.5 A40,40 0 0,1 50,10"
+        android:strokeColor="#FFCCBC"
+        android:strokeWidth="12"
+        android:strokeLineCap="butt"/>
+</vector>
