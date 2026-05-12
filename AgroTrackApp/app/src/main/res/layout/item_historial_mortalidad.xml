@@ -22,7 +22,7 @@
             android:layout_height="0dp"
             android:background="#EF5350"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_bottom_toBottomOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"/>
 
         <ImageView
