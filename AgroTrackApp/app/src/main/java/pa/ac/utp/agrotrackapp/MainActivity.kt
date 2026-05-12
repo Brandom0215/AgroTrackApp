@@ -39,7 +39,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.drawer_inicio            -> { /* Pantalla de inicio (menú principal) */ }
                 R.id.drawer_gestion_ganado    -> { /* startActivity(Intent(this, GestionGanadoActivity::class.java)) */ }
                 R.id.drawer_control_sanitario -> { /* startActivity(Intent(this, ControlSanitarioActivity::class.java)) */ }
-                R.id.drawer_produccion        -> { /* startActivity(Intent(this, ProduccionActivity::class.java)) */ }
+                R.id.drawer_produccion        -> { startActivity(Intent(this, ProduccionActivity::class.java)) }
                 R.id.drawer_pesaje            -> { /* startActivity(Intent(this, PesajeActivity::class.java)) */ }
                 R.id.drawer_mortalidad        -> {val intent = Intent(this, pagMortalidad::class.java)
                     startActivity(intent)}
