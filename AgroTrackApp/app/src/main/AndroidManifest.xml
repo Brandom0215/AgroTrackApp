@@ -26,6 +26,9 @@
         <activity
             android:name=".MainActivity"
             android:exported="true"></activity>
+        <activity
+            android:name=".PesajeActivity"
+            android:exported="false" />
     </application>
 
 </manifest>
