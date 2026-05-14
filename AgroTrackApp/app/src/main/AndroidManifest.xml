@@ -15,6 +15,9 @@
             android:name=".ProduccionActivity"
             android:exported="false" />
         <activity
+            android:name=".PesajeActivity"
+            android:exported="false" />
+        <activity
             android:name=".pagMortalidad"
             android:exported="false" />
         <activity

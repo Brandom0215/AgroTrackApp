@@ -87,17 +87,17 @@ class ProduccionActivity : AppCompatActivity() {
         val navigationView = findViewById<NavigationView>(R.id.navigationView)
         navigationView.setNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
-                R.id.drawer_inicio            -> { /* Pantalla de inicio */ }
-                R.id.drawer_gestion_ganado    -> { /* startActivity(Intent(this, GestionGanadoActivity::class.java)) */ }
-                R.id.drawer_control_sanitario -> { /* startActivity(Intent(this, ControlSanitarioActivity::class.java)) */ }
+                R.id.drawer_inicio            -> { startActivity(Intent(this@ProduccionActivity, MainActivity::class.java)) }
+                R.id.drawer_gestion_ganado    -> { /* startActivity(Intent(this@ProduccionActivity, GestionGanadoActivity::class.java)) */ }
+                R.id.drawer_control_sanitario -> { /* startActivity(Intent(this@ProduccionActivity, ControlSanitarioActivity::class.java)) */ }
                 R.id.drawer_produccion        -> { /* Ya estamos aquí */ }
-                R.id.drawer_pesaje            -> { /* startActivity(Intent(this, PesajeActivity::class.java)) */ }
+                R.id.drawer_pesaje            -> { startActivity(Intent(this@ProduccionActivity, PesajeActivity::class.java)) }
                 R.id.drawer_mortalidad        -> {
-                    val intent = Intent(this, pagMortalidad::class.java)
+                    val intent = Intent(this@ProduccionActivity, pagMortalidad::class.java)
                     startActivity(intent)
                 }
-                R.id.drawer_gestion_insumos   -> { /* startActivity(Intent(this, GestionInsumosActivity::class.java)) */ }
-                R.id.drawer_contabilidad      -> { /* startActivity(Intent(this, ContabilidadActivity::class.java)) */ }
+                R.id.drawer_gestion_insumos   -> { /* startActivity(Intent(this@ProduccionActivity, GestionInsumosActivity::class.java)) */ }
+                R.id.drawer_contabilidad      -> { /*startActivity(Intent(this@ProduccionActivity, ContabilidadActivity::class.java)) */}
             }
             drawerLayout.closeDrawer(GravityCompat.START)
             true

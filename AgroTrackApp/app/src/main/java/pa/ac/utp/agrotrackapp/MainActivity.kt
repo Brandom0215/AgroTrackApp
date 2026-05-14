@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import com.google.android.material.card.MaterialCardView
 import com.google.android.material.navigation.NavigationView
 import android.widget.ImageButton
 import androidx.activity.addCallback
@@ -19,7 +20,15 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         setupDrawer()
+        setupCards()
         setupBackPress()
+    }
+
+    private fun setupCards() {
+        val cardProduccion = findViewById<MaterialCardView>(R.id.cardProduccion)
+        cardProduccion.setOnClickListener {
+            startActivity(Intent(this@MainActivity, ProduccionActivity::class.java))
+        }
     }
 
     // Drawer
@@ -39,12 +48,12 @@ class MainActivity : AppCompatActivity() {
                 R.id.drawer_inicio            -> { /* Pantalla de inicio (menú principal) */ }
                 R.id.drawer_gestion_ganado    -> { /* startActivity(Intent(this, GestionGanadoActivity::class.java)) */ }
                 R.id.drawer_control_sanitario -> { /* startActivity(Intent(this, ControlSanitarioActivity::class.java)) */ }
-                R.id.drawer_produccion        -> { startActivity(Intent(this, ProduccionActivity::class.java)) }
-                R.id.drawer_pesaje            -> { /* startActivity(Intent(this, PesajeActivity::class.java)) */ }
-                R.id.drawer_mortalidad        -> {val intent = Intent(this, pagMortalidad::class.java)
+                R.id.drawer_produccion        -> { startActivity(Intent(this@MainActivity, ProduccionActivity::class.java)) }
+                R.id.drawer_pesaje            -> { startActivity(Intent(this@MainActivity, PesajeActivity::class.java)) }
+                R.id.drawer_mortalidad        -> {val intent = Intent(this@MainActivity, pagMortalidad::class.java)
                     startActivity(intent)}
-                R.id.drawer_gestion_insumos   -> { /* startActivity(Intent(this, GestionInsumosActivity::class.java)) */ }
-                R.id.drawer_contabilidad      -> { /* startActivity(Intent(this, ContabilidadActivity::class.java)) */ }
+                R.id.drawer_gestion_insumos   -> { /* startActivity(Intent(this@MainActivity, GestionInsumosActivity::class.java)) */ }
+                R.id.drawer_contabilidad      -> { /* startActivity(Intent(this@MainActivity, ContabilidadActivity::class.java)) */ }
             }
             drawerLayout.closeDrawer(GravityCompat.START)
             true
