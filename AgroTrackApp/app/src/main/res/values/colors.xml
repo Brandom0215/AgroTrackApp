@@ -1,14 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Core M3 Colors -->
+    <color name="md_theme_light_primary">#2E7D32</color>
+    <color name="md_theme_light_onPrimary">#FFFFFF</color>
+    <color name="md_theme_light_primaryContainer">#A5F5A9</color>
+    <color name="md_theme_light_onPrimaryContainer">#002106</color>
+    
+    <color name="md_theme_light_secondary">#52634F</color>
+    <color name="md_theme_light_onSecondary">#FFFFFF</color>
+    <color name="md_theme_light_secondaryContainer">#D5E8CE</color>
+    <color name="md_theme_light_onSecondaryContainer">#111F0F</color>
+    
+    <color name="md_theme_light_tertiary">#38656A</color>
+    <color name="md_theme_light_onTertiary">#FFFFFF</color>
+    
+    <color name="md_theme_light_background">#FDFDF5</color>
+    <color name="md_theme_light_onBackground">#1A1C18</color>
+    
+    <color name="md_theme_light_surface">#FDFDF5</color>
+    <color name="md_theme_light_onSurface">#1A1C18</color>
+    <color name="md_theme_light_surfaceVariant">#DFE4D7</color>
+    <color name="md_theme_light_onSurfaceVariant">#43483E</color>
+    
+    <!-- Old colors preserved for backward compatibility -->
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="primary_dark">#1A5C38</color>
+    <color name="primary_dark">#1B5E20</color>
     <color name="primary_light">#E8F5E9</color>
-    <color name="accent_green">#28B463</color>
+    <color name="accent_green">#4CAF50</color>
     <color name="text_dark">#1B5E20</color>
     <color name="text_gray">#757575</color>
-    <color name="bg_light">#F5F5F0</color>
-    <color name="status_red">#EF5350</color>
+    <color name="bg_light">#F4F7F5</color>
+    <color name="status_red">#D32F2F</color>
     <color name="status_red_light">#FFEBEE</color>
     <color name="status_green_light">#E8F5E9</color>
     <color name="status_orange_light">#FFF3E0</color>

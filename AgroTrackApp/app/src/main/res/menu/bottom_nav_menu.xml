@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_finca"
+        android:icon="@drawable/ic_finca"
+        android:title="Finca" />
+    <item
+        android:id="@+id/nav_animales"
+        android:icon="@drawable/ic_animales"
+        android:title="Animales" />
+    <item
+        android:id="@+id/nav_produccion"
+        android:icon="@drawable/ic_produccion"
+        android:title="Producción" />
+    <item
+        android:id="@+id/nav_alertas"
+        android:icon="@drawable/ic_alertas"
+        android:title="Alertas" />
+</menu>

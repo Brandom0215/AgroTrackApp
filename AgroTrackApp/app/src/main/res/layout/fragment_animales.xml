@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:background="?android:colorBackground">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true"
+        android:background="?attr/colorPrimary"
+        app:elevation="2dp">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp">
+            <ImageButton
+                android:id="@+id/btnMenu"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_centerVertical="true"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_menu"
+                app:tint="?attr/colorOnPrimary" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="Animales ⚠️"
+                android:textColor="?attr/colorOnPrimary"
+                android:textStyle="bold"
+                android:textSize="18sp" />
+        </RelativeLayout>
+        <!-- Filter bar from screenshot -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?android:colorBackground"
+            android:padding="8dp"
+            android:orientation="horizontal"
+            android:gravity="center">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="7 Machos" android:padding="8dp"/>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="32 Hembras" android:padding="8dp"/>
+        </LinearLayout>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Lista de animales aparecerá aquí." />
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabAddAnimal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="16dp"
+        app:backgroundTint="#D32F2F"
+        app:srcCompat="@android:drawable/ic_input_add"
+        app:tint="?attr/colorOnPrimary" />
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

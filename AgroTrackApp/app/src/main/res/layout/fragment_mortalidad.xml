@@ -5,13 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    android:background="#F4F7F5">
+    android:background="?android:colorBackground">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fitsSystemWindows="true"
-        android:background="#1B5E20"
+        android:background="?attr/colorPrimary"
         app:elevation="4dp">
 
         <androidx.appcompat.widget.Toolbar
@@ -32,7 +32,7 @@
                     android:layout_height="45dp"
                     android:padding="2dp"
                     android:src="@drawable/vaca"
-                    app:tint="@android:color/white" />
+                    app:tint="?attr/colorOnPrimaryContainer" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -44,7 +44,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Mortalidad"
-                        android:textColor="@android:color/white"
+                        android:textColor="?attr/colorOnPrimary"
                         android:textSize="22sp"
                         android:textStyle="bold" />
 
@@ -81,7 +81,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="8dp"
                     android:layout_weight="1"
-                    app:cardCornerRadius="12dp"
+                    app:cardCornerRadius="16dp"
                     app:cardElevation="2dp">
 
                     <LinearLayout
@@ -118,7 +118,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_weight="1"
-                    app:cardCornerRadius="12dp"
+                    app:cardCornerRadius="16dp"
                     app:cardElevation="2dp">
 
                     <LinearLayout
@@ -157,14 +157,14 @@
                 android:layout_marginTop="24dp"
                 android:layout_marginBottom="8dp"
                 android:text="Tendencia de Mortalidad"
-                android:textColor="#333333"
+                android:textColor="?android:textColorPrimary"
                 android:textStyle="bold" />
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="220dp"
-                app:cardBackgroundColor="@android:color/white"
-                app:cardCornerRadius="12dp"
+                app:cardBackgroundColor="?attr/colorSurface"
+                app:cardCornerRadius="16dp"
                 app:cardElevation="2dp">
 
                 <View
@@ -179,7 +179,7 @@
                 android:layout_marginTop="24dp"
                 android:layout_marginBottom="8dp"
                 android:text="Historial Reciente"
-                android:textColor="#333333"
+                android:textColor="?android:textColorPrimary"
                 android:textStyle="bold" />
 
             <androidx.recyclerview.widget.RecyclerView
@@ -200,8 +200,8 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
         android:contentDescription="Registrar Muerte"
-        app:backgroundTint="#28B463"
+        app:backgroundTint="?attr/colorPrimaryContainer"
         app:srcCompat="@android:drawable/ic_input_add"
-        app:tint="@android:color/white" />
+        app:tint="?attr/colorOnPrimaryContainer" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
