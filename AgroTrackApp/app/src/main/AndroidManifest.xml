@@ -11,15 +11,7 @@
         android:roundIcon="@mipmap/icono"
         android:supportsRtl="true"
         android:theme="@style/Theme.AgroTrackApp">
-        <activity
-            android:name=".ProduccionActivity"
-            android:exported="false" />
-        <activity
-            android:name=".PesajeActivity"
-            android:exported="false" />
-        <activity
-            android:name=".pagMortalidad"
-            android:exported="false" />
+
         <activity
             android:name=".Splash"
             android:exported="true">
@@ -32,6 +24,15 @@
         <activity
             android:name=".MainActivity"
             android:exported="true" />
+        <activity
+            android:name=".CrearAnimalActivity"
+            android:exported="false" />
+        <activity
+            android:name=".InsumosActivity"
+            android:exported="false" />
+        <activity
+            android:name=".CrearInsumoActivity"
+            android:exported="false" />
     </application>
 
 </manifest>
