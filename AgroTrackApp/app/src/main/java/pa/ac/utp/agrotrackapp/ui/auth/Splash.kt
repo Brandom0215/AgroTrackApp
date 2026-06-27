@@ -1,4 +1,4 @@
-package pa.ac.utp.agrotrackapp
+package pa.ac.utp.agrotrackapp.ui.auth
 
 import android.content.Intent
 import android.os.Bundle
@@ -6,6 +6,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import pa.ac.utp.agrotrackapp.R
+import pa.ac.utp.agrotrackapp.domain.repository.AuthRepository
+import pa.ac.utp.agrotrackapp.data.auth.SharedPrefsAuthRepository
+import pa.ac.utp.agrotrackapp.ui.main.MainActivity
 
 /**
  * Pantalla de bienvenida (Splash Screen)

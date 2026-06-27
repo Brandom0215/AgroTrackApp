@@ -1,4 +1,4 @@
-package pa.ac.utp.agrotrackapp
+package pa.ac.utp.agrotrackapp.ui.produccion
 
 import android.graphics.Color
 import android.os.Bundle
@@ -14,6 +14,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import pa.ac.utp.agrotrackapp.R
+import pa.ac.utp.agrotrackapp.ui.main.MainActivity
 
 class ProduccionFragment : Fragment(R.layout.fragment_produccion) {
 

@@ -1,4 +1,4 @@
-package pa.ac.utp.agrotrackapp
+package pa.ac.utp.agrotrackapp.ui.main
 
 import android.content.Intent
 import android.os.Bundle
@@ -11,6 +11,19 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
 import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
+import pa.ac.utp.agrotrackapp.R
+import pa.ac.utp.agrotrackapp.domain.repository.AuthRepository
+import pa.ac.utp.agrotrackapp.data.auth.SharedPrefsAuthRepository
+import pa.ac.utp.agrotrackapp.ui.auth.LoginActivity
+import pa.ac.utp.agrotrackapp.ui.finca.FincaFragment
+import pa.ac.utp.agrotrackapp.ui.animales.AnimalesFragment
+import pa.ac.utp.agrotrackapp.ui.produccion.ProduccionFragment
+import pa.ac.utp.agrotrackapp.ui.alertas.AlertasFragment
+import pa.ac.utp.agrotrackapp.ui.control.ControlSanitarioFragment
+import pa.ac.utp.agrotrackapp.ui.pesaje.PesajeFragment
+import pa.ac.utp.agrotrackapp.ui.mortalidad.MortalidadFragment
+import pa.ac.utp.agrotrackapp.ui.insumos.InsumosActivity
+import pa.ac.utp.agrotrackapp.ui.contabilidad.ContabilidadFragment
 
 class MainActivity : AppCompatActivity() {
 
@@ -92,6 +105,10 @@ class MainActivity : AppCompatActivity() {
             when (menuItem.itemId) {
                 R.id.drawer_inicio            -> navigateToTab(R.id.nav_finca)
                 R.id.drawer_gestion_ganado    -> navigateToTab(R.id.nav_animales)
+                R.id.drawer_control_sanitario -> {
+                    supportFragmentManager.beginTransaction().replace(R.id.fragment_container, ControlSanitarioFragment()).commit()
+                    bottomNavigation.menu.setGroupCheckable(0, false, true)
+                }
                 R.id.drawer_produccion        -> navigateToTab(R.id.nav_produccion)
                 R.id.drawer_pesaje            -> {
                     supportFragmentManager.beginTransaction().replace(R.id.fragment_container, PesajeFragment()).commit()
@@ -102,6 +119,10 @@ class MainActivity : AppCompatActivity() {
                     bottomNavigation.menu.setGroupCheckable(0, false, true)
                 }
                 R.id.drawer_gestion_insumos   -> { startActivity(Intent(this, InsumosActivity::class.java)) }
+                R.id.drawer_contabilidad      -> {
+                    supportFragmentManager.beginTransaction().replace(R.id.fragment_container, ContabilidadFragment()).commit()
+                    bottomNavigation.menu.setGroupCheckable(0, false, true)
+                }
                 R.id.drawer_cerrar_sesion     -> {
                     // Cerrar sesión en el repositorio y volver al login
                     authRepository.logout()

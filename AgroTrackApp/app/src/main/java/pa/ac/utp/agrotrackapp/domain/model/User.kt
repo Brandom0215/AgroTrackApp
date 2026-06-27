@@ -1,7 +1,7 @@
-package pa.ac.utp.agrotrackapp
+package pa.ac.utp.agrotrackapp.domain.model
 
 /**
- * Clase de datos que representa un Usuario de AgroTrack.
+ * Clase de datos que representa un Usuario de GanaDEX.
  * Contiene la información requerida tanto para la cuenta personal como para la finca.
  *
  * Si en el futuro migras a una base de datos local (como Room), puedes convertir fácilmente

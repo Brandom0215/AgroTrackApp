@@ -1,4 +1,4 @@
-package pa.ac.utp.agrotrackapp
+package pa.ac.utp.agrotrackapp.ui.insumos
 
 import android.content.Intent
 import android.os.Bundle
@@ -6,6 +6,8 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import pa.ac.utp.agrotrackapp.R
+import pa.ac.utp.agrotrackapp.domain.model.Insumo
 
 class InsumosActivity : AppCompatActivity() {
 

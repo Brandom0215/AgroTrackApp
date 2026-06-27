@@ -1,7 +1,9 @@
-package pa.ac.utp.agrotrackapp
+package pa.ac.utp.agrotrackapp.data.auth
 
 import android.content.Context
 import android.content.SharedPreferences
+import pa.ac.utp.agrotrackapp.domain.model.User
+import pa.ac.utp.agrotrackapp.domain.repository.AuthRepository
 
 /**
  * Implementación de [AuthRepository] utilizando SharedPreferences como persistencia local.
@@ -14,7 +16,7 @@ import android.content.SharedPreferences
 class SharedPrefsAuthRepository(context: Context) : AuthRepository {
 
     private val sharedPreferences: SharedPreferences =
-        context.getSharedPreferences("AgroTrackAuthPrefs", Context.MODE_PRIVATE)
+        context.getSharedPreferences("GanaDEXAuthPrefs", Context.MODE_PRIVATE)
 
     // Prefijos de claves para evitar conflictos en SharedPreferences
     companion object {

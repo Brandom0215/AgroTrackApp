@@ -1,22 +1,19 @@
-package pa.ac.utp.agrotrackapp
+package pa.ac.utp.agrotrackapp.ui.alertas
 
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageButton
 import androidx.fragment.app.Fragment
+import pa.ac.utp.agrotrackapp.R
+import pa.ac.utp.agrotrackapp.ui.main.MainActivity
 
-class AnimalesFragment : Fragment(R.layout.fragment_animales) {
+class AlertasFragment : Fragment(R.layout.fragment_alertas) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         
         view.findViewById<ImageButton>(R.id.btnMenu)?.setOnClickListener {
             (requireActivity() as MainActivity).openDrawer()
-        }
-
-        view.findViewById<View>(R.id.fabAddAnimal)?.setOnClickListener {
-            val intent = android.content.Intent(requireContext(), CrearAnimalActivity::class.java)
-            startActivity(intent)
         }
     }
 }

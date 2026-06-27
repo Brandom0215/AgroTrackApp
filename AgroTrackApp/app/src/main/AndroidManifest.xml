@@ -13,7 +13,7 @@
         android:theme="@style/Theme.AgroTrackApp">
 
         <activity
-            android:name=".Splash"
+            android:name=".ui.auth.Splash"
             android:theme="@style/Theme.GanaDEX.Splash"
             android:exported="true">
             <intent-filter>
@@ -23,24 +23,24 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.main.MainActivity"
             android:exported="true" />
         <activity
-            android:name=".LoginActivity"
+            android:name=".ui.auth.LoginActivity"
             android:windowSoftInputMode="adjustResize"
             android:exported="false" />
         <activity
-            android:name=".RegisterActivity"
+            android:name=".ui.auth.RegisterActivity"
             android:windowSoftInputMode="adjustResize"
             android:exported="false" />
         <activity
-            android:name=".CrearAnimalActivity"
+            android:name=".ui.animales.CrearAnimalActivity"
             android:exported="false" />
         <activity
-            android:name=".InsumosActivity"
+            android:name=".ui.insumos.InsumosActivity"
             android:exported="false" />
         <activity
-            android:name=".CrearInsumoActivity"
+            android:name=".ui.insumos.CrearInsumoActivity"
             android:exported="false" />
     </application>
 

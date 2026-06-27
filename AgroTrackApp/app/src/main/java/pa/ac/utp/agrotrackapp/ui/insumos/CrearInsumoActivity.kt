@@ -1,4 +1,4 @@
-package pa.ac.utp.agrotrackapp
+package pa.ac.utp.agrotrackapp.ui.insumos
 
 import android.os.Bundle
 import android.view.View
@@ -8,6 +8,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.textfield.TextInputEditText
+import pa.ac.utp.agrotrackapp.R
 
 class CrearInsumoActivity : AppCompatActivity() {
 

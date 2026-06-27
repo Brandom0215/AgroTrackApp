@@ -14,7 +14,7 @@
         android:fitsSystemWindows="true"
         android:background="?android:colorBackground">
 
-        <!-- Top app bar (Estilo AgroTrack) -->
+        <!-- Top app bar (Estilo GanaDEX) -->
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/appBarLayout"
             android:layout_width="match_parent"

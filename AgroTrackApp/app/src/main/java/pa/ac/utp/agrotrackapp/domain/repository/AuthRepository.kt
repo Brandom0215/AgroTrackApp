@@ -1,4 +1,6 @@
-package pa.ac.utp.agrotrackapp
+package pa.ac.utp.agrotrackapp.domain.repository
+
+import pa.ac.utp.agrotrackapp.domain.model.User
 
 /**
  * Interfaz que define las operaciones de autenticación y gestión de usuarios.

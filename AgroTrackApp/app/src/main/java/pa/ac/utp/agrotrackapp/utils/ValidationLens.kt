@@ -1,4 +1,4 @@
-package pa.ac.utp.agrotrackapp
+package pa.ac.utp.agrotrackapp.utils
 
 /**
  * Lente de Validación (ValidationLens)

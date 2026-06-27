@@ -1,4 +1,4 @@
-package pa.ac.utp.agrotrackapp
+package pa.ac.utp.agrotrackapp.ui.auth
 
 import android.os.Bundle
 import android.widget.TextView
@@ -7,6 +7,11 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import pa.ac.utp.agrotrackapp.R
+import pa.ac.utp.agrotrackapp.domain.model.User
+import pa.ac.utp.agrotrackapp.domain.repository.AuthRepository
+import pa.ac.utp.agrotrackapp.data.auth.SharedPrefsAuthRepository
+import pa.ac.utp.agrotrackapp.utils.ValidationLens
 
 /**
  * Pantalla de Registro de Usuario (Crear Cuenta)

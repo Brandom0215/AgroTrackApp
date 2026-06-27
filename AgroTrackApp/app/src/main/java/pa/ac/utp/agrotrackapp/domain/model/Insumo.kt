@@ -1,4 +1,4 @@
-package pa.ac.utp.agrotrackapp
+package pa.ac.utp.agrotrackapp.domain.model
 
 data class Insumo(
     val nombre: String,

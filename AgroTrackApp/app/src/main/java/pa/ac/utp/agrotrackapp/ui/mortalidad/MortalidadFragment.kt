@@ -1,4 +1,4 @@
-package pa.ac.utp.agrotrackapp
+package pa.ac.utp.agrotrackapp.ui.mortalidad
 
 import android.graphics.Color
 import android.os.Bundle
@@ -9,6 +9,8 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.appcompat.widget.Toolbar
+import pa.ac.utp.agrotrackapp.R
+import pa.ac.utp.agrotrackapp.ui.main.MainActivity
 
 class MortalidadFragment : Fragment() {
 
@@ -34,6 +36,6 @@ class MortalidadFragment : Fragment() {
         val rvHistorial = view.findViewById<RecyclerView>(R.id.rvHistorial)
         val listaPrueba = mutableListOf("136", "245", "089", "450", "112")
         rvHistorial.layoutManager = LinearLayoutManager(context)
-        rvHistorial.adapter = adapterMortalidad(listaPrueba)
+        rvHistorial.adapter = MortalidadAdapter(listaPrueba)
     }
 }

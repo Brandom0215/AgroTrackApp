@@ -1,4 +1,4 @@
-package pa.ac.utp.agrotrackapp
+package pa.ac.utp.agrotrackapp.ui.insumos
 
 import android.graphics.Color
 import android.view.LayoutInflater
@@ -6,6 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import pa.ac.utp.agrotrackapp.R
+import pa.ac.utp.agrotrackapp.domain.model.Insumo
 
 class InsumosAdapter(
     private val insumosList: List<Insumo>,
