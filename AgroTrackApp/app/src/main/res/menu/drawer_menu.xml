@@ -9,5 +9,6 @@
         <item android:id="@+id/drawer_mortalidad"        android:title="Mortalidad" />
         <item android:id="@+id/drawer_gestion_insumos"   android:title="Gestión de insumos" />
         <item android:id="@+id/drawer_contabilidad"      android:title="Contabilidad" />
+        <item android:id="@+id/drawer_cerrar_sesion"     android:title="Cerrar Sesión" />
     </group>
 </menu>

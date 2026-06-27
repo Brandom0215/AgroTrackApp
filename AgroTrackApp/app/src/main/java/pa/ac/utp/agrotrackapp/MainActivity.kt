@@ -2,6 +2,8 @@ package pa.ac.utp.agrotrackapp
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
@@ -14,11 +16,15 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var bottomNavigation: BottomNavigationView
+    private lateinit var authRepository: AuthRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         androidx.appcompat.app.AppCompatDelegate.setDefaultNightMode(androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO)
         setContentView(R.layout.activity_main)
+
+        // Inicializamos el repositorio de datos (desacoplado)
+        authRepository = SharedPrefsAuthRepository(this)
 
         drawerLayout = findViewById(R.id.drawerLayout)
         bottomNavigation = findViewById(R.id.bottom_navigation)
@@ -27,8 +33,32 @@ class MainActivity : AppCompatActivity() {
         setupBottomNavigation()
         setupBackPress()
 
+        // Cargamos los datos reales del usuario logueado en la cabecera del menú lateral
+        actualizarHeaderUsuario()
+
         if (savedInstanceState == null) {
             bottomNavigation.selectedItemId = R.id.nav_finca
+        }
+    }
+
+    /**
+     * Obtiene el usuario activo y actualiza los campos de texto del Drawer Navigation.
+     */
+    private fun actualizarHeaderUsuario() {
+        try {
+            val navigationView = findViewById<NavigationView>(R.id.navigationView)
+            val headerView = navigationView.getHeaderView(0)
+            
+            val tvFincaNombre = headerView.findViewById<TextView>(R.id.tvHeaderFincaNombre)
+            val tvUserName = headerView.findViewById<TextView>(R.id.tvHeaderUserName)
+            
+            val currentUser = authRepository.getCurrentUser()
+            if (currentUser != null) {
+                tvFincaNombre.text = currentUser.nombreFinca
+                tvUserName.text = "${currentUser.nombre} ${currentUser.apellido} - ${currentUser.lugar}"
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 
@@ -72,6 +102,13 @@ class MainActivity : AppCompatActivity() {
                     bottomNavigation.menu.setGroupCheckable(0, false, true)
                 }
                 R.id.drawer_gestion_insumos   -> { startActivity(Intent(this, InsumosActivity::class.java)) }
+                R.id.drawer_cerrar_sesion     -> {
+                    // Cerrar sesión en el repositorio y volver al login
+                    authRepository.logout()
+                    Toast.makeText(this, "Sesión cerrada correctamente", Toast.LENGTH_SHORT).show()
+                    startActivity(Intent(this, LoginActivity::class.java))
+                    finish()
+                }
             }
             drawerLayout.closeDrawer(GravityCompat.START)
             true

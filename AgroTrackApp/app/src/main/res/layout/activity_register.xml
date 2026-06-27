@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/md_theme_light_background">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="24dp"
+            android:gravity="center_horizontal">
+
+            <!-- Encabezado de la Pantalla -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Crear Nueva Cuenta"
+                android:textColor="@color/md_theme_light_onBackground"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Por favor, completa los 8 campos requeridos"
+                android:textColor="@color/text_gray"
+                android:textSize="14sp" />
+
+            <!-- Contenedor del Formulario (Card) -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/divider"
+                app:cardBackgroundColor="@color/white">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <!-- SECCIÓN 1: DATOS PERSONALES -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Datos del Usuario"
+                        android:textColor="@color/md_theme_light_primary"
+                        android:textStyle="bold"
+                        android:textSize="14sp"
+                        android:layout_marginBottom="12dp" />
+
+                    <!-- 1. Nombre -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/tilNombre"
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="12dp"
+                        android:hint="Nombre *">
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etNombre"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="textPersonName"
+                            android:maxLength="30"
+                            android:maxLines="1" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- 2. Apellido -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/tilApellido"
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="12dp"
+                        android:hint="Apellido *">
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etApellido"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="textPersonName"
+                            android:maxLength="30"
+                            android:maxLines="1" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- 3. Usuario -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/tilUsuario"
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="12dp"
+                        android:hint="Usuario o Correo *">
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etUsuario"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="textEmailAddress"
+                            android:maxLength="35"
+                            android:maxLines="1" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- 4. Contraseña -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/tilContrasena"
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="12dp"
+                        android:hint="Contraseña *"
+                        app:passwordToggleEnabled="true"
+                        app:helperText="Letras + números, mín. 8 caracteres">
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etContrasena"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="textPassword"
+                            android:maxLength="30"
+                            android:maxLines="1" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- 5. Confirmar Contraseña -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/tilConfirmContrasena"
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="24dp"
+                        android:hint="Confirmar Contraseña *"
+                        app:passwordToggleEnabled="true">
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etConfirmContrasena"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="textPassword"
+                            android:maxLength="30"
+                            android:maxLines="1" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- SECCIÓN 2: DATOS DE LA FINCA -->
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/divider"
+                        android:layout_marginBottom="16dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Datos de la Finca"
+                        android:textColor="@color/md_theme_light_primary"
+                        android:textStyle="bold"
+                        android:textSize="14sp"
+                        android:layout_marginBottom="12dp" />
+
+                    <!-- 6. Nombre de la Finca -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/tilFincaNombre"
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="12dp"
+                        android:hint="Nombre de la Finca *">
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etFincaNombre"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="text"
+                            android:maxLength="50"
+                            android:maxLines="1" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- 7. Contraseña de la Finca -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/tilFincaContrasena"
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="12dp"
+                        android:hint="Contraseña de Acceso de Finca *"
+                        app:passwordToggleEnabled="true"
+                        app:helperText="Mínimo 4 caracteres para seguridad">
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etFincaContrasena"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="textPassword"
+                            android:maxLength="30"
+                            android:maxLines="1" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- 8. Lugar -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/tilLugar"
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Ubicación / Lugar *">
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etLugar"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="text"
+                            android:maxLength="80"
+                            android:maxLines="2" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Botón de Registro -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnRegistrar"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginTop="24dp"
+                android:text="Crear Cuenta"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:cornerRadius="28dp"
+                app:backgroundTint="@color/md_theme_light_primary"
+                android:textColor="@color/white"
+                app:elevation="2dp" />
+
+            <!-- Enlace a Login -->
+            <TextView
+                android:id="@+id/tvVolverLogin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="24dp"
+                android:padding="8dp"
+                android:text="¿Ya tienes cuenta? Inicia sesión aquí"
+                android:textColor="@color/md_theme_light_primary"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackground" />
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

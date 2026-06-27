@@ -25,15 +25,17 @@
     </com.google.android.material.card.MaterialCardView>
 
     <TextView
+        android:id="@+id/tvHeaderFincaNombre"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="AgroTrack"
+        android:text="GanaDEX"
         android:textColor="?attr/colorOnPrimary"
         android:textSize="20sp"
         android:textStyle="bold"
         android:layout_marginTop="16dp" />
 
     <TextView
+        android:id="@+id/tvHeaderUserName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Gestión Ganadera"

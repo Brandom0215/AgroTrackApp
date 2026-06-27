@@ -1,22 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F1F2CA"
+    android:background="@color/md_theme_light_background"
     tools:context=".Splash">
 
-    <ImageView
-        android:id="@+id/imageView3"
-        android:layout_width="322dp"
-        android:layout_height="482dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+    <!-- Contenedor del Logo y Slogan con efecto minimalista -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        app:layout_constraintBottom_toTopOf="@id/progressIndicator"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.5"
-        app:srcCompat="@drawable/logo" />
+        app:layout_constraintVertical_chainStyle="packed">
+
+        <ImageView
+            android:id="@+id/ivSplashLogo"
+            android:layout_width="260dp"
+            android:layout_height="260dp"
+            android:contentDescription="GanaDEX Logo"
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/logo" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="GANADEX"
+            android:textColor="@color/md_theme_light_primary"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:letterSpacing="0.2" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="Gestión Ganadera Inteligente"
+            android:textColor="@color/md_theme_light_secondary"
+            android:textSize="14sp"
+            android:letterSpacing="0.05" />
+
+    </LinearLayout>
+
+    <!-- Indicador de carga minimalista en la parte inferior -->
+    <com.google.android.material.progressindicator.CircularProgressIndicator
+        android:id="@+id/progressIndicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="64dp"
+        android:indeterminate="true"
+        app:indicatorColor="@color/md_theme_light_primary"
+        app:trackColor="@color/md_theme_light_primaryContainer"
+        app:indicatorSize="32dp"
+        app:trackThickness="3dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
