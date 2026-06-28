@@ -13,6 +13,7 @@
         
         <!-- Background and surface colors -->
         <item name="android:colorBackground">@color/md_theme_light_background</item>
+        <item name="android:windowBackground">@color/md_theme_light_background</item>
         <item name="colorOnBackground">@color/md_theme_light_onBackground</item>
         <item name="colorSurface">@color/md_theme_light_surface</item>
         <item name="colorOnSurface">@color/md_theme_light_onSurface</item>
@@ -25,4 +26,10 @@
     </style>
 
     <style name="Theme.AgroTrackApp" parent="Base.Theme.AgroTrackApp" />
+
+    <!-- Estilo específico para el Splash que desactiva el icono del sistema en Android 12+ -->
+    <style name="Theme.GanaDEX.Splash" parent="Theme.AgroTrackApp">
+        <item name="android:windowSplashScreenAnimatedIcon" tools:targetApi="31">@android:color/transparent</item>
+        <item name="android:windowSplashScreenBackground" tools:targetApi="31">@color/md_theme_light_background</item>
+    </style>
 </resources>

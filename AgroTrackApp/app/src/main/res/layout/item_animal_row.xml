@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:weightSum="4.0"
+    android:paddingVertical="12dp"
+    android:paddingHorizontal="8dp"
+    android:gravity="center_vertical"
+    android:background="?attr/selectableItemBackground">
+
+    <!-- Column 1: Arete (Número) -->
+    <TextView
+        android:id="@+id/tvRowArete"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1.0"
+        android:text="1024"
+        android:textColor="?android:textColorPrimary"
+        android:textSize="14sp"
+        android:textStyle="bold" />
+
+    <!-- Column 2: Raza -->
+    <TextView
+        android:id="@+id/tvRowRaza"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1.0"
+        android:text="Brahman"
+        android:textColor="?android:textColorSecondary"
+        android:textSize="14sp" />
+
+    <!-- Column 3: Propósito -->
+    <TextView
+        android:id="@+id/tvRowProposito"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1.2"
+        android:text="Doble propósito"
+        android:textColor="?android:textColorSecondary"
+        android:textSize="13sp" />
+
+    <!-- Column 4: Acciones (Editar y Ver) -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.8"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <!-- Ver detalles -->
+        <ImageButton
+            android:id="@+id/btnViewAnimal"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_visibility"
+            app:tint="@color/md_theme_light_primary"
+            android:contentDescription="Ver información"
+            android:layout_marginEnd="6dp" />
+
+        <!-- Editar -->
+        <ImageButton
+            android:id="@+id/btnEditAnimal"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_edit"
+            app:tint="#F57C00"
+            android:contentDescription="Editar animal" />
+
+    </LinearLayout>
+
+</LinearLayout>

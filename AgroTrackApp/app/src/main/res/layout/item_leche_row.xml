@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="4dp"
+    app:cardBackgroundColor="@android:color/white"
+    app:cardCornerRadius="4dp"
+    app:cardElevation="1dp"
+    app:strokeWidth="0dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="8dp"
+        android:gravity="center_vertical">
+
+        <!-- Arete & Ultimo Parto -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvRowLecheArete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="123456789012345"
+                android:textColor="#333333"
+                android:textStyle="bold"
+                android:textSize="13sp" />
+
+            <TextView
+                android:id="@+id/tvRowLecheParto"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Parto: 01/01/2026"
+                android:textColor="#777777"
+                android:textSize="11sp" />
+        </LinearLayout>
+
+        <!-- Lactancias -->
+        <TextView
+            android:id="@+id/tvRowLecheLactancias"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.2"
+            android:text="3"
+            android:textColor="#333333"
+            android:textSize="13sp"
+            android:gravity="center" />
+
+        <!-- Litros Hoy -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.2"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/tvRowLecheLitros"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="15.5 L"
+                android:textColor="#1A5C38"
+                android:textStyle="bold"
+                android:textSize="13sp" />
+
+            <TextView
+                android:id="@+id/tvRowLecheTurno"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Turno: AM"
+                android:textColor="#999999"
+                android:textSize="9sp" />
+        </LinearLayout>
+
+        <!-- DEL (Días en Lactancia) -->
+        <TextView
+            android:id="@+id/tvRowLecheDEL"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.2"
+            android:text="145 d"
+            android:textColor="#333333"
+            android:textSize="13sp"
+            android:gravity="center" />
+
+        <!-- Accion: Sacar / Enviar -->
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.2"
+            android:gravity="center">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnRowLecheAction"
+                style="@style/Widget.Material3.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                android:padding="0dp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:text="Sacar"
+                android:textColor="#D32F2F"
+                android:textSize="11sp"
+                android:textStyle="bold" />
+        </RelativeLayout>
+
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>
