@@ -42,6 +42,12 @@
         <activity
             android:name=".ui.insumos.CrearInsumoActivity"
             android:exported="false" />
+        <activity
+            android:name=".ui.produccion.CarneProduccionActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.produccion.LecheProduccionActivity"
+            android:exported="false" />
     </application>
 
 </manifest>

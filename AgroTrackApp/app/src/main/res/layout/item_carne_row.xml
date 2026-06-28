@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="4dp"
+    app:cardBackgroundColor="@android:color/white"
+    app:cardCornerRadius="4dp"
+    app:cardElevation="1dp"
+    app:strokeWidth="0dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="8dp"
+        android:gravity="center_vertical">
+
+        <!-- Arete & Raza -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvRowArete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="123456789012345"
+                android:textColor="#333333"
+                android:textStyle="bold"
+                android:textSize="13sp" />
+
+            <TextView
+                android:id="@+id/tvRowRaza"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Brahman"
+                android:textColor="#777777"
+                android:textSize="11sp" />
+        </LinearLayout>
+
+        <!-- Peso Actual -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.5"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/tvRowPesoActual"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="450 kg"
+                android:textColor="#333333"
+                android:textStyle="bold"
+                android:textSize="13sp" />
+
+            <TextView
+                android:id="@+id/tvRowPesoAnterior"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ant: 420 kg"
+                android:textColor="#999999"
+                android:textSize="10sp" />
+        </LinearLayout>
+
+        <!-- GDP (Ganancia Diaria) -->
+        <TextView
+            android:id="@+id/tvRowGDP"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.2"
+            android:text="+1.25 kg"
+            android:textColor="#1A5C38"
+            android:textStyle="bold"
+            android:textSize="13sp"
+            android:gravity="center" />
+
+        <!-- Salud -->
+        <TextView
+            android:id="@+id/tvRowSalud"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.2"
+            android:text="Sano"
+            android:textColor="#555555"
+            android:textSize="12sp"
+            android:gravity="center" />
+
+        <!-- Accion: Sacar / Enviar -->
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.2"
+            android:gravity="center">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnRowAction"
+                style="@style/Widget.Material3.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                android:padding="0dp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:text="Sacar"
+                android:textColor="#D32F2F"
+                android:textSize="11sp"
+                android:textStyle="bold" />
+        </RelativeLayout>
+
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

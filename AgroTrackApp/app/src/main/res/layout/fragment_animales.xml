@@ -5,19 +5,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    android:background="?android:colorBackground">
+    android:background="@color/bg_light">
 
+    <!-- AppBar Layout -->
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fitsSystemWindows="true"
         android:background="?attr/colorPrimary"
-        app:elevation="2dp">
+        app:elevation="4dp">
+        
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="56dp"
             android:paddingStart="8dp"
             android:paddingEnd="8dp">
+            
             <ImageButton
                 android:id="@+id/btnMenu"
                 android:layout_width="40dp"
@@ -25,42 +28,557 @@
                 android:layout_centerVertical="true"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:src="@drawable/ic_menu"
-                app:tint="?attr/colorOnPrimary" />
+                app:tint="?attr/colorOnPrimary"
+                android:contentDescription="Menú" />
+                
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:text="Animales ⚠️"
+                android:text="Gestión de Animales"
                 android:textColor="?attr/colorOnPrimary"
                 android:textStyle="bold"
                 android:textSize="18sp" />
         </RelativeLayout>
-        <!-- Filter bar from screenshot -->
+
+        <!-- Filter bar from screenshot (Dynamic values) -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?android:colorBackground"
-            android:padding="8dp"
+            android:padding="10dp"
             android:orientation="horizontal"
-            android:gravity="center">
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="7 Machos" android:padding="8dp"/>
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="32 Hembras" android:padding="8dp"/>
+            android:gravity="center"
+            android:elevation="1dp">
+            
+            <TextView 
+                android:id="@+id/tvHeaderMachosCount"
+                android:layout_width="wrap_content" 
+                android:layout_height="wrap_content" 
+                android:text="0 Machos" 
+                android:paddingHorizontal="16dp"
+                android:paddingVertical="6dp"
+                android:textStyle="bold"
+                android:textColor="@color/md_theme_light_primary"
+                android:textSize="13sp" />
+                
+            <TextView 
+                android:id="@+id/tvHeaderHembrasCount"
+                android:layout_width="wrap_content" 
+                android:layout_height="wrap_content" 
+                android:text="0 Hembras" 
+                android:paddingHorizontal="16dp"
+                android:paddingVertical="6dp"
+                android:textStyle="bold"
+                android:textColor="@color/md_theme_light_primary"
+                android:textSize="13sp" />
         </LinearLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
+    <!-- Scrollable Content -->
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:clipToPadding="false"
+        android:paddingBottom="80dp">
+        
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="16dp">
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Lista de animales aparecerá aquí." />
+
+            <!-- 1. Animal Inventory Detail Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="2dp"
+                app:strokeColor="@color/divider"
+                app:strokeWidth="1dp">
+                
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+                    
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Inventario de Hato"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/md_theme_light_primary" />
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp">
+
+                        <!-- Donut Chart -->
+                        <FrameLayout
+                            android:id="@+id/donutChart"
+                            android:layout_width="110dp"
+                            android:layout_height="110dp"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent">
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:background="@drawable/grafica_circular" />
+                            <TextView
+                                android:id="@+id/tvDonutTotal"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:gravity="center"
+                                android:text="Total\n0"
+                                android:textStyle="bold"
+                                android:textColor="?android:textColorPrimary" />
+                        </FrameLayout>
+
+                        <!-- Legends -->
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:layout_marginStart="20dp"
+                            app:layout_constraintStart_toEndOf="@id/donutChart"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent">
+
+                            <!-- Hembras -->
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="8dp">
+                                <View
+                                    android:id="@+id/dotHembras"
+                                    android:layout_width="8dp"
+                                    android:layout_height="8dp"
+                                    android:layout_centerVertical="true"
+                                    android:background="@drawable/punto_verde" />
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_toEndOf="@id/dotHembras"
+                                    android:layout_marginStart="8dp"
+                                    android:text="Vacas / Hembras"
+                                    android:textColor="@color/text_gray" />
+                                <TextView
+                                    android:id="@+id/tvCountHembras"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignParentEnd="true"
+                                    android:text="0"
+                                    android:textStyle="bold"
+                                    android:textColor="?android:textColorPrimary" />
+                            </RelativeLayout>
+
+                            <!-- Machos -->
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="8dp">
+                                <View
+                                    android:id="@+id/dotMachos"
+                                    android:layout_width="8dp"
+                                    android:layout_height="8dp"
+                                    android:layout_centerVertical="true"
+                                    android:background="@drawable/punto_marron" />
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_toEndOf="@id/dotMachos"
+                                    android:layout_marginStart="8dp"
+                                    android:text="Toros / Machos"
+                                    android:textColor="@color/text_gray" />
+                                <TextView
+                                    android:id="@+id/tvCountMachos"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignParentEnd="true"
+                                    android:text="0"
+                                    android:textStyle="bold"
+                                    android:textColor="?android:textColorPrimary" />
+                            </RelativeLayout>
+
+                            <!-- Terneros -->
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+                                <View
+                                    android:id="@+id/dotTerneros"
+                                    android:layout_width="8dp"
+                                    android:layout_height="8dp"
+                                    android:layout_centerVertical="true"
+                                    android:background="@drawable/punto_melocoton" />
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_toEndOf="@id/dotTerneros"
+                                    android:layout_marginStart="8dp"
+                                    android:text="Terneros / Novillas"
+                                    android:textColor="@color/text_gray" />
+                                <TextView
+                                    android:id="@+id/tvCountTerneros"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignParentEnd="true"
+                                    android:text="0"
+                                    android:textStyle="bold"
+                                    android:textColor="?android:textColorPrimary" />
+                            </RelativeLayout>
+                        </LinearLayout>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- 2. Search and Filter Box -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="2dp"
+                app:strokeColor="@color/divider"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="12dp"
+                    android:gravity="center_vertical"
+                    android:weightSum="3">
+
+                    <!-- Search by Arete -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.8"
+                        android:layout_marginEnd="8dp"
+                        android:hint="Buscar arete..."
+                        app:startIconDrawable="@android:drawable/ic_menu_search"
+                        app:startIconTint="@color/text_gray">
+                        
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etSearchArete"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="text"
+                            android:textSize="14sp" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- Filter by Sex -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1.2"
+                        android:orientation="vertical"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Filtrar Sexo:"
+                            android:textSize="10sp"
+                            android:textColor="@color/text_gray"
+                            android:textStyle="bold"
+                            android:layout_marginStart="4dp" />
+
+                        <Spinner
+                            android:id="@+id/spinnerFilterSexo"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@android:drawable/btn_dropdown"
+                            android:spinnerMode="dropdown" />
+                    </LinearLayout>
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- 3. Tabla de Animales Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="2dp"
+                app:strokeColor="@color/divider"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="12dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Animales Registrados"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/md_theme_light_primary"
+                        android:layout_marginBottom="12dp" />
+
+                    <!-- Table Headers -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:weightSum="4.0"
+                        android:paddingVertical="8dp"
+                        android:paddingHorizontal="8dp"
+                        android:background="#F5F5F0">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1.0"
+                            android:text="Arete"
+                            android:textColor="@color/md_theme_light_primary"
+                            android:textSize="13sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1.0"
+                            android:text="Raza"
+                            android:textColor="@color/md_theme_light_primary"
+                            android:textSize="13sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1.2"
+                            android:text="Propósito"
+                            android:textColor="@color/md_theme_light_primary"
+                            android:textSize="13sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.8"
+                            android:text="Acción"
+                            android:textColor="@color/md_theme_light_primary"
+                            android:textSize="13sp"
+                            android:textStyle="bold"
+                            android:gravity="center" />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/divider" />
+
+                    <!-- RecyclerView for Table Rows -->
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvAnimalesTabla"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        android:nestedScrollingEnabled="false" />
+
+                    <!-- Empty state view -->
+                    <TextView
+                        android:id="@+id/tvEmptyState"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="No hay animales registrados que coincidan con la búsqueda."
+                        android:gravity="center"
+                        android:padding="24dp"
+                        android:textColor="@color/text_gray"
+                        android:textSize="14sp"
+                        android:visibility="gone" />
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- 4. Activity List Card (Actividad Reciente) -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="2dp"
+                app:strokeColor="@color/divider"
+                app:strokeWidth="1dp">
+                
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="20dp"
+                        android:text="Actividad Reciente"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/md_theme_light_primary" />
+
+                    <!-- Activity Item 1 -->
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="20dp">
+                        <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/iconContainer1"
+                            android:layout_width="44dp"
+                            android:layout_height="44dp"
+                            app:cardCornerRadius="22dp"
+                            app:cardElevation="0dp"
+                            app:strokeWidth="0dp">
+                            <ImageView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:scaleType="centerCrop"
+                                android:src="@drawable/img_vacunacion" />
+                        </com.google.android.material.card.MaterialCardView>
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_toEndOf="@id/iconContainer1"
+                            android:layout_marginStart="16dp"
+                            android:orientation="vertical">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Vacunación Completada"
+                                android:textStyle="bold"
+                                android:textColor="?android:textColorPrimary"
+                                android:textSize="14sp" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Manga Machos • 45 Vacas"
+                                android:textColor="@color/text_gray"
+                                android:textSize="12sp" />
+                        </LinearLayout>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:text="hace 2h"
+                            android:textColor="@color/text_gray"
+                            android:textSize="11sp" />
+                    </RelativeLayout>
+
+                    <!-- Activity Item 2 -->
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="20dp">
+                        <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/iconContainer2"
+                            android:layout_width="44dp"
+                            android:layout_height="44dp"
+                            app:cardCornerRadius="22dp"
+                            app:cardElevation="0dp"
+                            app:strokeWidth="0dp">
+                            <ImageView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:scaleType="centerCrop"
+                                android:src="@drawable/img_muerte" />
+                        </com.google.android.material.card.MaterialCardView>
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_toEndOf="@id/iconContainer2"
+                            android:layout_marginStart="16dp"
+                            android:orientation="vertical">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Muerte de Animal"
+                                android:textStyle="bold"
+                                android:textColor="?android:textColorPrimary"
+                                android:textSize="14sp" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Vaca 12132 murió"
+                                android:textColor="@color/text_gray"
+                                android:textSize="12sp" />
+                        </LinearLayout>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:text="hace 5h"
+                            android:textColor="@color/text_gray"
+                            android:textSize="11sp" />
+                    </RelativeLayout>
+
+                    <!-- Activity Item 3 -->
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/iconContainer3"
+                            android:layout_width="44dp"
+                            android:layout_height="44dp"
+                            app:cardCornerRadius="22dp"
+                            app:cardElevation="0dp"
+                            app:strokeWidth="0dp">
+                            <ImageView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:scaleType="centerCrop"
+                                android:src="@drawable/vaca" />
+                        </com.google.android.material.card.MaterialCardView>
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_toEndOf="@id/iconContainer3"
+                            android:layout_marginStart="16dp"
+                            android:orientation="vertical">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Nacimiento"
+                                android:textStyle="bold"
+                                android:textColor="?android:textColorPrimary"
+                                android:textSize="14sp" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="2 terneros nacidos"
+                                android:textColor="@color/text_gray"
+                                android:textSize="12sp" />
+                        </LinearLayout>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:text="hace 8h"
+                            android:textColor="@color/text_gray"
+                            android:textSize="11sp" />
+                    </RelativeLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
+    <!-- Floating Action Button for adding animals -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabAddAnimal"
         android:layout_width="wrap_content"
@@ -69,5 +587,7 @@
         android:layout_margin="16dp"
         app:backgroundTint="#D32F2F"
         app:srcCompat="@android:drawable/ic_input_add"
-        app:tint="?attr/colorOnPrimary" />
+        app:tint="@color/white"
+        app:elevation="6dp" />
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

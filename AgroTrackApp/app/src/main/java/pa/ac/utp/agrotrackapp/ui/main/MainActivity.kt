@@ -92,7 +92,21 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun navigateToTab(itemId: Int) {
-        bottomNavigation.selectedItemId = itemId
+        bottomNavigation.menu.setGroupCheckable(0, true, true)
+        if (bottomNavigation.selectedItemId == itemId) {
+            val fragment: Fragment = when (itemId) {
+                R.id.nav_finca -> FincaFragment()
+                R.id.nav_animales -> AnimalesFragment()
+                R.id.nav_produccion -> ProduccionFragment()
+                R.id.nav_alertas -> AlertasFragment()
+                else -> FincaFragment()
+            }
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, fragment)
+                .commit()
+        } else {
+            bottomNavigation.selectedItemId = itemId
+        }
     }
 
     fun openDrawer() {

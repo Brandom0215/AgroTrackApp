@@ -3,253 +3,376 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:background="#F8F9FA">
+
+    <!-- Top app bar -->
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true"
+        android:background="#1A5C38"
+        app:elevation="2dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:gravity="center_vertical">
+
+            <ImageButton
+                android:id="@+id/btnMenu"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Menú"
+                android:src="@drawable/ic_menu"
+                app:tint="@android:color/white" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="Dashboard de Producción"
+                android:textColor="@android:color/white"
+                android:textStyle="bold"
+                android:textSize="18sp" />
+
+        </RelativeLayout>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fitsSystemWindows="true"
-        android:background="?android:colorBackground">
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:fillViewport="true">
 
-        <!-- Top app bar (Estilo GanaDEX) -->
-        <com.google.android.material.appbar.AppBarLayout
-            android:id="@+id/appBarLayout"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fitsSystemWindows="true"
-            android:background="?attr/colorPrimary"
-            app:liftOnScroll="false"
-            app:elevation="2dp">
+            android:orientation="vertical"
+            android:padding="16dp">
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:paddingStart="8dp"
-                android:paddingEnd="8dp"
-                android:gravity="center_vertical">
+            <!-- KPIs Header -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Inventario en Producción"
+                android:textColor="#333333"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp" />
 
-                <ImageButton
-                    android:id="@+id/btnMenu"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_alignParentStart="true"
-                    android:layout_centerVertical="true"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:contentDescription="Menú"
-                    android:src="@drawable/ic_menu"
-                    app:tint="?attr/colorOnPrimary" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:text="Producción"
-                    android:textColor="?attr/colorOnPrimary"
-                    android:textStyle="bold"
-                    android:textSize="18sp" />
-
-            </RelativeLayout>
-        </com.google.android.material.appbar.AppBarLayout>
-
-        <androidx.core.widget.NestedScrollView
-            android:id="@+id/scrollContent"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fillViewport="true"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            android:clipToPadding="false">
-
+            <!-- KPI Cards Grid -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp">
+                android:orientation="horizontal"
+                android:weightSum="2"
+                android:layout_marginBottom="16dp">
 
-                <!-- KPIs Section (Grid 2x2) -->
-                <GridLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:columnCount="2"
-                    android:rowCount="2">
-
-                    <!-- KPI: Producción Hoy -->
-                    <com.google.android.material.card.MaterialCardView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_columnWeight="1"
-                        android:layout_margin="4dp"
-                        app:cardBackgroundColor="?attr/colorSurface"
-                        app:cardCornerRadius="16dp"
-                        app:cardElevation="2dp"
-                        app:strokeWidth="0dp">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:padding="16dp">
-                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                                android:text="PRODUCCIÓN HOY" android:textColor="?android:textColorPrimary" android:textSize="12sp" android:textStyle="bold" />
-                            <TextView android:id="@+id/tvKpiHoy" android:layout_width="wrap_content" android:layout_height="wrap_content"
-                                android:text="145 L" android:textColor="?android:textColorPrimary" android:textSize="24sp" android:textStyle="bold" android:layout_marginTop="4dp" />
-                        </LinearLayout>
-                    </com.google.android.material.card.MaterialCardView>
-
-                    <!-- KPI: Esta Semana -->
-                    <com.google.android.material.card.MaterialCardView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_columnWeight="1"
-                        android:layout_margin="4dp"
-                        app:cardBackgroundColor="?attr/colorSurface"
-                        app:cardCornerRadius="16dp"
-                        app:cardElevation="2dp"
-                        app:strokeWidth="0dp">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:padding="16dp">
-                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                                android:text="ESTA SEMANA" android:textColor="?android:textColorPrimary" android:textSize="12sp" android:textStyle="bold" />
-                            <TextView android:id="@+id/tvKpiSemana" android:layout_width="wrap_content" android:layout_height="wrap_content"
-                                android:text="1,020 L" android:textColor="?android:textColorPrimary" android:textSize="24sp" android:textStyle="bold" android:layout_marginTop="4dp" />
-                        </LinearLayout>
-                    </com.google.android.material.card.MaterialCardView>
-
-                    <!-- KPI: Este Mes -->
-                    <com.google.android.material.card.MaterialCardView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_columnWeight="1"
-                        android:layout_margin="4dp"
-                        app:cardBackgroundColor="?attr/colorSurface"
-                        app:cardCornerRadius="16dp"
-                        app:cardElevation="2dp"
-                        app:strokeWidth="0dp">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:padding="16dp">
-                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                                android:text="ESTE MES" android:textColor="?android:textColorPrimary" android:textSize="12sp" android:textStyle="bold" />
-                            <TextView android:id="@+id/tvKpiMes" android:layout_width="wrap_content" android:layout_height="wrap_content"
-                                android:text="4,200 L" android:textColor="?android:textColorPrimary" android:textSize="24sp" android:textStyle="bold" android:layout_marginTop="4dp" />
-                        </LinearLayout>
-                    </com.google.android.material.card.MaterialCardView>
-
-                    <!-- KPI: Promedio Diario -->
-                    <com.google.android.material.card.MaterialCardView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_columnWeight="1"
-                        android:layout_margin="4dp"
-                        app:cardBackgroundColor="?attr/colorSurface"
-                        app:cardCornerRadius="16dp"
-                        app:cardElevation="2dp"
-                        app:strokeWidth="0dp">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:padding="16dp">
-                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                                android:text="PROM. DIARIO" android:textColor="?android:textColorPrimary" android:textSize="12sp" android:textStyle="bold" />
-                            <TextView android:id="@+id/tvKpiPromedio" android:layout_width="wrap_content" android:layout_height="wrap_content"
-                                android:text="14.5 L" android:textColor="?android:textColorPrimary" android:textSize="24sp" android:textStyle="bold" android:layout_marginTop="4dp" />
-                        </LinearLayout>
-                    </com.google.android.material.card.MaterialCardView>
-                </GridLayout>
-
-                <!-- Gráfica -->
+                <!-- KPI: Carne -->
                 <com.google.android.material.card.MaterialCardView
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    app:cardBackgroundColor="?attr/colorSurface"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="8dp"
+                    app:cardBackgroundColor="@android:color/white"
                     app:cardCornerRadius="16dp"
-                    app:cardElevation="2dp">
+                    app:cardElevation="3dp"
+                    app:strokeWidth="0dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:padding="16dp"
+                        android:gravity="center_horizontal">
+
+                        <ImageView
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:src="@drawable/p_carne" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_margin="16dp"
-                            android:text="Tendencia de Producción"
-                            android:textSize="16sp"
+                            android:text="Producción Carne"
+                            android:textColor="#666666"
+                            android:textSize="12sp"
                             android:textStyle="bold"
-                            android:textColor="?android:textColorPrimary" />
+                            android:layout_marginTop="8dp" />
 
-                        <ImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="120dp"
-                            android:src="@drawable/grafica_produccion"
-                            android:scaleType="centerCrop" />
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
+                        <TextView
+                            android:id="@+id/tvKpiCarneCount"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:weightSum="4"
-                            android:paddingHorizontal="12dp"
-                            android:paddingBottom="16dp"
-                            android:layout_marginTop="8dp">
-                            <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Sem. 1" android:textSize="10sp" android:textColor="#6B8080" android:gravity="center" />
-                            <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Sem. 2" android:textSize="10sp" android:textColor="#6B8080" android:gravity="center" />
-                            <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Sem. 3" android:textSize="10sp" android:textColor="#6B8080" android:gravity="center" />
-                            <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Sem. 4" android:textSize="10sp" android:textColor="#6B8080" android:gravity="center" />
-                        </LinearLayout>
+                            android:text="0 Animales"
+                            android:textColor="#1A5C38"
+                            android:textSize="20sp"
+                            android:textStyle="bold"
+                            android:layout_marginTop="4dp" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
-                <!-- Top Producción -->
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                    android:layout_marginTop="24dp" android:layout_marginBottom="12dp"
-                    android:text="Top Producción Semanal" android:textColor="?android:textColorPrimary" android:textStyle="bold" android:textSize="16sp" />
+                <!-- KPI: Leche -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="8dp"
+                    app:cardBackgroundColor="@android:color/white"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="3dp"
+                    app:strokeWidth="0dp">
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rvTopProduccion"
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp"
+                        android:gravity="center_horizontal">
+
+                        <ImageView
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:src="@drawable/p_leche" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Producción Leche"
+                            android:textColor="#666666"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            android:layout_marginTop="8dp" />
+
+                        <TextView
+                            android:id="@+id/tvKpiLecheCount"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0 Vacas"
+                            android:textColor="#1A5C38"
+                            android:textSize="20sp"
+                            android:textStyle="bold"
+                            android:layout_marginTop="4dp" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+            </LinearLayout>
+
+            <!-- Trend Graphic Card -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tendencias de Producción Reciente"
+                android:textColor="#333333"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                app:cardBackgroundColor="@android:color/white"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="3dp"
+                app:strokeWidth="0dp">
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:nestedScrollingEnabled="false"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    tools:listitem="@layout/item_produccion_row" />
-
-                <!-- Historial / Tabla -->
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                    android:layout_marginTop="24dp" android:layout_marginBottom="12dp"
-                    android:text="Historial Reciente"
-                    android:textColor="?android:textColorPrimary"
-                    android:textStyle="bold" android:textSize="16sp" />
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rvHistorial"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:nestedScrollingEnabled="false"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     android:orientation="vertical"
-                    tools:listitem="@layout/item_produccion_row" />
+                    android:padding="16dp">
 
-                <View android:layout_width="match_parent" android:layout_height="80dp" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Rendimiento del Hato (Carne vs Leche)"
+                        android:textColor="#333333"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="12dp" />
+
+                    <ImageView
+                        android:id="@+id/ivTrendChart"
+                        android:layout_width="match_parent"
+                        android:layout_height="160dp"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/grafica_produccion" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center"
+                        android:layout_marginTop="8dp">
+                        <View
+                            android:layout_width="12dp"
+                            android:layout_height="12dp"
+                            android:background="#1A5C38"
+                            android:layout_marginEnd="4dp" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Carne (GDP)"
+                            android:textSize="12sp"
+                            android:textColor="#555555"
+                            android:layout_marginEnd="16dp" />
+
+                        <View
+                            android:layout_width="12dp"
+                            android:layout_height="12dp"
+                            android:background="#4FC3F7"
+                            android:layout_marginEnd="4dp" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Leche (Litros)"
+                            android:textSize="12sp"
+                            android:textColor="#555555" />
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Navigation Direct Shortcuts -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Módulos Específicos"
+                android:textColor="#333333"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="12dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <!-- Module Button: Carne -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/btnModuleCarne"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="12dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    app:cardBackgroundColor="@android:color/white"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="2dp"
+                    app:strokeWidth="1dp"
+                    app:strokeColor="#E0E0E0">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="16dp"
+                        android:gravity="center_vertical">
+
+                        <ImageView
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:src="@drawable/p_carne" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginStart="16dp"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Módulo de Engorde (Carne)"
+                                android:textColor="#1A5C38"
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Control de pesaje, GDP, días transcurridos y salud."
+                                android:textColor="#777777"
+                                android:textSize="12sp"
+                                android:layout_marginTop="2dp" />
+                        </LinearLayout>
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@android:drawable/ic_media_play"
+                            app:tint="#1A5C38" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Module Button: Leche -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/btnModuleLeche"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="32dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    app:cardBackgroundColor="@android:color/white"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="2dp"
+                    app:strokeWidth="1dp"
+                    app:strokeColor="#E0E0E0">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="16dp"
+                        android:gravity="center_vertical">
+
+                        <ImageView
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:src="@drawable/p_leche" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginStart="16dp"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Módulo Lácteo (Leche)"
+                                android:textColor="#1A5C38"
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Registros individuales/masivos, DEL, promedios y eficiencia."
+                                android:textColor="#777777"
+                                android:textSize="12sp"
+                                android:layout_marginTop="2dp" />
+                        </LinearLayout>
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@android:drawable/ic_media_play"
+                            app:tint="#1A5C38" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
 
             </LinearLayout>
-        </androidx.core.widget.NestedScrollView>
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fabAdd"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
-            android:layout_margin="16dp"
-            android:contentDescription="Registrar Producción"
-            app:backgroundTint="?attr/colorPrimaryContainer"
-            app:srcCompat="@android:drawable/ic_input_add"
-            app:tint="?attr/colorOnPrimaryContainer" />
-
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

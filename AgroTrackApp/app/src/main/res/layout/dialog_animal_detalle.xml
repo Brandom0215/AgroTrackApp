@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bottom_sheet_bg"
+    android:padding="20dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Bottom Sheet Indicator line -->
+        <View
+            android:layout_width="40dp"
+            android:layout_height="4dp"
+            android:background="#D0D0D0"
+            android:layout_gravity="center"
+            android:layout_marginBottom="16dp"/>
+
+        <!-- Bovine Image Preview -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="180dp"
+            app:cardCornerRadius="12dp"
+            app:strokeColor="@color/divider"
+            app:strokeWidth="1dp"
+            app:cardElevation="0dp"
+            android:layout_marginBottom="16dp">
+            
+            <ImageView
+                android:id="@+id/ivDetalleFoto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:src="@drawable/vaca"
+                android:contentDescription="Imagen del Bovino" />
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Header Row (Sex + Arete + Name) -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp">
+
+            <TextView
+                android:id="@+id/tvDetalleArete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Arete #1024"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:textColor="@color/md_theme_light_primary"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true" />
+
+            <!-- Sex Badge (Macho / Hembra) -->
+            <TextView
+                android:id="@+id/tvDetalleSexo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Hembra"
+                android:textColor="@android:color/white"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="4dp"
+                android:background="@drawable/bg_section_header"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true" />
+
+        </RelativeLayout>
+
+
+        <!-- 1. Información Básica Section -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            app:cardCornerRadius="12dp"
+            app:cardBackgroundColor="@color/white"
+            app:strokeColor="@color/divider"
+            app:strokeWidth="1dp"
+            app:cardElevation="0dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Información Básica"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/md_theme_light_primary"
+                    android:layout_marginBottom="12dp" />
+
+                <!-- Raza -->
+                <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="8dp">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Raza" android:textColor="@color/text_gray" android:textSize="13sp"/>
+                    <TextView android:id="@+id/tvDetalleRaza" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentEnd="true" android:text="Brahman" android:textColor="?android:textColorPrimary" android:textStyle="bold" android:textSize="13sp"/>
+                </RelativeLayout>
+
+                <!-- Propósito -->
+                <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="8dp">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Propósito" android:textColor="@color/text_gray" android:textSize="13sp"/>
+                    <TextView android:id="@+id/tvDetalleProposito" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentEnd="true" android:text="Doble propósito" android:textColor="?android:textColorPrimary" android:textStyle="bold" android:textSize="13sp"/>
+                </RelativeLayout>
+
+                <!-- Fecha de Nacimiento -->
+                <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="8dp">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Fecha Nacimiento" android:textColor="@color/text_gray" android:textSize="13sp"/>
+                    <TextView android:id="@+id/tvDetalleFechaNacimiento" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentEnd="true" android:text="12/04/2023" android:textColor="?android:textColorPrimary" android:textStyle="bold" android:textSize="13sp"/>
+                </RelativeLayout>
+
+                <!-- Manga -->
+                <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="8dp">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Manga (Lote)" android:textColor="@color/text_gray" android:textSize="13sp"/>
+                    <TextView android:id="@+id/tvDetalleManga" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentEnd="true" android:text="Lote 1" android:textColor="?android:textColorPrimary" android:textStyle="bold" android:textSize="13sp"/>
+                </RelativeLayout>
+
+                <!-- Trazabilidad -->
+                <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="8dp">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Trazabilidad" android:textColor="@color/text_gray" android:textSize="13sp"/>
+                    <TextView android:id="@+id/tvDetalleTrazabilidad" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentEnd="true" android:text="N/A" android:textColor="?android:textColorPrimary" android:textSize="13sp"/>
+                </RelativeLayout>
+
+                <!-- Chip -->
+                <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Número de Chip" android:textColor="@color/text_gray" android:textSize="13sp"/>
+                    <TextView android:id="@+id/tvDetalleChip" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentEnd="true" android:text="N/A" android:textColor="?android:textColorPrimary" android:textSize="13sp"/>
+                </RelativeLayout>
+
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- 2. Peso (kg) Section -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            app:cardCornerRadius="12dp"
+            app:cardBackgroundColor="@color/white"
+            app:strokeColor="@color/divider"
+            app:strokeWidth="1dp"
+            app:cardElevation="0dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Control de Peso"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/md_theme_light_primary"
+                    android:layout_marginBottom="12dp" />
+
+                <!-- Peso -->
+                <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Peso registrado" android:textColor="@color/text_gray" android:textSize="13sp"/>
+                    <TextView android:id="@+id/tvDetallePeso" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentEnd="true" android:text="0 kg" android:textColor="?android:textColorPrimary" android:textStyle="bold" android:textSize="13sp"/>
+                </RelativeLayout>
+
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- 3. Origen Section -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            app:cardCornerRadius="12dp"
+            app:cardBackgroundColor="@color/white"
+            app:strokeColor="@color/divider"
+            app:strokeWidth="1dp"
+            app:cardElevation="0dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Genealogía (Origen)"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/md_theme_light_primary"
+                    android:layout_marginBottom="12dp" />
+
+                <!-- Padre -->
+                <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="8dp">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Padre" android:textColor="@color/text_gray" android:textSize="13sp"/>
+                    <TextView android:id="@+id/tvDetallePadre" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentEnd="true" android:text="Toro 001" android:textColor="?android:textColorPrimary" android:textSize="13sp"/>
+                </RelativeLayout>
+
+                <!-- Madre -->
+                <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Madre" android:textColor="@color/text_gray" android:textSize="13sp"/>
+                    <TextView android:id="@+id/tvDetalleMadre" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentEnd="true" android:text="Vaca 102" android:textColor="?android:textColorPrimary" android:textSize="13sp"/>
+                </RelativeLayout>
+
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- 4. Notas Section -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            app:cardCornerRadius="12dp"
+            app:cardBackgroundColor="@color/white"
+            app:strokeColor="@color/divider"
+            app:strokeWidth="1dp"
+            app:cardElevation="0dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Notas y Observaciones"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/md_theme_light_primary"
+                    android:layout_marginBottom="8dp" />
+
+                <TextView
+                    android:id="@+id/tvDetalleNotas"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Ninguna observación registrada."
+                    android:textColor="?android:textColorSecondary"
+                    android:textSize="13sp" />
+
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Cerrar Button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCerrarDetalle"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:text="Cerrar"
+            android:textColor="@color/white"
+            app:backgroundTint="@color/md_theme_light_primary"
+            app:cornerRadius="24dp"
+            android:layout_marginBottom="16dp" />
+
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

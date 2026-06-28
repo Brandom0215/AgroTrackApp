@@ -34,6 +34,7 @@
                 app:tint="?attr/colorOnPrimary" />
 
             <TextView
+                android:id="@+id/tvTitleActivity"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toEndOf="@id/btnBack"
@@ -96,6 +97,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
                 android:background="@drawable/bg_cow_header">
+
+                <ImageView
+                    android:id="@+id/ivAnimalPreview"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:contentDescription="Vista previa de foto"
+                    android:visibility="gone" />
                 
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/btnCamera"
@@ -207,45 +216,54 @@
                     </com.google.android.material.card.MaterialCardView>
                 </LinearLayout>
 
-                <!-- Número del animal -->
+                <!-- Arete -->
                 <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tilNumeroAnimal"
                     style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
-                    android:hint="Número del animal *">
+                    android:hint="Arete *"
+                    app:errorEnabled="true">
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etNumeroAnimal"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:maxLength="30"
                         android:inputType="text" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <!-- Trazabilidad -->
                 <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tilTrazabilidad"
                     style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
-                    android:hint="Trazabilidad">
+                    android:hint="Trazabilidad"
+                    app:errorEnabled="true">
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etTrazabilidad"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:maxLength="30"
                         android:inputType="text" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <!-- Número de chip -->
                 <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tilNumeroChip"
                     style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
-                    android:hint="Número de chip">
+                    android:hint="Número de chip"
+                    app:errorEnabled="true">
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etNumeroChip"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:maxLength="30"
                         android:inputType="text" />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -259,27 +277,16 @@
                     android:textStyle="bold"
                     android:layout_marginBottom="16dp" />
 
-                <!-- Nombre del animal -->
-                <com.google.android.material.textfield.TextInputLayout
-                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
-                    android:hint="Nombre del animal">
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/etNombre"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="textPersonName" />
-                </com.google.android.material.textfield.TextInputLayout>
 
                 <!-- Fecha de nacimiento -->
                 <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tilFechaNacimiento"
                     style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
-                    android:hint="Fecha de nacimiento *">
+                    android:hint="Fecha de nacimiento *"
+                    app:errorEnabled="true">
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etFechaNacimiento"
                         android:layout_width="match_parent"
@@ -332,66 +339,29 @@
                         android:inputType="none" />
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <!-- Pesos Header -->
+                <!-- Peso Header -->
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/bg_section_header"
-                    android:text="Pesos (kg)"
+                    android:text="Peso (kg)"
                     android:textColor="?attr/colorOnPrimary"
                     android:textStyle="bold"
                     android:layout_marginBottom="16dp" />
 
-                <!-- Pesos Row -->
-                <LinearLayout
+                <!-- Peso Input -->
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:weightSum="3"
-                    android:layout_marginBottom="16dp">
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-                        android:layout_width="0dp"
+                    android:layout_marginBottom="16dp"
+                    android:hint="Peso (kg)">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etPeso"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:layout_marginEnd="4dp"
-                        android:hint="Al nacer">
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/etPesoNacer"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:inputType="numberDecimal" />
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:layout_marginHorizontal="4dp"
-                        android:hint="Al destete">
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/etPesoDestete"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:inputType="numberDecimal" />
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:layout_marginStart="4dp"
-                        android:hint="12 meses">
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/etPeso12Meses"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:inputType="numberDecimal" />
-                    </com.google.android.material.textfield.TextInputLayout>
-                </LinearLayout>
+                        android:inputType="numberDecimal" />
+                </com.google.android.material.textfield.TextInputLayout>
 
                 <!-- Origen Header -->
                 <TextView
@@ -452,17 +422,22 @@
 
                 <!-- Notas -->
                 <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tilNotas"
                     style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="32dp"
-                    android:hint="Notas y observaciones">
+                    android:hint="Notas y observaciones"
+                    app:errorEnabled="true"
+                    app:counterEnabled="true"
+                    app:counterMaxLength="100">
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etNotas"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="top|start"
                         android:inputType="textMultiLine"
+                        android:maxLength="100"
                         android:lines="4"
                         android:minLines="4" />
                 </com.google.android.material.textfield.TextInputLayout>
