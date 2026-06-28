@@ -6,18 +6,25 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import pa.ac.utp.agrotrackapp.R
+import pa.ac.utp.agrotrackapp.domain.model.MortalidadRecord
 
 /**
  * Adaptador de Recycler View para mostrar el historial de mortalidad.
- * Conversión de Java a Kotlin con corrección de nomenclatura (PascalCase).
  */
-class MortalidadAdapter(
-    private val listaIds: List<String>
-) : RecyclerView.Adapter<MortalidadAdapter.ViewHolder>() {
+class MortalidadAdapter : RecyclerView.Adapter<MortalidadAdapter.ViewHolder>() {
+
+    private var list: List<MortalidadRecord> = emptyList()
+
+    fun submitList(newList: List<MortalidadRecord>) {
+        list = newList
+        notifyDataSetChanged()
+    }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val tvId: TextView = itemView.findViewById(R.id.tvTrazabilidad)
-        val tvCausa: TextView = itemView.findViewById(R.id.tvCausa)
+        val tvArete: TextView = itemView.findViewById(R.id.tvRowArete)
+        val tvCausa: TextView = itemView.findViewById(R.id.tvRowCausa)
+        val tvDetalles: TextView = itemView.findViewById(R.id.tvRowDetalles)
+        val tvFecha: TextView = itemView.findViewById(R.id.tvRowFecha)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -27,10 +34,12 @@ class MortalidadAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        // Asignamos la información (ejemplo ficticio)
-        holder.tvId.text = "ID: " + listaIds[position]
-        holder.tvCausa.text = "Causa: Pendiente de diagnóstico"
+        val record = list[position]
+        holder.tvArete.text = "Arete: ${record.numeroAnimal}"
+        holder.tvCausa.text = record.causa.uppercase()
+        holder.tvDetalles.text = record.detalles
+        holder.tvFecha.text = "Fecha: ${record.fechaMuerte}"
     }
 
-    override fun getItemCount() = listaIds.size
+    override fun getItemCount() = list.size
 }

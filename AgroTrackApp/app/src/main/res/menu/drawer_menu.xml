@@ -1,14 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group android:checkableBehavior="single">
-        <item android:id="@+id/drawer_inicio"            android:title="Inicio" />
-        <item android:id="@+id/drawer_gestion_ganado"    android:title="Gestión de ganado" />
-        <item android:id="@+id/drawer_control_sanitario" android:title="Control sanitario" />
-        <item android:id="@+id/drawer_produccion"        android:title="Producción" />
-        <item android:id="@+id/drawer_pesaje"            android:title="Pesaje" />
-        <item android:id="@+id/drawer_mortalidad"        android:title="Mortalidad" />
-        <item android:id="@+id/drawer_gestion_insumos"   android:title="Gestión de insumos" />
-        <item android:id="@+id/drawer_contabilidad"      android:title="Contabilidad" />
-        <item android:id="@+id/drawer_cerrar_sesion"     android:title="Cerrar Sesión" />
+        <item
+            android:id="@+id/drawer_inicio"
+            android:title="Inicio"
+            android:icon="@drawable/ic_finca" />
+        <item
+            android:id="@+id/drawer_gestion_ganado"
+            android:title="Gestión de ganado"
+            android:icon="@drawable/ic_animales" />
+        <item
+            android:id="@+id/drawer_control_sanitario"
+            android:title="Control sanitario"
+            android:icon="@drawable/ic_alertas" />
+        <item
+            android:id="@+id/drawer_produccion"
+            android:title="Producción"
+            android:icon="@drawable/ic_produccion" />
+        <item
+            android:id="@+id/drawer_pesaje"
+            android:title="Pesaje"
+            android:icon="@android:drawable/ic_menu_compass" />
+        <item
+            android:id="@+id/drawer_mortalidad"
+            android:title="Mortalidad"
+            android:icon="@android:drawable/ic_dialog_alert" />
+        <item
+            android:id="@+id/drawer_gestion_insumos"
+            android:title="Gestión de insumos"
+            android:icon="@android:drawable/ic_menu_manage" />
+        <item
+            android:id="@+id/drawer_contabilidad"
+            android:title="Contabilidad"
+            android:icon="@android:drawable/ic_menu_save" />
+        <item
+            android:id="@+id/drawer_cerrar_sesion"
+            android:title="Cerrar Sesión"
+            android:icon="@drawable/cerrar_sesion" />
     </group>
 </menu>

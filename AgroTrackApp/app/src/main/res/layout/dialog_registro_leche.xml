@@ -16,7 +16,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Registrar Ordeño Individual"
-            android:textColor="#1A5C38"
+            android:textColor="@color/md_theme_light_primary"
             android:textSize="18sp"
             android:textStyle="bold"
             android:layout_marginBottom="16dp" />
@@ -146,7 +146,7 @@
                 android:layout_height="wrap_content"
                 android:text="Guardar"
                 android:textColor="@android:color/white"
-                app:backgroundTint="#1A5C38"
+                app:backgroundTint="@color/md_theme_light_primary"
                 android:layout_marginStart="8dp" />
         </LinearLayout>
     </LinearLayout>

@@ -12,7 +12,7 @@
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#1A5C38"
+        android:background="@color/md_theme_light_primary"
         app:elevation="2dp">
 
         <RelativeLayout
@@ -93,7 +93,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="0 Animales"
-                        android:textColor="#1A5C38"
+                        android:textColor="@color/md_theme_light_primary"
                         android:textSize="24sp"
                         android:textStyle="bold"
                         android:layout_marginTop="2dp" />
@@ -196,7 +196,7 @@
         android:layout_margin="16dp"
         android:text="Pesaje"
         app:icon="@android:drawable/ic_input_add"
-        app:backgroundTint="#1A5C38"
+        app:backgroundTint="@color/md_theme_light_primary"
         android:textColor="@android:color/white"
         app:iconTint="@android:color/white" />
 

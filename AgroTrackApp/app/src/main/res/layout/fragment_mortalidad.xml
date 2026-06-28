@@ -94,14 +94,15 @@
                             android:layout_width="24dp"
                             android:layout_height="24dp"
                             android:src="@android:drawable/ic_menu_compass"
-                            app:tint="#28B463" />
+                            app:tint="@color/md_theme_light_primary" />
 
                         <TextView
+                            android:id="@+id/tvTasaMortalidad"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
-                            android:text="3.3%"
-                            android:textColor="#1B5E20"
+                            android:text="0.0%"
+                            android:textColor="@color/md_theme_light_primary"
                             android:textSize="20sp"
                             android:textStyle="bold" />
 
@@ -131,14 +132,15 @@
                             android:layout_width="24dp"
                             android:layout_height="24dp"
                             android:src="@android:drawable/ic_menu_mylocation"
-                            app:tint="#28B463" />
+                            app:tint="@color/md_theme_light_primary" />
 
                         <TextView
+                            android:id="@+id/tvCausaPrincipal"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
-                            android:text="Respiratoria"
-                            android:textColor="#1B5E20"
+                            android:text="Ninguna"
+                            android:textColor="@color/md_theme_light_primary"
                             android:textSize="18sp"
                             android:textStyle="bold" />
 
@@ -162,15 +164,17 @@
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
-                android:layout_height="220dp"
+                android:layout_height="160dp"
                 app:cardBackgroundColor="?attr/colorSurface"
                 app:cardCornerRadius="16dp"
                 app:cardElevation="2dp">
 
-                <View
+                <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="#FAFAFA" />
+                    android:src="@drawable/grafica_produccion"
+                    android:scaleType="centerCrop"
+                    android:alpha="0.85" />
             </com.google.android.material.card.MaterialCardView>
 
             <TextView

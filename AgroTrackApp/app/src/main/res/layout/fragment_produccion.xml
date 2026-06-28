@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fitsSystemWindows="true"
-        android:background="#1A5C38"
+        android:background="@color/md_theme_light_primary"
         app:elevation="2dp">
 
         <RelativeLayout
@@ -114,7 +114,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="0 Animales"
-                            android:textColor="#1A5C38"
+                            android:textColor="@color/md_theme_light_primary"
                             android:textSize="20sp"
                             android:textStyle="bold"
                             android:layout_marginTop="4dp" />
@@ -158,7 +158,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="0 Vacas"
-                            android:textColor="#1A5C38"
+                            android:textColor="@color/md_theme_light_primary"
                             android:textSize="20sp"
                             android:textStyle="bold"
                             android:layout_marginTop="4dp" />
@@ -216,7 +216,7 @@
                         <View
                             android:layout_width="12dp"
                             android:layout_height="12dp"
-                            android:background="#1A5C38"
+                            android:background="@color/md_theme_light_primary"
                             android:layout_marginEnd="4dp" />
                         <TextView
                             android:layout_width="wrap_content"
@@ -293,7 +293,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Módulo de Engorde (Carne)"
-                                android:textColor="#1A5C38"
+                                android:textColor="@color/md_theme_light_primary"
                                 android:textSize="16sp"
                                 android:textStyle="bold" />
 
@@ -310,7 +310,7 @@
                             android:layout_width="24dp"
                             android:layout_height="24dp"
                             android:src="@android:drawable/ic_media_play"
-                            app:tint="#1A5C38" />
+                            app:tint="@color/md_theme_light_primary" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
@@ -351,7 +351,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Módulo Lácteo (Leche)"
-                                android:textColor="#1A5C38"
+                                android:textColor="@color/md_theme_light_primary"
                                 android:textSize="16sp"
                                 android:textStyle="bold" />
 
@@ -368,7 +368,7 @@
                             android:layout_width="24dp"
                             android:layout_height="24dp"
                             android:src="@android:drawable/ic_media_play"
-                            app:tint="#1A5C38" />
+                            app:tint="@color/md_theme_light_primary" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 

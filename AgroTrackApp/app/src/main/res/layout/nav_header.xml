@@ -7,21 +7,21 @@
     android:orientation="vertical"
     android:gravity="bottom"
     android:padding="24dp"
-    android:background="?attr/colorPrimary">
+    android:background="@drawable/bg_nav_header">
 
     <com.google.android.material.card.MaterialCardView
         android:layout_width="64dp"
         android:layout_height="64dp"
         app:cardCornerRadius="32dp"
-        app:cardElevation="0dp"
-        app:cardBackgroundColor="?attr/colorPrimaryContainer">
+        app:cardElevation="2dp"
+        app:cardBackgroundColor="#FFFFFFFF">
         
         <ImageView
-            android:layout_width="32dp"
-            android:layout_height="32dp"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
             android:layout_gravity="center"
             android:src="@drawable/vaca"
-            app:tint="?attr/colorOnPrimaryContainer" />
+            app:tint="@color/md_theme_light_primary" />
     </com.google.android.material.card.MaterialCardView>
 
     <TextView

@@ -75,7 +75,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1.2"
             android:text="+1.25 kg"
-            android:textColor="#1A5C38"
+            android:textColor="@color/md_theme_light_primary"
             android:textStyle="bold"
             android:textSize="13sp"
             android:gravity="center" />

@@ -12,7 +12,7 @@
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#1A5C38"
+        android:background="@color/md_theme_light_primary"
         app:elevation="2dp">
 
         <RelativeLayout
@@ -91,7 +91,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="0 Vacas"
-                        android:textColor="#1A5C38"
+                        android:textColor="@color/md_theme_light_primary"
                         android:textSize="16sp"
                         android:textStyle="bold"
                         android:layout_marginTop="4dp" />
@@ -124,7 +124,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="0.0 L"
-                        android:textColor="#1A5C38"
+                        android:textColor="@color/md_theme_light_primary"
                         android:textSize="16sp"
                         android:textStyle="bold"
                         android:layout_marginTop="4dp" />
@@ -157,7 +157,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="0.0 L/Vaca"
-                        android:textColor="#1A5C38"
+                        android:textColor="@color/md_theme_light_primary"
                         android:textSize="16sp"
                         android:textStyle="bold"
                         android:layout_marginTop="4dp" />
@@ -278,7 +278,7 @@
             android:layout_height="wrap_content"
             android:text="Ordeño Indiv."
             app:icon="@android:drawable/ic_input_add"
-            app:backgroundTint="#1A5C38"
+            app:backgroundTint="@color/md_theme_light_primary"
             android:textColor="@android:color/white"
             app:iconTint="@android:color/white" />
     </LinearLayout>

@@ -12,7 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Carga Masiva de Leche"
-        android:textColor="#1A5C38"
+        android:textColor="@color/md_theme_light_primary"
         android:textSize="18sp"
         android:textStyle="bold"
         android:layout_marginBottom="16dp" />
@@ -63,8 +63,8 @@
         android:layout_height="wrap_content"
         android:text="Copiar producción de ayer"
         app:icon="@android:drawable/ic_menu_edit"
-        android:textColor="#1A5C38"
-        app:strokeColor="#1A5C38"
+        android:textColor="@color/md_theme_light_primary"
+        app:strokeColor="@color/md_theme_light_primary"
         android:layout_marginBottom="16dp" />
 
     <!-- Table Header labels -->
@@ -129,7 +129,7 @@
             android:layout_height="wrap_content"
             android:text="Guardar Lote"
             android:textColor="@android:color/white"
-            app:backgroundTint="#1A5C38"
+            app:backgroundTint="@color/md_theme_light_primary"
             android:layout_marginStart="8dp" />
     </LinearLayout>
 

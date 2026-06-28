@@ -115,6 +115,14 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupDrawer() {
         val navigationView = findViewById<NavigationView>(R.id.navigationView)
+        
+        // Desactivar el tinte para el item de Cerrar Sesión (preservar los colores del PNG)
+        val logoutMenuItem = navigationView.menu.findItem(R.id.drawer_cerrar_sesion)
+        logoutMenuItem?.icon?.mutate()?.let { icon ->
+            icon.setTintList(null)
+            icon.clearColorFilter()
+        }
+
         navigationView.setNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.drawer_inicio            -> navigateToTab(R.id.nav_finca)

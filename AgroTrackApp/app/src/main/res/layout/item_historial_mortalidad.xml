@@ -7,7 +7,7 @@
     android:layout_marginHorizontal="16dp"
     android:layout_marginBottom="12dp"
     app:cardCornerRadius="16dp"
-    app:cardElevation="3dp"
+    app:cardElevation="2dp"
     app:strokeWidth="1dp"
     app:strokeColor="#E0E0E0">
 
@@ -31,31 +31,32 @@
             android:layout_height="24dp"
             android:layout_marginStart="12dp"
             android:src="@android:drawable/ic_menu_agenda"
-            app:tint="#28B463"
+            app:tint="@color/md_theme_light_primary"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toEndOf="@id/indicatorBar"/>
 
         <TextView
-            android:id="@+id/tvTrazabilidad"
+            android:id="@+id/tvRowArete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:text="ID: 136"
-            android:textSize="18sp"
+            android:text="Arete: 1234567890"
+            android:textSize="16sp"
             android:textStyle="bold"
-            android:textColor="#1B5E20"
+            android:textColor="@color/md_theme_light_primary"
             app:layout_constraintBottom_toBottomOf="@id/ivArete"
             app:layout_constraintStart_toEndOf="@id/ivArete"
             app:layout_constraintTop_toTopOf="@id/ivArete"/>
 
+        <!-- Causa (Etiqueta Roja) -->
         <TextView
-            android:id="@+id/tvCausa"
+            android:id="@+id/tvRowCausa"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/fondo_etiqueta_roja"
             android:paddingHorizontal="10dp"
             android:paddingVertical="4dp"
-            android:text="RESPIRATORIA"
+            android:text="DIARREA"
             android:textColor="#D32F2F"
             android:textSize="10sp"
             android:textStyle="bold"
@@ -65,34 +66,31 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:layout_marginTop="12dp"
             android:layout_marginStart="12dp"
             app:layout_constraintTop_toBottomOf="@id/ivArete"
             app:layout_constraintStart_toEndOf="@id/indicatorBar"
             app:layout_constraintEnd_toEndOf="parent">
 
+            <!-- Detalles/Observaciones de muerte -->
             <TextView
-                android:id="@+id/tvGenero"
-                android:layout_width="wrap_content"
+                android:id="@+id/tvRowDetalles"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Hembra"
-                android:textSize="14sp"
-                android:textColor="#757575"/>
+                android:text="Detalles u observaciones de la muerte del animal..."
+                android:textSize="13sp"
+                android:textColor="#555555"
+                android:layout_marginBottom="4dp" />
 
+            <!-- Fecha de muerte -->
             <TextView
+                android:id="@+id/tvRowFecha"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=" • "
-                android:textColor="#BDBDBD"/>
-
-            <TextView
-                android:id="@+id/tvFecha"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="14/12/2021"
-                android:textSize="14sp"
-                android:textColor="#757575"/>
+                android:text="Fecha: 14/12/2026"
+                android:textSize="11sp"
+                android:textColor="#999999"/>
         </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
