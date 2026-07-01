@@ -37,9 +37,6 @@
             android:name=".ui.animales.CrearAnimalActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.insumos.InsumosActivity"
-            android:exported="false" />
-        <activity
             android:name=".ui.insumos.CrearInsumoActivity"
             android:exported="false" />
         <activity

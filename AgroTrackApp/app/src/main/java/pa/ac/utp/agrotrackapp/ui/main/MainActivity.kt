@@ -22,7 +22,7 @@ import pa.ac.utp.agrotrackapp.ui.alertas.AlertasFragment
 import pa.ac.utp.agrotrackapp.ui.control.ControlSanitarioFragment
 import pa.ac.utp.agrotrackapp.ui.pesaje.PesajeFragment
 import pa.ac.utp.agrotrackapp.ui.mortalidad.MortalidadFragment
-import pa.ac.utp.agrotrackapp.ui.insumos.InsumosActivity
+import pa.ac.utp.agrotrackapp.ui.insumos.InsumosFragment
 import pa.ac.utp.agrotrackapp.ui.contabilidad.ContabilidadFragment
 
 class MainActivity : AppCompatActivity() {
@@ -140,7 +140,10 @@ class MainActivity : AppCompatActivity() {
                     supportFragmentManager.beginTransaction().replace(R.id.fragment_container, MortalidadFragment()).commit()
                     bottomNavigation.menu.setGroupCheckable(0, false, true)
                 }
-                R.id.drawer_gestion_insumos   -> { startActivity(Intent(this, InsumosActivity::class.java)) }
+                R.id.drawer_gestion_insumos   -> {
+                    supportFragmentManager.beginTransaction().replace(R.id.fragment_container, InsumosFragment()).commit()
+                    bottomNavigation.menu.setGroupCheckable(0, false, true)
+                }
                 R.id.drawer_contabilidad      -> {
                     supportFragmentManager.beginTransaction().replace(R.id.fragment_container, ContabilidadFragment()).commit()
                     bottomNavigation.menu.setGroupCheckable(0, false, true)
