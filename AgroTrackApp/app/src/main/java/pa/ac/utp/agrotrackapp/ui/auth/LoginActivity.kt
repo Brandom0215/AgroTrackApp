@@ -2,26 +2,27 @@ package pa.ac.utp.agrotrackapp.ui.auth
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.ViewGroup
+import android.widget.EditText
+import android.widget.FrameLayout
+import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import pa.ac.utp.agrotrackapp.R
-import pa.ac.utp.agrotrackapp.domain.repository.AuthRepository
 import pa.ac.utp.agrotrackapp.data.auth.SharedPrefsAuthRepository
+import pa.ac.utp.agrotrackapp.domain.repository.AuthRepository
+import pa.ac.utp.agrotrackapp.services.BiometricService
 import pa.ac.utp.agrotrackapp.ui.main.MainActivity
 
-/**
- * Pantalla de Inicio de Sesión (Login)
- *
- * Captura las credenciales del usuario, las valida utilizando el repositorio desacoplado,
- * y permite redirigir al registro en caso de no tener una cuenta activa.
- */
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var authRepository: AuthRepository
+    private lateinit var biometricService: BiometricService
 
     private lateinit var tilUsuario: TextInputLayout
     private lateinit var tilContrasena: TextInputLayout
@@ -29,6 +30,8 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var etContrasena: TextInputEditText
     private lateinit var btnIngresar: MaterialButton
     private lateinit var tvRegistrarse: TextView
+    private lateinit var tvRecuperarContrasena: TextView
+    private lateinit var btnBiometria: ImageButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,10 +45,11 @@ class LoginActivity : AppCompatActivity() {
         etContrasena = findViewById(R.id.etContrasena)
         btnIngresar = findViewById(R.id.btnIngresar)
         tvRegistrarse = findViewById(R.id.tvRegistrarse)
+        tvRecuperarContrasena = findViewById(R.id.tvRecuperarContrasena)
+        btnBiometria = findViewById(R.id.btnBiometria)
 
-        // Inicializamos el repositorio de datos (desacoplado)
-        // SI MIGRARAS A BASE DE DATOS (Room/SQLite), solo necesitas inicializar aquí tu clase de base de datos
         authRepository = SharedPrefsAuthRepository(this)
+        biometricService = BiometricService(this)
 
         // Configuración de botones
         btnIngresar.setOnClickListener {
@@ -53,17 +57,26 @@ class LoginActivity : AppCompatActivity() {
         }
 
         tvRegistrarse.setOnClickListener {
-            // Navega a la pantalla de creación de cuenta (Registro)
             val intent = Intent(this, RegisterActivity::class.java)
             startActivity(intent)
         }
+
+        tvRecuperarContrasena.setOnClickListener {
+            mostrarDialogoRecuperacion()
+        }
+
+        // Configurar detección biométrica
+        if (biometricService.isBiometricAvailable()) {
+            btnBiometria.visibility = android.view.View.VISIBLE
+            btnBiometria.setOnClickListener {
+                realizarLoginBiometrico()
+            }
+        } else {
+            btnBiometria.visibility = android.view.View.GONE
+        }
     }
 
-    /**
-     * Realiza la validación local de ingreso y consulta al repositorio.
-     */
     private fun realizarLogin() {
-        // Limpiamos errores anteriores
         tilUsuario.error = null
         tilContrasena.error = null
 
@@ -72,7 +85,6 @@ class LoginActivity : AppCompatActivity() {
 
         var hasError = false
 
-        // Validación inicial para evitar romper datos o enviar campos vacíos
         if (usuario.isEmpty()) {
             tilUsuario.error = "Ingresa tu usuario o correo electrónico"
             hasError = true
@@ -85,23 +97,93 @@ class LoginActivity : AppCompatActivity() {
 
         if (hasError) return
 
-        // Consultamos al repositorio de autenticación
         val resultado = authRepository.loginUser(usuario, contrasena)
 
         resultado.fold(
             onSuccess = { user ->
-                // Login exitoso: Mensaje de bienvenida
                 Toast.makeText(this, "¡Bienvenido de vuelta, ${user.nombre}!", Toast.LENGTH_SHORT).show()
-                
-                // Redirige al Dashboard principal de la aplicación
                 val intent = Intent(this, MainActivity::class.java)
                 startActivity(intent)
-                finish() // Cierra el LoginActivity para que no regrese atrás al Dashboard
+                finish()
             },
             onFailure = { error ->
-                // Error de autenticación: Muestra el mensaje devuelto por el repositorio
-                Toast.makeText(this, error.message ?: "Credenciales inválidas", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, "Error: ${error.message}", Toast.LENGTH_SHORT).show()
             }
         )
+    }
+
+    private fun realizarLoginBiometrico() {
+        val lastUsername = authRepository.getLastUsername()
+        if (lastUsername.isNullOrEmpty()) {
+            Toast.makeText(this, "Inicie sesión con contraseña al menos una vez antes de usar huella dactilar.", Toast.LENGTH_LONG).show()
+            return
+        }
+
+        biometricService.showBiometricPrompt(
+            activity = this,
+            title = "Inicio de Sesión",
+            subtitle = "Acceso biométrico para: $lastUsername",
+            description = "Coloque su huella en el lector para ingresar",
+            onSuccess = {
+                val resultado = authRepository.loginWithUsername(lastUsername)
+                resultado.fold(
+                    onSuccess = { user ->
+                        Toast.makeText(this, "¡Autenticación biométrica exitosa! Bienvenido, ${user.nombre}.", Toast.LENGTH_SHORT).show()
+                        val intent = Intent(this, MainActivity::class.java)
+                        startActivity(intent)
+                        finish()
+                    },
+                    onFailure = { error ->
+                        Toast.makeText(this, "Error de inicio biométrico: ${error.message}", Toast.LENGTH_SHORT).show()
+                    }
+                )
+            },
+            onError = { errorString ->
+                Toast.makeText(this, "Biometría cancelada o fallida: $errorString", Toast.LENGTH_SHORT).show()
+            }
+        )
+    }
+
+    private fun mostrarDialogoRecuperacion() {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Recuperar Contraseña")
+        builder.setMessage("Ingrese su usuario o correo electrónico registrado:")
+
+        val input = EditText(this)
+        input.inputType = android.text.InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS
+        val container = FrameLayout(this)
+        val params = FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+        params.leftMargin = (24 * resources.displayMetrics.density).toInt()
+        params.rightMargin = (24 * resources.displayMetrics.density).toInt()
+        input.layoutParams = params
+        container.addView(input)
+        builder.setView(container)
+
+        builder.setPositiveButton("Recuperar") { dialog, _ ->
+            val username = input.text.toString().trim().lowercase()
+            if (username.isEmpty()) {
+                Toast.makeText(this, "Por favor ingrese un usuario", Toast.LENGTH_SHORT).show()
+                return@setPositiveButton
+            }
+            
+            val prefs = getSharedPreferences("GanaDEXAuthPrefs", MODE_PRIVATE)
+            val savedPassword = prefs.getString("user_${username}_password", null)
+            if (savedPassword != null) {
+                AlertDialog.Builder(this)
+                    .setTitle("Contraseña Encontrada")
+                    .setMessage("Su contraseña registrada para el usuario '$username' es:\n\n$savedPassword")
+                    .setPositiveButton("Aceptar") { innerDialog, _ -> innerDialog.dismiss() }
+                    .show()
+            } else {
+                Toast.makeText(this, "El usuario no existe en el sistema", Toast.LENGTH_LONG).show()
+            }
+            dialog.dismiss()
+        }
+        
+        builder.setNegativeButton("Cancelar") { dialog, _ ->
+            dialog.dismiss()
+        }
+        
+        builder.show()
     }
 }

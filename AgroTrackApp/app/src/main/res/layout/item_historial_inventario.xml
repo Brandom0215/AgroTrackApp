@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginVertical="6dp"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="1dp"
+    app:strokeWidth="0dp"
+    app:cardBackgroundColor="?attr/colorSurface">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="12dp"
+        android:gravity="center_vertical">
+
+        <!-- Small Type Circle Icon -->
+        <FrameLayout
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/bottom_sheet_bg"
+            android:backgroundTint="#E8F5E9"
+            android:padding="8dp">
+
+            <ImageView
+                android:id="@+id/ivHistorialIcon"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_finca"
+                app:tint="@color/md_theme_light_primary"
+                android:contentDescription="Icono de tipo" />
+        </FrameLayout>
+
+        <!-- Center Info -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="8dp">
+
+            <TextView
+                android:id="@+id/tvHistorialNombre"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Nombre del Producto"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="@color/md_theme_light_onBackground" />
+
+            <TextView
+                android:id="@+id/tvHistorialTipo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Alimento"
+                android:textSize="11sp"
+                android:textColor="@color/text_gray"
+                android:layout_marginTop="2dp" />
+
+            <TextView
+                android:id="@+id/tvHistorialFecha"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Reg: 08/07/2026 16:30"
+                android:textSize="10sp"
+                android:textColor="#9E9E9E"
+                android:layout_marginTop="2dp" />
+
+        </LinearLayout>
+
+        <!-- Right Side: Quantity and Cost -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="end">
+
+            <TextView
+                android:id="@+id/tvHistorialCantidad"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="180 Litros"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="@color/md_theme_light_onBackground" />
+
+            <TextView
+                android:id="@+id/tvHistorialCosto"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Costo: $45.00"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:textColor="@color/md_theme_light_primary"
+                android:layout_marginTop="2dp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>
