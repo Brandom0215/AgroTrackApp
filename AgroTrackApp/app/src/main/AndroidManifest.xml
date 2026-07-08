@@ -34,10 +34,14 @@
             android:windowSoftInputMode="adjustResize"
             android:exported="false" />
         <activity
+            android:name=".ui.auth.PerfilUsuarioActivity"
+            android:windowSoftInputMode="adjustResize"
+            android:exported="false" />
+        <activity
             android:name=".ui.animales.CrearAnimalActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.insumos.CrearInsumoActivity"
+            android:name=".ui.insumos.CrearInventarioActivity"
             android:exported="false" />
         <activity
             android:name=".ui.produccion.CarneProduccionActivity"

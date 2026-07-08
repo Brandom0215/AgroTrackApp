@@ -4,35 +4,39 @@
         <item
             android:id="@+id/drawer_inicio"
             android:title="Inicio"
-            android:icon="@drawable/ic_finca" />
+            android:icon="@drawable/inicio" />
+        <item
+            android:id="@+id/drawer_perfil"
+            android:title="Mi Perfil"
+            android:icon="@drawable/usuario" />
         <item
             android:id="@+id/drawer_gestion_ganado"
             android:title="Gestión de ganado"
-            android:icon="@drawable/ic_animales" />
+            android:icon="@drawable/ganado" />
         <item
             android:id="@+id/drawer_control_sanitario"
             android:title="Control sanitario"
-            android:icon="@drawable/ic_alertas" />
+            android:icon="@drawable/gestion_sanitaria" />
         <item
             android:id="@+id/drawer_produccion"
             android:title="Producción"
-            android:icon="@drawable/ic_produccion" />
+            android:icon="@drawable/produccion" />
         <item
             android:id="@+id/drawer_pesaje"
             android:title="Pesaje"
-            android:icon="@android:drawable/ic_menu_compass" />
+            android:icon="@drawable/pesaje" />
         <item
             android:id="@+id/drawer_mortalidad"
             android:title="Mortalidad"
-            android:icon="@android:drawable/ic_dialog_alert" />
+            android:icon="@drawable/mortalidad" />
         <item
             android:id="@+id/drawer_gestion_insumos"
-            android:title="Gestión de insumos"
-            android:icon="@android:drawable/ic_menu_manage" />
+            android:title="Inventario"
+            android:icon="@drawable/inventario" />
         <item
             android:id="@+id/drawer_contabilidad"
             android:title="Contabilidad"
-            android:icon="@android:drawable/ic_menu_save" />
+            android:icon="@drawable/contabilidad" />
         <item
             android:id="@+id/drawer_cerrar_sesion"
             android:title="Cerrar Sesión"

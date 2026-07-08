@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="2dp"
+    app:strokeWidth="0dp"
+    app:cardBackgroundColor="?attr/colorSurface">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <!-- Top Section: Image container -->
+        <FrameLayout
+            android:id="@+id/imageContainer"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:background="#E8F0E8">
+
+            <ImageView
+                android:id="@+id/ivProducto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:src="@drawable/icono_ganadex" />
+
+            <!-- Type Chip overlay on bottom left of image -->
+            <TextView
+                android:id="@+id/tvChipTipo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|start"
+                android:layout_margin="8dp"
+                android:background="#80000000"
+                android:textColor="@color/white"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                android:paddingHorizontal="8dp"
+                android:paddingVertical="4dp"
+                android:text="ALIMENTO" />
+
+            <!-- Edit button overlay on top left of image -->
+            <ImageButton
+                android:id="@+id/btnEditar"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="top|start"
+                android:layout_margin="8dp"
+                android:background="@drawable/bottom_sheet_bg"
+                android:backgroundTint="#FDFDF5"
+                android:padding="6dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/editar"
+                android:contentDescription="Editar producto"
+                app:elevation="2dp" />
+
+            <!-- Delete button overlay on top right of image -->
+            <ImageButton
+                android:id="@+id/btnEliminar"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="top|end"
+                android:layout_margin="8dp"
+                android:background="@drawable/bottom_sheet_bg"
+                android:backgroundTint="#FDFDF5"
+                android:padding="6dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/eliminar"
+                android:contentDescription="Eliminar producto"
+                app:elevation="2dp" />
+
+        </FrameLayout>
+
+        <!-- Bottom Section: Product details -->
+        <LinearLayout
+            android:id="@+id/detailsContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/imageContainer"
+            android:orientation="vertical"
+            android:padding="12dp">
+
+            <!-- Title -->
+            <TextView
+                android:id="@+id/tvNombre"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Nombre del Producto"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="@color/md_theme_light_onBackground"
+                android:ellipsize="end"
+                android:maxLines="1" />
+
+            <!-- Stock row -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="4dp"
+                android:gravity="bottom">
+
+                <TextView
+                    android:id="@+id/tvStock"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="180"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/md_theme_light_primary"
+                    android:includeFontPadding="false" />
+
+                <TextView
+                    android:id="@+id/tvUnidad"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=" Litros"
+                    android:textSize="12sp"
+                    android:textColor="@color/text_gray"
+                    android:layout_marginStart="4dp" />
+
+            </LinearLayout>
+
+            <!-- Warning Badge -->
+            <TextView
+                android:id="@+id/tvAlertaStock"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:background="@color/status_red_light"
+                android:textColor="@color/status_red"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:paddingVertical="3dp"
+                android:text="⚠️ STOCK BAJO"
+                android:visibility="gone" />
+
+        </LinearLayout>
+    </RelativeLayout>
+</com.google.android.material.card.MaterialCardView>

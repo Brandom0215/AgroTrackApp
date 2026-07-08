@@ -41,6 +41,7 @@ dependencies {
     implementation("com.google.android.material:material:1.13.0")
     implementation("androidx.activity:activity:1.13.0")
     implementation("androidx.constraintlayout:constraintlayout:2.2.1")
+    implementation("androidx.biometric:biometric:1.2.0-alpha05")
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

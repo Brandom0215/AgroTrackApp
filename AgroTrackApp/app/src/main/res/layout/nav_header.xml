@@ -10,18 +10,23 @@
     android:background="@drawable/bg_nav_header">
 
     <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cardProfileHeader"
         android:layout_width="64dp"
         android:layout_height="64dp"
         app:cardCornerRadius="32dp"
         app:cardElevation="2dp"
+        app:strokeWidth="0dp"
         app:cardBackgroundColor="#FFFFFFFF">
         
         <ImageView
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:layout_gravity="center"
+            android:id="@+id/ivHeaderProfile"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="12dp"
+            android:scaleType="centerCrop"
             android:src="@drawable/vaca"
-            app:tint="@color/md_theme_light_primary" />
+            app:tint="@color/md_theme_light_primary"
+            android:contentDescription="Foto de perfil" />
     </com.google.android.material.card.MaterialCardView>
 
     <TextView

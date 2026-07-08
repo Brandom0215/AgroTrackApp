@@ -22,8 +22,9 @@ import pa.ac.utp.agrotrackapp.ui.alertas.AlertasFragment
 import pa.ac.utp.agrotrackapp.ui.control.ControlSanitarioFragment
 import pa.ac.utp.agrotrackapp.ui.pesaje.PesajeFragment
 import pa.ac.utp.agrotrackapp.ui.mortalidad.MortalidadFragment
-import pa.ac.utp.agrotrackapp.ui.insumos.InsumosFragment
+import pa.ac.utp.agrotrackapp.ui.insumos.InventarioFragment
 import pa.ac.utp.agrotrackapp.ui.contabilidad.ContabilidadFragment
+import pa.ac.utp.agrotrackapp.ui.auth.PerfilUsuarioActivity
 
 class MainActivity : AppCompatActivity() {
 
@@ -54,6 +55,11 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        actualizarHeaderUsuario()
+    }
+
     /**
      * Obtiene el usuario activo y actualiza los campos de texto del Drawer Navigation.
      */
@@ -64,11 +70,44 @@ class MainActivity : AppCompatActivity() {
             
             val tvFincaNombre = headerView.findViewById<TextView>(R.id.tvHeaderFincaNombre)
             val tvUserName = headerView.findViewById<TextView>(R.id.tvHeaderUserName)
+            val ivHeaderProfile = headerView.findViewById<android.widget.ImageView>(R.id.ivHeaderProfile)
             
             val currentUser = authRepository.getCurrentUser()
             if (currentUser != null) {
                 tvFincaNombre.text = currentUser.nombreFinca
-                tvUserName.text = "${currentUser.nombre} ${currentUser.apellido} - ${currentUser.lugar}"
+                tvUserName.text = "${currentUser.nombre} ${currentUser.apellido} - ${currentUser.rol}"
+                
+                if (ivHeaderProfile != null) {
+                    if (!currentUser.profileImagePath.isNullOrEmpty()) {
+                        val file = java.io.File(currentUser.profileImagePath)
+                        if (file.exists()) {
+                            val bitmap = android.graphics.BitmapFactory.decodeFile(file.absolutePath)
+                            ivHeaderProfile.setImageBitmap(bitmap)
+                            ivHeaderProfile.imageTintList = null
+                            ivHeaderProfile.setPadding(0, 0, 0, 0)
+                        } else {
+                            ivHeaderProfile.setImageResource(R.drawable.vaca)
+                            val paddingPx = (12 * resources.displayMetrics.density).toInt()
+                            ivHeaderProfile.setPadding(paddingPx, paddingPx, paddingPx, paddingPx)
+                            ivHeaderProfile.imageTintList = android.content.res.ColorStateList.valueOf(
+                                androidx.core.content.ContextCompat.getColor(this, R.color.md_theme_light_primary)
+                            )
+                        }
+                    } else {
+                        ivHeaderProfile.setImageResource(R.drawable.vaca)
+                        val paddingPx = (12 * resources.displayMetrics.density).toInt()
+                        ivHeaderProfile.setPadding(paddingPx, paddingPx, paddingPx, paddingPx)
+                        ivHeaderProfile.imageTintList = android.content.res.ColorStateList.valueOf(
+                            androidx.core.content.ContextCompat.getColor(this, R.color.md_theme_light_primary)
+                        )
+                    }
+                }
+            }
+
+            // Click en la cabecera abre el perfil
+            headerView.setOnClickListener {
+                startActivity(Intent(this, PerfilUsuarioActivity::class.java))
+                drawerLayout.closeDrawer(GravityCompat.START)
             }
         } catch (e: Exception) {
             e.printStackTrace()
@@ -116,12 +155,8 @@ class MainActivity : AppCompatActivity() {
     private fun setupDrawer() {
         val navigationView = findViewById<NavigationView>(R.id.navigationView)
         
-        // Desactivar el tinte para el item de Cerrar Sesión (preservar los colores del PNG)
-        val logoutMenuItem = navigationView.menu.findItem(R.id.drawer_cerrar_sesion)
-        logoutMenuItem?.icon?.mutate()?.let { icon ->
-            icon.setTintList(null)
-            icon.clearColorFilter()
-        }
+        // Desactivar el tinte para todos los ítems para preservar el color de los PNGs
+        navigationView.itemIconTintList = null
 
         navigationView.setNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
@@ -141,12 +176,15 @@ class MainActivity : AppCompatActivity() {
                     bottomNavigation.menu.setGroupCheckable(0, false, true)
                 }
                 R.id.drawer_gestion_insumos   -> {
-                    supportFragmentManager.beginTransaction().replace(R.id.fragment_container, InsumosFragment()).commit()
+                    supportFragmentManager.beginTransaction().replace(R.id.fragment_container, InventarioFragment()).commit()
                     bottomNavigation.menu.setGroupCheckable(0, false, true)
                 }
                 R.id.drawer_contabilidad      -> {
                     supportFragmentManager.beginTransaction().replace(R.id.fragment_container, ContabilidadFragment()).commit()
                     bottomNavigation.menu.setGroupCheckable(0, false, true)
+                }
+                R.id.drawer_perfil            -> {
+                    startActivity(Intent(this, PerfilUsuarioActivity::class.java))
                 }
                 R.id.drawer_cerrar_sesion     -> {
                     // Cerrar sesión en el repositorio y volver al login

@@ -119,6 +119,40 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
+            <!-- Opciones adicionales (Recuperar Contraseña y Biometría) -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginTop="12dp"
+                android:paddingHorizontal="4dp">
+
+                <TextView
+                    android:id="@+id/tvRecuperarContrasena"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="¿Olvidaste tu contraseña?"
+                    android:textColor="@color/md_theme_light_primary"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="?attr/selectableItemBackground" />
+
+                <ImageButton
+                    android:id="@+id/btnBiometria"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:src="@drawable/huella"
+                    android:scaleType="fitCenter"
+                    android:contentDescription="Iniciar sesión con huella"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+
             <!-- Botón de Ingreso -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnIngresar"
