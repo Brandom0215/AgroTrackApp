@@ -15,7 +15,7 @@ import com.google.android.material.card.MaterialCardView
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import pa.ac.utp.agrotrackapp.R
-import pa.ac.utp.agrotrackapp.data.auth.SharedPrefsAuthRepository
+import pa.ac.utp.agrotrackapp.data.auth.SqliteAuthRepository
 import pa.ac.utp.agrotrackapp.domain.model.User
 import pa.ac.utp.agrotrackapp.domain.repository.AuthRepository
 import pa.ac.utp.agrotrackapp.services.BiometricService
@@ -77,7 +77,7 @@ class PerfilUsuarioActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_perfil_usuario)
 
-        authRepository = SharedPrefsAuthRepository(this)
+        authRepository = SqliteAuthRepository(this)
         currentUser = authRepository.getCurrentUser()
 
         // Bind containers and toolbar
@@ -162,10 +162,14 @@ class PerfilUsuarioActivity : AppCompatActivity() {
             if (!user.profileImagePath.isNullOrEmpty()) {
                 val file = File(user.profileImagePath)
                 if (file.exists()) {
-                    val bitmap = BitmapFactory.decodeFile(file.absolutePath)
-                    ivPerfilPreview.setImageBitmap(bitmap)
-                    ivPerfilPreview.imageTintList = null
-                    imagePathLocal = user.profileImagePath
+                    val bitmap = pa.ac.utp.agrotrackapp.utils.ImageResizer.decodeSampledBitmapFromFile(file.absolutePath, 300, 300)
+                    if (bitmap != null) {
+                        ivPerfilPreview.setImageBitmap(bitmap)
+                        ivPerfilPreview.imageTintList = null
+                        imagePathLocal = user.profileImagePath
+                    } else {
+                        ivPerfilPreview.setImageResource(R.drawable.vaca)
+                    }
                 } else {
                     ivPerfilPreview.setImageResource(R.drawable.vaca)
                 }
@@ -248,24 +252,28 @@ class PerfilUsuarioActivity : AppCompatActivity() {
                 if (requestCode == REQUEST_IMAGE_CAPTURE) {
                     val bitmap = data?.extras?.get("data") as? Bitmap
                     if (bitmap != null) {
-                        destFile.outputStream().use { out ->
-                            bitmap.compress(Bitmap.CompressFormat.PNG, 100, out)
+                        val saved = pa.ac.utp.agrotrackapp.utils.ImageResizer.compressAndSaveBitmap(bitmap, destFile)
+                        if (saved) {
+                            imagePathLocal = destFile.absolutePath
+                            val optBitmap = pa.ac.utp.agrotrackapp.utils.ImageResizer.decodeSampledBitmapFromFile(destFile.absolutePath, 300, 300)
+                            ivPerfilPreview.setImageBitmap(optBitmap ?: bitmap)
+                            ivPerfilPreview.imageTintList = null
+                        } else {
+                            Toast.makeText(this, "Error al optimizar foto de la cámara", Toast.LENGTH_SHORT).show()
                         }
-                        imagePathLocal = destFile.absolutePath
-                        ivPerfilPreview.setImageBitmap(bitmap)
-                        ivPerfilPreview.imageTintList = null
                     }
                 } else if (requestCode == REQUEST_IMAGE_PICK) {
                     val selectedImageUri = data?.data
                     if (selectedImageUri != null) {
-                        contentResolver.openInputStream(selectedImageUri)?.use { inputStream ->
-                            destFile.outputStream().use { outputStream ->
-                                inputStream.copyTo(outputStream)
-                            }
+                        val saved = pa.ac.utp.agrotrackapp.utils.ImageResizer.compressAndSaveImage(this, selectedImageUri, destFile)
+                        if (saved) {
+                            imagePathLocal = destFile.absolutePath
+                            val optBitmap = pa.ac.utp.agrotrackapp.utils.ImageResizer.decodeSampledBitmapFromFile(destFile.absolutePath, 300, 300)
+                            ivPerfilPreview.setImageBitmap(optBitmap)
+                            ivPerfilPreview.imageTintList = null
+                        } else {
+                            Toast.makeText(this, "Error al optimizar foto de la galería", Toast.LENGTH_SHORT).show()
                         }
-                        imagePathLocal = destFile.absolutePath
-                        ivPerfilPreview.setImageURI(selectedImageUri)
-                        ivPerfilPreview.imageTintList = null
                     }
                 }
             } catch (e: Exception) {
@@ -386,6 +394,39 @@ class PerfilUsuarioActivity : AppCompatActivity() {
         alert.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(android.graphics.Color.RED)
     }
 
+    private fun mostrarAvisoPrivacidadTransparencia() {
+        val dialogView = layoutInflater.inflate(R.layout.dialog_aviso_privacidad, null)
+        val dialog = AlertDialog.Builder(this)
+            .setView(dialogView)
+            .setCancelable(true)
+            .create()
+
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+
+        val btnAccept = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnAcceptConsent)
+        val btnDecline = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnDeclineConsent)
+        val tvText = dialogView.findViewById<TextView>(R.id.tvDialogText)
+
+        tvText.text = "De conformidad con la Ley N° 81 de 2019 de la República de Panamá:\n\n" +
+                "1. Responsable del Tratamiento: Los datos son recopilados por la aplicación AgroTrackApp de forma local.\n" +
+                "2. Finalidad del Tratamiento: Gestionar la producción, ganado, inventario y alertas del usuario para fines de monitoreo personal en su finca.\n" +
+                "3. Destinatarios: Los datos no se transfieren a terceros ni se almacenan en servidores externos sin su previa autorización.\n" +
+                "4. Derechos ARCO:\n" +
+                "• Acceso: Puede consultar sus historiales en las pantallas respectivas.\n" +
+                "• Rectificación: Puede corregir sus datos mediante este formulario de perfil.\n" +
+                "• Cancelación: Al pulsar 'Destrucción de Datos', se borrará toda su información sin dejar rastro.\n" +
+                "• Oposición: Puede activar o desactivar el módulo de alertas e inicio biométrico desde los controles en esta pantalla.\n\n" +
+                "Contacto: Para consultas o ejercicio de sus derechos, contacte al responsable de la aplicación en: soporte@agrotrack.pa"
+
+        btnAccept.text = "Entendido"
+        btnAccept.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        btnDecline.visibility = View.GONE
+
+        dialog.show()
+    }
     override fun onBackPressed() {
         if (isEditMode) {
             setEditModeEnabled(false)

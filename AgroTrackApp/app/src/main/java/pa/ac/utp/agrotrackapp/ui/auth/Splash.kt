@@ -8,7 +8,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import pa.ac.utp.agrotrackapp.R
 import pa.ac.utp.agrotrackapp.domain.repository.AuthRepository
-import pa.ac.utp.agrotrackapp.data.auth.SharedPrefsAuthRepository
+import pa.ac.utp.agrotrackapp.data.auth.SqliteAuthRepository
 import pa.ac.utp.agrotrackapp.ui.main.MainActivity
 
 /**
@@ -28,8 +28,7 @@ class Splash : AppCompatActivity() {
         supportActionBar?.hide()
 
         // Inicializamos el repositorio.
-        // SI MIGRARAS A ROOM/DATABASE: aquí instanciarías tu RoomAuthRepository(this).
-        authRepository = SharedPrefsAuthRepository(this)
+        authRepository = SqliteAuthRepository(this)
 
         // Lanzamos una corrutina para controlar el tiempo del Splash (2 segundos)
         lifecycleScope.launch {

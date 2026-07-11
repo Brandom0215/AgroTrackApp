@@ -14,7 +14,7 @@ import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import pa.ac.utp.agrotrackapp.R
-import pa.ac.utp.agrotrackapp.data.auth.SharedPrefsAuthRepository
+import pa.ac.utp.agrotrackapp.data.auth.SqliteAuthRepository
 import pa.ac.utp.agrotrackapp.domain.repository.AuthRepository
 import pa.ac.utp.agrotrackapp.services.BiometricService
 import pa.ac.utp.agrotrackapp.ui.main.MainActivity
@@ -48,7 +48,7 @@ class LoginActivity : AppCompatActivity() {
         tvRecuperarContrasena = findViewById(R.id.tvRecuperarContrasena)
         btnBiometria = findViewById(R.id.btnBiometria)
 
-        authRepository = SharedPrefsAuthRepository(this)
+        authRepository = SqliteAuthRepository(this)
         biometricService = BiometricService(this)
 
         // Configuración de botones
@@ -185,5 +185,47 @@ class LoginActivity : AppCompatActivity() {
         }
         
         builder.show()
+    }
+    private fun verificarConsentimientoPrivacidad() {
+        val prefs = getSharedPreferences("GanaDEXAuthPrefs", MODE_PRIVATE)
+        val consentido = prefs.getBoolean("privacy_policy_accepted", false)
+        if (!consentido) {
+            mostrarDialogoPrivacidad(obligatorio = true)
+        }
+    }
+
+    private fun mostrarDialogoPrivacidad(obligatorio: Boolean) {
+        val dialogView = layoutInflater.inflate(R.layout.dialog_aviso_privacidad, null)
+        val dialog = AlertDialog.Builder(this)
+            .setView(dialogView)
+            .setCancelable(!obligatorio)
+            .create()
+
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+
+        val btnAccept = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnAcceptConsent)
+        val btnDecline = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnDeclineConsent)
+
+        if (obligatorio) {
+            btnDecline.text = "Salir"
+        } else {
+            btnDecline.text = "Cerrar"
+        }
+
+        btnAccept.setOnClickListener {
+            val prefs = getSharedPreferences("GanaDEXAuthPrefs", MODE_PRIVATE)
+            prefs.edit().putBoolean("privacy_policy_accepted", true).apply()
+            dialog.dismiss()
+        }
+
+        btnDecline.setOnClickListener {
+            if (obligatorio) {
+                finishAffinity()
+            } else {
+                dialog.dismiss()
+            }
+        }
+
+        dialog.show()
     }
 }

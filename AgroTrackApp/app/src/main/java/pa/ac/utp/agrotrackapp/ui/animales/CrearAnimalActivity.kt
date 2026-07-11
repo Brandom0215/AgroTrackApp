@@ -15,7 +15,8 @@ import com.google.android.material.card.MaterialCardView
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import pa.ac.utp.agrotrackapp.R
-import pa.ac.utp.agrotrackapp.data.animal.SharedPrefsAnimalRepository
+import pa.ac.utp.agrotrackapp.data.animal.SqliteAnimalRepository
+import pa.ac.utp.agrotrackapp.data.produccion.SqliteProduccionRepository
 import pa.ac.utp.agrotrackapp.domain.model.Animal
 import pa.ac.utp.agrotrackapp.domain.repository.AnimalRepository
 import java.io.File
@@ -74,7 +75,7 @@ class CrearAnimalActivity : AppCompatActivity() {
         setContentView(R.layout.activity_crear_animal)
 
         // Inicializamos repositorio
-        animalRepository = SharedPrefsAnimalRepository(this)
+        animalRepository = SqliteAnimalRepository(this)
 
         // Bind Views de TextInputLayout
         tilNumeroAnimal = findViewById(R.id.tilNumeroAnimal)
@@ -172,26 +173,30 @@ class CrearAnimalActivity : AppCompatActivity() {
                 if (requestCode == REQUEST_IMAGE_CAPTURE) {
                     val bitmap = data?.extras?.get("data") as? Bitmap
                     if (bitmap != null) {
-                        tempFile.outputStream().use { out ->
-                            bitmap.compress(Bitmap.CompressFormat.PNG, 100, out)
+                        val saved = pa.ac.utp.agrotrackapp.utils.ImageResizer.compressAndSaveBitmap(bitmap, tempFile)
+                        if (saved) {
+                            imagenPathLocal = tempFile.absolutePath
+                            ivAnimalPreview.visibility = View.VISIBLE
+                            val optBitmap = pa.ac.utp.agrotrackapp.utils.ImageResizer.decodeSampledBitmapFromFile(tempFile.absolutePath, 400, 400)
+                            ivAnimalPreview.setImageBitmap(optBitmap ?: bitmap)
+                        } else {
+                            Toast.makeText(this, "Error al optimizar imagen de la cámara", Toast.LENGTH_SHORT).show()
                         }
-                        imagenPathLocal = tempFile.absolutePath
-                        ivAnimalPreview.visibility = View.VISIBLE
-                        ivAnimalPreview.setImageBitmap(bitmap)
                     } else {
                         Toast.makeText(this, "No se recibió imagen de la cámara", Toast.LENGTH_SHORT).show()
                     }
                 } else if (requestCode == REQUEST_IMAGE_PICK) {
                     val selectedImageUri = data?.data
                     if (selectedImageUri != null) {
-                        contentResolver.openInputStream(selectedImageUri)?.use { inputStream ->
-                            tempFile.outputStream().use { outputStream ->
-                                inputStream.copyTo(outputStream)
-                            }
+                        val saved = pa.ac.utp.agrotrackapp.utils.ImageResizer.compressAndSaveImage(this, selectedImageUri, tempFile)
+                        if (saved) {
+                            imagenPathLocal = tempFile.absolutePath
+                            ivAnimalPreview.visibility = View.VISIBLE
+                            val optBitmap = pa.ac.utp.agrotrackapp.utils.ImageResizer.decodeSampledBitmapFromFile(tempFile.absolutePath, 400, 400)
+                            ivAnimalPreview.setImageBitmap(optBitmap)
+                        } else {
+                            Toast.makeText(this, "Error al optimizar imagen de la galería", Toast.LENGTH_SHORT).show()
                         }
-                        imagenPathLocal = tempFile.absolutePath
-                        ivAnimalPreview.visibility = View.VISIBLE
-                        ivAnimalPreview.setImageURI(selectedImageUri)
                     }
                 }
             } catch (e: Exception) {
@@ -297,7 +302,12 @@ class CrearAnimalActivity : AppCompatActivity() {
             if (file.exists()) {
                 imagenPathLocal = animal.imagenPath
                 ivAnimalPreview.visibility = View.VISIBLE
-                ivAnimalPreview.setImageURI(Uri.fromFile(file))
+                val bitmap = pa.ac.utp.agrotrackapp.utils.ImageResizer.decodeSampledBitmapFromFile(file.absolutePath, 400, 400)
+                if (bitmap != null) {
+                    ivAnimalPreview.setImageBitmap(bitmap)
+                } else {
+                    ivAnimalPreview.setImageURI(Uri.fromFile(file))
+                }
             }
         }
     }
@@ -453,7 +463,7 @@ class CrearAnimalActivity : AppCompatActivity() {
                 .setTitle("Criterio de Producción de Leche")
                 .setMessage(msg)
                 .setPositiveButton("Agregar a Producción") { _, _ ->
-                    val prodRepository = pa.ac.utp.agrotrackapp.data.produccion.SharedPrefsProduccionRepository(this)
+                    val prodRepository = SqliteProduccionRepository(this)
                     val record = pa.ac.utp.agrotrackapp.domain.model.LecheRecord(
                         numeroAnimal = arete,
                         fechaRegistro = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(Date()),
@@ -480,7 +490,7 @@ class CrearAnimalActivity : AppCompatActivity() {
                 .setTitle("Criterio de Producción de Carne")
                 .setMessage(msg)
                 .setPositiveButton("Agregar a Producción") { _, _ ->
-                    val prodRepository = pa.ac.utp.agrotrackapp.data.produccion.SharedPrefsProduccionRepository(this)
+                    val prodRepository = SqliteProduccionRepository(this)
                     val record = pa.ac.utp.agrotrackapp.domain.model.CarneRecord(
                         numeroAnimal = arete,
                         raza = animal.raza,

@@ -15,7 +15,7 @@ import com.google.android.material.card.MaterialCardView
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import pa.ac.utp.agrotrackapp.R
-import pa.ac.utp.agrotrackapp.data.inventario.SharedPrefsInventarioRepository
+import pa.ac.utp.agrotrackapp.data.inventario.SqliteInventarioRepository
 import pa.ac.utp.agrotrackapp.domain.model.InventarioItem
 import pa.ac.utp.agrotrackapp.domain.repository.InventarioRepository
 import java.io.File
@@ -74,7 +74,7 @@ class CrearInventarioActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_crear_inventario)
 
-        inventarioRepository = SharedPrefsInventarioRepository(this)
+        inventarioRepository = SqliteInventarioRepository(this)
 
         // Bind views
         tvTitle = findViewById(R.id.tvTitle)
