@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="24dp"
+    app:cardElevation="0dp"
+    app:strokeWidth="0dp"
+    app:cardBackgroundColor="@color/md_theme_light_background">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp"
+        android:gravity="center_horizontal">
+
+        <!-- Logo -->
+        <ImageView
+            android:id="@+id/ivDialogLogo"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@drawable/icono_ganadex"
+            android:scaleType="fitCenter"
+            android:layout_marginTop="8dp"
+            android:contentDescription="AgroTrack Logo" />
+
+        <!-- Title -->
+        <TextView
+            android:id="@+id/tvDialogTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Aviso de Privacidad"
+            android:textColor="@color/md_theme_light_primary"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:layout_marginTop="16dp"
+            android:gravity="center" />
+
+        <!-- Subtitle -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cumplimiento Ley N° 81 - República de Panamá"
+            android:textColor="@color/text_gray"
+            android:textSize="12sp"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="16dp"
+            android:gravity="center" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/divider"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Scrollable content -->
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="220dp"
+            android:fillViewport="true"
+            android:layout_marginBottom="20dp">
+
+            <TextView
+                android:id="@+id/tvDialogText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:textColor="@color/md_theme_light_onBackground"
+                android:lineSpacingMultiplier="1.25"
+                android:text="En cumplimiento de la Ley N° 81 de 26 de marzo de 2019 de la República de Panamá, le informamos que esta aplicación recopila y procesa de forma estrictamente local datos personales y de producción/monitoreo de su finca.\n\nPrincipios aplicados:\n• Lealtad y Finalidad: Sus datos se procesan únicamente para el monitoreo y gestión de su finca.\n• Proporcionalidad: Solo se solicitan datos estrictamente necesarios.\n• Seguridad: Su información se almacena localmente en la base de datos segura de su dispositivo.\n• Transparencia y Derechos ARCO: Usted tiene derecho a acceder, rectificar, cancelar (eliminar) u oponerse al tratamiento de sus datos en cualquier momento desde la pantalla de perfil.\n\nAl hacer clic en Aceptar, usted otorga su consentimiento expreso e inequívoco para el tratamiento de sus datos en los términos descritos." />
+        </androidx.core.widget.NestedScrollView>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/divider"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Action Buttons -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnAcceptConsent"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:text="Aceptar y Continuar"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:cornerRadius="16dp"
+            app:backgroundTint="@color/md_theme_light_primary"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="8dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnDeclineConsent"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:text="Salir"
+            android:textSize="14sp"
+            android:textColor="@color/status_red" />
+
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

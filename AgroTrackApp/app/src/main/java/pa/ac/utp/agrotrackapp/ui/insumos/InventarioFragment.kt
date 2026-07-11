@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageButton
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
@@ -78,6 +79,20 @@ class InventarioFragment : Fragment(R.layout.fragment_inventario) {
     private fun cargarDatos() {
         val items = inventarioRepository.getItems()
         
+        val tvEmpty = view?.findViewById<TextView>(R.id.tvEmptyInventario)
+        val rvInv = view?.findViewById<View>(R.id.recyclerViewInventario)
+        val rvHistorial = view?.findViewById<View>(R.id.recyclerViewHistorial)
+
+        if (items.isEmpty()) {
+            tvEmpty?.visibility = View.VISIBLE
+            rvInv?.visibility = View.GONE
+            rvHistorial?.visibility = View.GONE
+        } else {
+            tvEmpty?.visibility = View.GONE
+            rvInv?.visibility = View.VISIBLE
+            rvHistorial?.visibility = View.VISIBLE
+        }
+
         // Catálogo ordenado por nombre (por defecto)
         adapter.updateData(items)
 

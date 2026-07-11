@@ -160,9 +160,10 @@
                             android:layout_centerVertical="true">
 
                             <TextView
+                                android:id="@+id/tvActiveAnimalsCount"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="480"
+                                android:text="0"
                                 android:textSize="36sp"
                                 android:textColor="@color/md_theme_light_primary"
                                 android:textStyle="bold"
@@ -212,9 +213,10 @@
                                     android:layout_height="8dp"
                                     android:background="@drawable/punto_verde" />
                                 <TextView
+                                    android:id="@+id/tvVacasCount"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text=" Vacas: 280"
+                                    android:text=" Hembras: 0"
                                     android:textSize="11sp"
                                     android:textColor="@color/text_gray" />
                             </LinearLayout>
@@ -231,9 +233,10 @@
                                     android:layout_height="8dp"
                                     android:background="@drawable/punto_marron" />
                                 <TextView
+                                    android:id="@+id/tvTorosCount"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text=" Toros: 110"
+                                    android:text=" Machos: 0"
                                     android:textSize="11sp"
                                     android:textColor="@color/text_gray" />
                             </LinearLayout>
@@ -249,9 +252,10 @@
                                     android:layout_height="8dp"
                                     android:background="@drawable/punto_melocoton" />
                                 <TextView
+                                    android:id="@+id/tvTernerosCount"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text=" Terneros/Nov: 90"
+                                    android:text=" Total Registros: 0"
                                     android:textSize="11sp"
                                     android:textColor="@color/text_gray" />
                             </LinearLayout>
@@ -289,6 +293,7 @@
 
                     <!-- Alertas del Día en Tarjeta Pill -->
                     <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/cardAlertasHoy"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
@@ -312,9 +317,10 @@
                                 android:contentDescription="Alerta" />
 
                             <TextView
+                                android:id="@+id/tvAlertsCountHome"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="3 animales pendientes de vacunación hoy"
+                                android:text="Sin alertas pendientes hoy"
                                 android:textColor="#E65100"
                                 android:textSize="13sp"
                                 android:textStyle="bold"
@@ -324,6 +330,7 @@
 
                     <!-- Estado de Cuarentena en Tarjeta Pill -->
                     <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/cardCuarentenaHome"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
@@ -347,9 +354,10 @@
                                 android:contentDescription="Alerta cuarentena" />
 
                             <TextView
+                                android:id="@+id/tvCuarentenaCountHome"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="4 animales bajo tratamiento o aislados"
+                                android:text="Sin animales bajo tratamiento o aislados"
                                 android:textColor="@color/status_red"
                                 android:textSize="13sp"
                                 android:textStyle="bold"
@@ -407,9 +415,10 @@
                                 android:textColor="@color/text_gray" />
 
                             <TextView
+                                android:id="@+id/tvProduccionHome"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="4,850 Ltrs"
+                                android:text="0 Ltrs"
                                 android:textSize="22sp"
                                 android:textStyle="bold"
                                 android:textColor="@color/md_theme_light_primary"
@@ -456,9 +465,10 @@
                             android:layout_marginStart="8dp" />
 
                         <TextView
+                            android:id="@+id/tvGdpHome"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text=" +1.2 kg/día"
+                            android:text=" 0.0 kg/día"
                             android:textColor="@color/md_theme_light_primary"
                             android:textSize="14sp"
                             android:textStyle="bold" />
@@ -507,13 +517,14 @@
                             android:padding="12dp"
                             android:gravity="center_vertical">
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Tasa de mortalidad: 1.2% 📉"
-                                android:textColor="@color/md_theme_light_primary"
-                                android:textSize="15sp"
-                                android:textStyle="bold" />
+                             <TextView
+                                 android:id="@+id/tvMortalidadHome"
+                                 android:layout_width="wrap_content"
+                                 android:layout_height="wrap_content"
+                                 android:text="Tasa de mortalidad: 0.0% 📉"
+                                 android:textColor="@color/md_theme_light_primary"
+                                 android:textSize="15sp"
+                                 android:textStyle="bold" />
 
                         </LinearLayout>
                     </com.google.android.material.card.MaterialCardView>
@@ -555,6 +566,7 @@
 
                     <!-- Alerta Roja: Concentrado -->
                     <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/cardCriticalInv1"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
@@ -576,9 +588,10 @@
                                 android:background="@color/status_red" />
                             
                             <TextView
+                                android:id="@+id/tvCriticalInv1"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Concentrado Iniciador: Solo quedan 2 sacos"
+                                android:text="Inventario en niveles óptimos"
                                 android:textColor="@color/status_red"
                                 android:textSize="13sp"
                                 android:textStyle="bold"
@@ -588,6 +601,7 @@
 
                     <!-- Alerta Amarilla: Vacunas -->
                     <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/cardCriticalInv2"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
@@ -609,9 +623,10 @@
                                 android:background="#F57F17" />
                             
                             <TextView
+                                android:id="@+id/tvCriticalInv2"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Vacunas Fiebre Aftosa: Stock bajo (5 dosis)"
+                                android:text="No hay alertas preventivas"
                                 android:textColor="#F57F17"
                                 android:textSize="13sp"
                                 android:textStyle="bold"
@@ -680,14 +695,15 @@
                                     android:textColor="@color/md_theme_light_primary"
                                     android:textStyle="bold" />
 
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="$4,850.00"
-                                    android:textSize="18sp"
-                                    android:textStyle="bold"
-                                    android:textColor="@color/md_theme_light_primary"
-                                    android:layout_marginTop="4dp" />
+                                 <TextView
+                                     android:id="@+id/tvIngresosHome"
+                                     android:layout_width="wrap_content"
+                                     android:layout_height="wrap_content"
+                                     android:text="$0.00"
+                                     android:textSize="18sp"
+                                     android:textStyle="bold"
+                                     android:textColor="@color/md_theme_light_primary"
+                                     android:layout_marginTop="4dp" />
                             </LinearLayout>
                         </com.google.android.material.card.MaterialCardView>
 
@@ -718,9 +734,10 @@
                                     android:textStyle="bold" />
 
                                 <TextView
+                                    android:id="@+id/tvGastosHome"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="$2,120.00"
+                                    android:text="$0.00"
                                     android:textSize="18sp"
                                     android:textStyle="bold"
                                     android:textColor="@color/status_red"
@@ -741,28 +758,31 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content">
                             <TextView
+                                android:id="@+id/tvBalanceHome"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Balance neto: +$2,730.00"
+                                android:text="Balance neto: $0.00"
                                 android:textSize="12sp"
                                 android:textStyle="bold"
                                 android:textColor="@color/md_theme_light_primary" />
                             <TextView
+                                android:id="@+id/tvGastadoPercentHome"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentEnd="true"
-                                android:text="43% Gastado"
+                                android:text="0% Gastado"
                                 android:textSize="11sp"
                                 android:textColor="@color/text_gray" />
                         </RelativeLayout>
 
                         <com.google.android.material.progressindicator.LinearProgressIndicator
+                            android:id="@+id/progressBalanceHome"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="6dp"
                             app:trackColor="#E0E0E0"
                             app:indicatorColor="@color/md_theme_light_primary"
-                            android:value="57"
+                            android:value="0"
                             app:trackCornerRadius="4dp"
                             app:trackThickness="6dp"/>
                     </LinearLayout>
