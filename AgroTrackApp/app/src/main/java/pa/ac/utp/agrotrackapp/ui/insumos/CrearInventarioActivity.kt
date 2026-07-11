@@ -50,6 +50,9 @@ class CrearInventarioActivity : AppCompatActivity() {
 
     private lateinit var tilCosto: TextInputLayout
     private lateinit var etCosto: TextInputEditText
+
+    private lateinit var tilPrecio: TextInputLayout
+    private lateinit var etPrecio: TextInputEditText
     
     private lateinit var tilLimite: TextInputLayout
     private lateinit var etLimite: TextInputEditText
@@ -92,6 +95,9 @@ class CrearInventarioActivity : AppCompatActivity() {
 
         tilCosto = findViewById(R.id.tilCosto)
         etCosto = findViewById(R.id.etCosto)
+
+        tilPrecio = findViewById(R.id.tilPrecio)
+        etPrecio = findViewById(R.id.etPrecio)
         
         tilLimite = findViewById(R.id.tilLimite)
         etLimite = findViewById(R.id.etLimite)
@@ -173,6 +179,9 @@ class CrearInventarioActivity : AppCompatActivity() {
 
         val costStr = if (item.costo % 1.0 == 0.0) item.costo.toInt().toString() else item.costo.toString()
         etCosto.setText(costStr)
+
+        val priceStr = if (item.precio % 1.0 == 0.0) item.precio.toInt().toString() else item.precio.toString()
+        etPrecio.setText(priceStr)
 
         updateDynamicFieldsVisibility(item.tipo)
 
@@ -264,6 +273,7 @@ class CrearInventarioActivity : AppCompatActivity() {
         val tipoOtro = etTipoOtro.text.toString().trim()
         val stockStr = etStock.text.toString().trim()
         val costoStr = etCosto.text.toString().trim()
+        val precioStr = etPrecio.text.toString().trim()
         val limiteStr = etLimite.text.toString().trim()
         val unidad = etUnidad.text.toString().trim()
 
@@ -313,6 +323,18 @@ class CrearInventarioActivity : AppCompatActivity() {
             tilCosto.error = null
         }
 
+        if (precioStr.isEmpty()) {
+            tilPrecio.error = "Ingrese el precio de venta"
+            return
+        }
+        val precio = precioStr.toDoubleOrNull()
+        if (precio == null || precio < 0) {
+            tilPrecio.error = "Ingrese un precio unitario válido (>= 0)"
+            return
+        } else {
+            tilPrecio.error = null
+        }
+
         var limite: Double? = null
         if (tipo == "Alimento" || tipo == "Medicina") {
             if (limiteStr.isNotEmpty()) {
@@ -352,6 +374,7 @@ class CrearInventarioActivity : AppCompatActivity() {
             limiteNotificacion = limite,
             unidad = unidad,
             costo = costo,
+            precio = precio,
             fechaRegistro = fecha
         )
 

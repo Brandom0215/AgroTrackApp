@@ -16,9 +16,6 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import pa.ac.utp.agrotrackapp.R
 import pa.ac.utp.agrotrackapp.data.auth.SqliteAuthRepository
-import pa.ac.utp.agrotrackapp.data.database.DatabaseHelper
-import pa.ac.utp.agrotrackapp.data.alertas.AlertManager
-import com.google.android.material.switchmaterial.SwitchMaterial
 import pa.ac.utp.agrotrackapp.domain.model.User
 import pa.ac.utp.agrotrackapp.domain.repository.AuthRepository
 import pa.ac.utp.agrotrackapp.services.BiometricService
@@ -69,10 +66,6 @@ class PerfilUsuarioActivity : AppCompatActivity() {
     
     private lateinit var btnGuardarPerfil: MaterialButton
     private lateinit var btnDestruirDatos: MaterialButton
-
-    private lateinit var swAlertas: SwitchMaterial
-    private lateinit var swBiometrico: SwitchMaterial
-    private lateinit var btnAvisoPrivacidad: MaterialButton
 
     companion object {
         private const val REQUEST_IMAGE_CAPTURE = 3001
@@ -125,26 +118,6 @@ class PerfilUsuarioActivity : AppCompatActivity() {
         
         btnGuardarPerfil = findViewById(R.id.btnGuardarPerfil)
         btnDestruirDatos = findViewById(R.id.btnDestruirDatos)
-        swAlertas = findViewById(R.id.swAlertas)
-        swBiometrico = findViewById(R.id.swBiometrico)
-        btnAvisoPrivacidad = findViewById(R.id.btnAvisoPrivacidad)
-
-        val authPrefs = getSharedPreferences("GanaDEXAuthPrefs", MODE_PRIVATE)
-        swAlertas.isChecked = authPrefs.getBoolean("alerts_enabled", true)
-        swBiometrico.isChecked = authPrefs.getBoolean("biometric_enabled", true)
-
-        swAlertas.setOnCheckedChangeListener { _, isChecked ->
-            authPrefs.edit().putBoolean("alerts_enabled", isChecked).apply()
-            AlertManager(this).checkAlerts()
-        }
-
-        swBiometrico.setOnCheckedChangeListener { _, isChecked ->
-            authPrefs.edit().putBoolean("biometric_enabled", isChecked).apply()
-        }
-
-        btnAvisoPrivacidad.setOnClickListener {
-            mostrarAvisoPrivacidadTransparencia()
-        }
 
         // Setup back button
         findViewById<View>(R.id.btnBack).setOnClickListener {
@@ -385,21 +358,13 @@ class PerfilUsuarioActivity : AppCompatActivity() {
                 "• Todas las fotos de perfil y productos\n\n" +
                 "¿Está completamente seguro de que desea proceder?")
         builder.setPositiveButton("ELIMINAR TODO") { dialog, _ ->
-            // 1. Borrar SharedPreferences
-            getSharedPreferences("GanaDEXAuthPrefs", MODE_PRIVATE).edit().clear().apply()
-            getSharedPreferences("GanaDEXInventarioPrefs", MODE_PRIVATE).edit().clear().apply()
-            getSharedPreferences("AlertManagerState", MODE_PRIVATE).edit().clear().apply()
-            getSharedPreferences("GanaDEXAnimalPrefs", MODE_PRIVATE).edit().clear().apply()
-            getSharedPreferences("GanaDEXMortalidadPrefs", MODE_PRIVATE).edit().clear().apply()
-            getSharedPreferences("GanaDEXProduccionPrefs", MODE_PRIVATE).edit().clear().apply()
-            getSharedPreferences("AgroTrackAlertasPrefs", MODE_PRIVATE).edit().clear().apply()
+            // 1. Borrar SharedPreferences de Autenticación
+            val authPrefs = getSharedPreferences("GanaDEXAuthPrefs", MODE_PRIVATE)
+            authPrefs.edit().clear().apply()
 
-            // 2. Borrar todos los registros en base de datos SQLite (Derecho de Cancelación ARCO)
-            try {
-                DatabaseHelper(this).clearAllTables()
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
+            // 2. Borrar SharedPreferences de Inventario
+            val inventarioPrefs = getSharedPreferences("GanaDEXInventarioPrefs", MODE_PRIVATE)
+            inventarioPrefs.edit().clear().apply()
 
             // 3. Borrar todos los archivos locales del directorio de la app (fotos, etc.)
             val dir = filesDir
@@ -462,7 +427,6 @@ class PerfilUsuarioActivity : AppCompatActivity() {
 
         dialog.show()
     }
-
     override fun onBackPressed() {
         if (isEditMode) {
             setEditModeEnabled(false)

@@ -51,8 +51,6 @@ class LoginActivity : AppCompatActivity() {
         authRepository = SqliteAuthRepository(this)
         biometricService = BiometricService(this)
 
-        verificarConsentimientoPrivacidad()
-
         // Configuración de botones
         btnIngresar.setOnClickListener {
             realizarLogin()
@@ -118,13 +116,6 @@ class LoginActivity : AppCompatActivity() {
         val lastUsername = authRepository.getLastUsername()
         if (lastUsername.isNullOrEmpty()) {
             Toast.makeText(this, "Inicie sesión con contraseña al menos una vez antes de usar huella dactilar.", Toast.LENGTH_LONG).show()
-            return
-        }
-
-        val prefs = getSharedPreferences("GanaDEXAuthPrefs", MODE_PRIVATE)
-        val biometricEnabled = prefs.getBoolean("biometric_enabled", true)
-        if (!biometricEnabled) {
-            Toast.makeText(this, "La autenticación biométrica está desactivada en la configuración.", Toast.LENGTH_LONG).show()
             return
         }
 
@@ -195,7 +186,6 @@ class LoginActivity : AppCompatActivity() {
         
         builder.show()
     }
-
     private fun verificarConsentimientoPrivacidad() {
         val prefs = getSharedPreferences("GanaDEXAuthPrefs", MODE_PRIVATE)
         val consentido = prefs.getBoolean("privacy_policy_accepted", false)

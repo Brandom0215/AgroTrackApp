@@ -115,6 +115,7 @@ class SqliteInventarioRepository(private val context: Context) : InventarioRepos
             limiteNotificacion = limiteNotificacion,
             unidad = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_INV_UNIDAD)),
             costo = cursor.getDouble(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_INV_COSTO)),
+            precio = cursor.getDouble(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_INV_PRECIO)),
             fechaRegistro = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_INV_FECHA))
         )
     }
@@ -130,6 +131,7 @@ class SqliteInventarioRepository(private val context: Context) : InventarioRepos
             put(DatabaseHelper.COL_INV_LIMITE, item.limiteNotificacion ?: -1.0)
             put(DatabaseHelper.COL_INV_UNIDAD, item.unidad)
             put(DatabaseHelper.COL_INV_COSTO, item.costo)
+            put(DatabaseHelper.COL_INV_PRECIO, item.precio)
             put(DatabaseHelper.COL_INV_FECHA, item.fechaRegistro)
         }
     }

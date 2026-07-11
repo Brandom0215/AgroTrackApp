@@ -17,6 +17,7 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import pa.ac.utp.agrotrackapp.R
 import pa.ac.utp.agrotrackapp.data.animal.SqliteAnimalRepository
+import pa.ac.utp.agrotrackapp.data.produccion.SqliteProduccionRepository
 import pa.ac.utp.agrotrackapp.domain.model.Animal
 import pa.ac.utp.agrotrackapp.domain.repository.AnimalRepository
 import pa.ac.utp.agrotrackapp.services.BluetoothRfidService
@@ -864,7 +865,7 @@ class CrearAnimalActivity : AppCompatActivity(), BluetoothRfidService.BluetoothR
                 .setTitle("Criterio de Producción de Leche")
                 .setMessage(msg)
                 .setPositiveButton("Agregar a Producción") { _, _ ->
-                    val prodRepository = pa.ac.utp.agrotrackapp.data.produccion.SqliteProduccionRepository(this)
+                    val prodRepository = SqliteProduccionRepository(this)
                     val record = pa.ac.utp.agrotrackapp.domain.model.LecheRecord(
                         numeroAnimal = arete,
                         fechaRegistro = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(Date()),
@@ -891,7 +892,7 @@ class CrearAnimalActivity : AppCompatActivity(), BluetoothRfidService.BluetoothR
                 .setTitle("Criterio de Producción de Carne")
                 .setMessage(msg)
                 .setPositiveButton("Agregar a Producción") { _, _ ->
-                    val prodRepository = pa.ac.utp.agrotrackapp.data.produccion.SqliteProduccionRepository(this)
+                    val prodRepository = SqliteProduccionRepository(this)
                     val record = pa.ac.utp.agrotrackapp.domain.model.CarneRecord(
                         numeroAnimal = arete,
                         raza = animal.raza,

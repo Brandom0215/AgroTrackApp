@@ -30,76 +30,38 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:text="Alertas"
+                android:text="Alertas ⚠️"
                 android:textColor="?attr/colorOnPrimary"
                 android:textStyle="bold"
                 android:textSize="18sp" />
-            <ImageButton
-                android:id="@+id/btnHistorial"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:src="@drawable/ic_produccion"
-                app:tint="?attr/colorOnPrimary" />
         </RelativeLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
-    <LinearLayout
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-        <!-- Banner de historial -->
         <LinearLayout
-            android:id="@+id/llVolverAlertas"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="12dp"
-            android:gravity="center_vertical"
-            android:background="?attr/selectableItemBackground"
-            android:clickable="true"
-            android:focusable="true"
-            android:visibility="gone">
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="?attr/homeAsUpIndicator"
-                app:tint="?attr/colorPrimary" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:text="Volver a Alertas"
-                android:textColor="?attr/colorPrimary"
-                android:textStyle="bold"
-                android:textSize="16sp" />
-        </LinearLayout>
-
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rvAlertas"
+            android:orientation="vertical"
+            android:padding="16dp">
+            
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:clipToPadding="false"
-                android:padding="16dp" />
-
-            <TextView
-                android:id="@+id/tvEmptyAlertas"
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="No hay alertas activas en este momento"
-                android:textColor="?android:textColorSecondary"
-                android:visibility="gone" />
+                app:cardCornerRadius="16dp"
+                app:cardBackgroundColor="?attr/colorSurface">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Evento: Lorenzo" android:textStyle="bold" android:textColor="?android:textColorPrimary" android:textSize="16sp"/>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Para mañana está programado el evento de Lorenzo." android:textColor="?android:textColorSecondary" android:layout_marginTop="8dp"/>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
 
-        </FrameLayout>
-    </LinearLayout>
-
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

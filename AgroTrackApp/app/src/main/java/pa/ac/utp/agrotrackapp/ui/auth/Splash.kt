@@ -28,7 +28,6 @@ class Splash : AppCompatActivity() {
         supportActionBar?.hide()
 
         // Inicializamos el repositorio.
-        // SI MIGRARAS A ROOM/DATABASE: aquí instanciarías tu RoomAuthRepository(this).
         authRepository = SqliteAuthRepository(this)
 
         // Lanzamos una corrutina para controlar el tiempo del Splash (2 segundos)
