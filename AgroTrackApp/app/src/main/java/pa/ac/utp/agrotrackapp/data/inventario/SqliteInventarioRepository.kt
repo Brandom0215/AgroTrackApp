@@ -16,11 +16,11 @@ class SqliteInventarioRepository(private val context: Context) : InventarioRepos
         val items = getItems()
         if (items.isEmpty()) {
             val initialItems = listOf(
-                InventarioItem("1", "LEVADURA", "Otro", "Levadura para ganado", null, 180.0, null, "Litros", 45.0, "01/07/2026 09:30"),
-                InventarioItem("2", "SAL MINERAL", "Alimento", null, null, 60.0, 10.0, "Sacos", 25.0, "02/07/2026 10:15"),
-                InventarioItem("3", "AFRECHO DE CERVEZA", "Alimento", null, null, 320.0, 50.0, "Sacos", 80.0, "03/07/2026 11:00"),
-                InventarioItem("4", "GALLINAZA", "Alimento", null, null, 150.0, 20.0, "Sacos", 15.0, "04/07/2026 14:20"),
-                InventarioItem("5", "MAÍZ MOLIDO", "Alimento", null, null, 200.0, 30.0, "Sacos", 35.0, "05/07/2026 16:45")
+                InventarioItem("1", "LEVADURA", "Otro", "Levadura para ganado", null, 180.0, null, "Litros", 45.0, 60.0, "01/07/2026 09:30"),
+                InventarioItem("2", "SAL MINERAL", "Alimento", null, null, 60.0, 10.0, "Sacos", 25.0, 35.0, "02/07/2026 10:15"),
+                InventarioItem("3", "AFRECHO DE CERVEZA", "Alimento", null, null, 320.0, 50.0, "Sacos", 80.0, 100.0, "03/07/2026 11:00"),
+                InventarioItem("4", "GALLINAZA", "Alimento", null, null, 150.0, 20.0, "Sacos", 15.0, 20.0, "04/07/2026 14:20"),
+                InventarioItem("5", "MAÍZ MOLIDO", "Alimento", null, null, 200.0, 30.0, "Sacos", 35.0, 45.0, "05/07/2026 16:45")
             )
             for (item in initialItems) {
                 saveItem(item)
@@ -130,6 +130,7 @@ class SqliteInventarioRepository(private val context: Context) : InventarioRepos
             limiteNotificacion = limiteNotificacion,
             unidad = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_INV_UNIDAD)),
             costo = cursor.getDouble(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_INV_COSTO)),
+            precio = cursor.getDouble(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_INV_PRECIO)),
             fechaRegistro = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_INV_FECHA))
         )
     }
@@ -145,6 +146,7 @@ class SqliteInventarioRepository(private val context: Context) : InventarioRepos
             put(DatabaseHelper.COL_INV_LIMITE, item.limiteNotificacion ?: -1.0)
             put(DatabaseHelper.COL_INV_UNIDAD, item.unidad)
             put(DatabaseHelper.COL_INV_COSTO, item.costo)
+            put(DatabaseHelper.COL_INV_PRECIO, item.precio)
             put(DatabaseHelper.COL_INV_FECHA, item.fechaRegistro)
         }
     }

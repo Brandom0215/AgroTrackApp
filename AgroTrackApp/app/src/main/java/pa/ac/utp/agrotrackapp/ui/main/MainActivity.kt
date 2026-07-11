@@ -13,7 +13,7 @@ import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import pa.ac.utp.agrotrackapp.R
 import pa.ac.utp.agrotrackapp.domain.repository.AuthRepository
-import pa.ac.utp.agrotrackapp.data.auth.SqliteAuthRepository
+import pa.ac.utp.agrotrackapp.data.auth.SharedPrefsAuthRepository
 import pa.ac.utp.agrotrackapp.ui.auth.LoginActivity
 import pa.ac.utp.agrotrackapp.ui.finca.FincaFragment
 import pa.ac.utp.agrotrackapp.ui.animales.AnimalesFragment
@@ -38,7 +38,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         // Inicializamos el repositorio de datos (desacoplado)
-        authRepository = SqliteAuthRepository(this)
+        authRepository = SharedPrefsAuthRepository(this)
 
         drawerLayout = findViewById(R.id.drawerLayout)
         bottomNavigation = findViewById(R.id.bottom_navigation)
@@ -51,12 +51,7 @@ class MainActivity : AppCompatActivity() {
         actualizarHeaderUsuario()
 
         if (savedInstanceState == null) {
-            val openAlertas = intent.getBooleanExtra("OPEN_ALERTAS", false)
-            if (openAlertas) {
-                bottomNavigation.selectedItemId = R.id.nav_alertas
-            } else {
-                bottomNavigation.selectedItemId = R.id.nav_finca
-            }
+            bottomNavigation.selectedItemId = R.id.nav_finca
         }
     }
 
@@ -136,41 +131,20 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun navigateToTab(itemId: Int) {
-        val bottomIds = listOf(R.id.nav_finca, R.id.nav_animales, R.id.nav_produccion, R.id.nav_alertas)
-        
-        if (itemId in bottomIds) {
-            bottomNavigation.menu.setGroupCheckable(0, true, true)
-            if (bottomNavigation.selectedItemId == itemId) {
-                val fragment: Fragment = when (itemId) {
-                    R.id.nav_finca -> FincaFragment()
-                    R.id.nav_animales -> AnimalesFragment()
-                    R.id.nav_produccion -> ProduccionFragment()
-                    R.id.nav_alertas -> AlertasFragment()
-                    else -> FincaFragment()
-                }
-                supportFragmentManager.beginTransaction()
-                    .replace(R.id.fragment_container, fragment)
-                    .commit()
-            } else {
-                bottomNavigation.selectedItemId = itemId
+        bottomNavigation.menu.setGroupCheckable(0, true, true)
+        if (bottomNavigation.selectedItemId == itemId) {
+            val fragment: Fragment = when (itemId) {
+                R.id.nav_finca -> FincaFragment()
+                R.id.nav_animales -> AnimalesFragment()
+                R.id.nav_produccion -> ProduccionFragment()
+                R.id.nav_alertas -> AlertasFragment()
+                else -> FincaFragment()
             }
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, fragment)
+                .commit()
         } else {
-            // Manejar navegación a fragmentos del Drawer que no están en el Bottom Nav
-            val fragment: Fragment? = when (itemId) {
-                R.id.drawer_control_sanitario -> ControlSanitarioFragment()
-                R.id.drawer_pesaje -> PesajeFragment()
-                R.id.drawer_mortalidad -> MortalidadFragment()
-                R.id.drawer_gestion_insumos -> InventarioFragment()
-                R.id.drawer_contabilidad -> ContabilidadFragment()
-                else -> null
-            }
-            
-            fragment?.let {
-                supportFragmentManager.beginTransaction()
-                    .replace(R.id.fragment_container, it)
-                    .commit()
-                bottomNavigation.menu.setGroupCheckable(0, false, true)
-            }
+            bottomNavigation.selectedItemId = itemId
         }
     }
 

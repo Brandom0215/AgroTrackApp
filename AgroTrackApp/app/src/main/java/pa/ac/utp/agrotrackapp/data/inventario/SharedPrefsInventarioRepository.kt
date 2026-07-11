@@ -2,11 +2,10 @@ package pa.ac.utp.agrotrackapp.data.inventario
 
 import android.content.Context
 import android.content.SharedPreferences
-import pa.ac.utp.agrotrackapp.data.alertas.AlertManager
 import pa.ac.utp.agrotrackapp.domain.model.InventarioItem
 import pa.ac.utp.agrotrackapp.domain.repository.InventarioRepository
 
-class SharedPrefsInventarioRepository(private val context: Context) : InventarioRepository {
+class SharedPrefsInventarioRepository(context: Context) : InventarioRepository {
 
     private val prefs: SharedPreferences =
         context.getSharedPreferences("GanaDEXInventarioPrefs", Context.MODE_PRIVATE)
@@ -23,6 +22,7 @@ class SharedPrefsInventarioRepository(private val context: Context) : Inventario
         private const val SUFFIX_LIMITE = "_limite"
         private const val SUFFIX_UNIDAD = "_unidad"
         private const val SUFFIX_COSTO = "_costo"
+        private const val SUFFIX_PRECIO = "_precio"
         private const val SUFFIX_FECHA = "_fecha"
     }
 
@@ -31,11 +31,11 @@ class SharedPrefsInventarioRepository(private val context: Context) : Inventario
         val ids = getIdsSet()
         if (ids.isEmpty()) {
             val initialItems = listOf(
-                InventarioItem("1", "LEVADURA", "Otro", "Levadura para ganado", null, 180.0, null, "Litros", 45.0, "01/07/2026 09:30"),
-                InventarioItem("2", "SAL MINERAL", "Alimento", null, null, 60.0, 10.0, "Sacos", 25.0, "02/07/2026 10:15"),
-                InventarioItem("3", "AFRECHO DE CERVEZA", "Alimento", null, null, 320.0, 50.0, "Sacos", 80.0, "03/07/2026 11:00"),
-                InventarioItem("4", "GALLINAZA", "Alimento", null, null, 150.0, 20.0, "Sacos", 15.0, "04/07/2026 14:20"),
-                InventarioItem("5", "MAÍZ MOLIDO", "Alimento", null, null, 200.0, 30.0, "Sacos", 35.0, "05/07/2026 16:45")
+                InventarioItem("1", "LEVADURA", "Otro", "Levadura para ganado", null, 180.0, null, "Litros", 45.0, 60.0, "01/07/2026 09:30"),
+                InventarioItem("2", "SAL MINERAL", "Alimento", null, null, 60.0, 10.0, "Sacos", 25.0, 35.0, "02/07/2026 10:15"),
+                InventarioItem("3", "AFRECHO DE CERVEZA", "Alimento", null, null, 320.0, 50.0, "Sacos", 80.0, 100.0, "03/07/2026 11:00"),
+                InventarioItem("4", "GALLINAZA", "Alimento", null, null, 150.0, 20.0, "Sacos", 15.0, 20.0, "04/07/2026 14:20"),
+                InventarioItem("5", "MAÍZ MOLIDO", "Alimento", null, null, 200.0, 30.0, "Sacos", 35.0, 45.0, "05/07/2026 16:45")
             )
             for (item in initialItems) {
                 saveItem(item)
@@ -72,6 +72,7 @@ class SharedPrefsInventarioRepository(private val context: Context) : Inventario
 
         val unidad = prefs.getString("$PREFIX_ITEM$id$SUFFIX_UNIDAD", "Unidades") ?: "Unidades"
         val costo = prefs.getFloat("$PREFIX_ITEM$id$SUFFIX_COSTO", 0f).toDouble()
+        val precio = prefs.getFloat("$PREFIX_ITEM$id$SUFFIX_PRECIO", 0f).toDouble()
         val fecha = prefs.getString("$PREFIX_ITEM$id$SUFFIX_FECHA", "") ?: ""
 
         return InventarioItem(
@@ -84,6 +85,7 @@ class SharedPrefsInventarioRepository(private val context: Context) : Inventario
             limiteNotificacion = limiteNotificacion,
             unidad = unidad,
             costo = costo,
+            precio = precio,
             fechaRegistro = fecha
         )
     }
@@ -94,7 +96,6 @@ class SharedPrefsInventarioRepository(private val context: Context) : Inventario
             ids.add(item.id)
             saveIdsSet(ids)
             persistItemData(item)
-            AlertManager(context).checkAlerts()
             Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)
@@ -108,7 +109,6 @@ class SharedPrefsInventarioRepository(private val context: Context) : Inventario
                 return Result.failure(Exception("Item no encontrado"))
             }
             persistItemData(item)
-            AlertManager(context).checkAlerts()
             Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)
@@ -124,7 +124,6 @@ class SharedPrefsInventarioRepository(private val context: Context) : Inventario
             ids.remove(id)
             saveIdsSet(ids)
             removeItemData(id)
-            AlertManager(context).checkAlerts()
             Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)
@@ -141,6 +140,7 @@ class SharedPrefsInventarioRepository(private val context: Context) : Inventario
             putFloat("$PREFIX_ITEM${item.id}$SUFFIX_LIMITE", item.limiteNotificacion?.toFloat() ?: -1f)
             putString("$PREFIX_ITEM${item.id}$SUFFIX_UNIDAD", item.unidad)
             putFloat("$PREFIX_ITEM${item.id}$SUFFIX_COSTO", item.costo.toFloat())
+            putFloat("$PREFIX_ITEM${item.id}$SUFFIX_PRECIO", item.precio.toFloat())
             putString("$PREFIX_ITEM${item.id}$SUFFIX_FECHA", item.fechaRegistro)
             apply()
         }
@@ -156,6 +156,7 @@ class SharedPrefsInventarioRepository(private val context: Context) : Inventario
             remove("$PREFIX_ITEM${id}$SUFFIX_LIMITE")
             remove("$PREFIX_ITEM${id}$SUFFIX_UNIDAD")
             remove("$PREFIX_ITEM${id}$SUFFIX_COSTO")
+            remove("$PREFIX_ITEM${id}$SUFFIX_PRECIO")
             remove("$PREFIX_ITEM${id}$SUFFIX_FECHA")
             apply()
         }

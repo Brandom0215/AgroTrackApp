@@ -8,7 +8,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.google.android.material.card.MaterialCardView
 import pa.ac.utp.agrotrackapp.R
-import pa.ac.utp.agrotrackapp.data.produccion.SqliteProduccionRepository
+import pa.ac.utp.agrotrackapp.data.produccion.SharedPrefsProduccionRepository
 import pa.ac.utp.agrotrackapp.domain.repository.ProduccionRepository
 import pa.ac.utp.agrotrackapp.ui.main.MainActivity
 
@@ -22,7 +22,7 @@ class ProduccionFragment : Fragment(R.layout.fragment_produccion) {
         super.onViewCreated(view, savedInstanceState)
 
         // Inicializamos repositorio de producción
-        produccionRepository = SqliteProduccionRepository(requireContext())
+        produccionRepository = SharedPrefsProduccionRepository(requireContext())
 
         // Vincular vistas
         tvKpiCarneCount = view.findViewById(R.id.tvKpiCarneCount)

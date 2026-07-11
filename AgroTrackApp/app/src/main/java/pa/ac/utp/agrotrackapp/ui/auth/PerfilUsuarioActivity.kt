@@ -15,10 +15,7 @@ import com.google.android.material.card.MaterialCardView
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import pa.ac.utp.agrotrackapp.R
-import pa.ac.utp.agrotrackapp.data.auth.SqliteAuthRepository
-import pa.ac.utp.agrotrackapp.data.database.DatabaseHelper
-import pa.ac.utp.agrotrackapp.data.alertas.AlertManager
-import com.google.android.material.switchmaterial.SwitchMaterial
+import pa.ac.utp.agrotrackapp.data.auth.SharedPrefsAuthRepository
 import pa.ac.utp.agrotrackapp.domain.model.User
 import pa.ac.utp.agrotrackapp.domain.repository.AuthRepository
 import pa.ac.utp.agrotrackapp.services.BiometricService
@@ -70,10 +67,6 @@ class PerfilUsuarioActivity : AppCompatActivity() {
     private lateinit var btnGuardarPerfil: MaterialButton
     private lateinit var btnDestruirDatos: MaterialButton
 
-    private lateinit var swAlertas: SwitchMaterial
-    private lateinit var swBiometrico: SwitchMaterial
-    private lateinit var btnAvisoPrivacidad: MaterialButton
-
     companion object {
         private const val REQUEST_IMAGE_CAPTURE = 3001
         private const val REQUEST_IMAGE_PICK = 3002
@@ -84,7 +77,7 @@ class PerfilUsuarioActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_perfil_usuario)
 
-        authRepository = SqliteAuthRepository(this)
+        authRepository = SharedPrefsAuthRepository(this)
         currentUser = authRepository.getCurrentUser()
 
         // Bind containers and toolbar
@@ -125,26 +118,6 @@ class PerfilUsuarioActivity : AppCompatActivity() {
         
         btnGuardarPerfil = findViewById(R.id.btnGuardarPerfil)
         btnDestruirDatos = findViewById(R.id.btnDestruirDatos)
-        swAlertas = findViewById(R.id.swAlertas)
-        swBiometrico = findViewById(R.id.swBiometrico)
-        btnAvisoPrivacidad = findViewById(R.id.btnAvisoPrivacidad)
-
-        val authPrefs = getSharedPreferences("GanaDEXAuthPrefs", MODE_PRIVATE)
-        swAlertas.isChecked = authPrefs.getBoolean("alerts_enabled", true)
-        swBiometrico.isChecked = authPrefs.getBoolean("biometric_enabled", true)
-
-        swAlertas.setOnCheckedChangeListener { _, isChecked ->
-            authPrefs.edit().putBoolean("alerts_enabled", isChecked).apply()
-            AlertManager(this).checkAlerts()
-        }
-
-        swBiometrico.setOnCheckedChangeListener { _, isChecked ->
-            authPrefs.edit().putBoolean("biometric_enabled", isChecked).apply()
-        }
-
-        btnAvisoPrivacidad.setOnClickListener {
-            mostrarAvisoPrivacidadTransparencia()
-        }
 
         // Setup back button
         findViewById<View>(R.id.btnBack).setOnClickListener {
@@ -377,21 +350,13 @@ class PerfilUsuarioActivity : AppCompatActivity() {
                 "• Todas las fotos de perfil y productos\n\n" +
                 "¿Está completamente seguro de que desea proceder?")
         builder.setPositiveButton("ELIMINAR TODO") { dialog, _ ->
-            // 1. Borrar SharedPreferences
-            getSharedPreferences("GanaDEXAuthPrefs", MODE_PRIVATE).edit().clear().apply()
-            getSharedPreferences("GanaDEXInventarioPrefs", MODE_PRIVATE).edit().clear().apply()
-            getSharedPreferences("AlertManagerState", MODE_PRIVATE).edit().clear().apply()
-            getSharedPreferences("GanaDEXAnimalPrefs", MODE_PRIVATE).edit().clear().apply()
-            getSharedPreferences("GanaDEXMortalidadPrefs", MODE_PRIVATE).edit().clear().apply()
-            getSharedPreferences("GanaDEXProduccionPrefs", MODE_PRIVATE).edit().clear().apply()
-            getSharedPreferences("AgroTrackAlertasPrefs", MODE_PRIVATE).edit().clear().apply()
+            // 1. Borrar SharedPreferences de Autenticación
+            val authPrefs = getSharedPreferences("GanaDEXAuthPrefs", MODE_PRIVATE)
+            authPrefs.edit().clear().apply()
 
-            // 2. Borrar todos los registros en base de datos SQLite (Derecho de Cancelación ARCO)
-            try {
-                DatabaseHelper(this).clearAllTables()
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
+            // 2. Borrar SharedPreferences de Inventario
+            val inventarioPrefs = getSharedPreferences("GanaDEXInventarioPrefs", MODE_PRIVATE)
+            inventarioPrefs.edit().clear().apply()
 
             // 3. Borrar todos los archivos locales del directorio de la app (fotos, etc.)
             val dir = filesDir
@@ -419,25 +384,6 @@ class PerfilUsuarioActivity : AppCompatActivity() {
         val alert = builder.create()
         alert.show()
         alert.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(android.graphics.Color.RED)
-    }
-
-    private fun mostrarAvisoPrivacidadTransparencia() {
-        AlertDialog.Builder(this)
-            .setTitle("Aviso de Privacidad e Información Legal")
-            .setMessage(
-                "De conformidad con la Ley N° 81 de 2019 de la República de Panamá:\n\n" +
-                "1. Responsable del Tratamiento: Los datos son recopilados por la aplicación AgroTrackApp de forma local.\n" +
-                "2. Finalidad del Tratamiento: Gestionar la producción, ganado, inventario y alertas del usuario para fines de monitoreo personal en su finca.\n" +
-                "3. Destinatarios: Los datos no se transfieren a terceros ni se almacenan en servidores externos sin su previa autorización.\n" +
-                "4. Derechos ARCO:\n" +
-                "• Acceso: Puede consultar sus historiales en las pantallas respectivas.\n" +
-                "• Rectificación: Puede corregir sus datos mediante este formulario de perfil.\n" +
-                "• Cancelación: Al pulsar 'Destrucción de Datos', se borrará toda su información sin dejar rastro.\n" +
-                "• Oposición: Puede activar o desactivar el módulo de alertas e inicio biométrico desde los controles en esta pantalla.\n\n" +
-                "Contacto: Para consultas o ejercicio de sus derechos, contacte al responsable de la aplicación en: soporte@agrotrack.pa"
-            )
-            .setPositiveButton("Cerrar") { dialog, _ -> dialog.dismiss() }
-            .show()
     }
 
     override fun onBackPressed() {

@@ -20,8 +20,8 @@ import com.google.android.material.floatingactionbutton.ExtendedFloatingActionBu
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import pa.ac.utp.agrotrackapp.R
-import pa.ac.utp.agrotrackapp.data.animal.SqliteAnimalRepository
-import pa.ac.utp.agrotrackapp.data.produccion.SqliteProduccionRepository
+import pa.ac.utp.agrotrackapp.data.animal.SharedPrefsAnimalRepository
+import pa.ac.utp.agrotrackapp.data.produccion.SharedPrefsProduccionRepository
 import pa.ac.utp.agrotrackapp.domain.model.LecheRecord
 import pa.ac.utp.agrotrackapp.domain.repository.AnimalRepository
 import pa.ac.utp.agrotrackapp.domain.repository.ProduccionRepository
@@ -58,8 +58,8 @@ class LecheProduccionActivity : AppCompatActivity() {
         setContentView(R.layout.activity_leche_produccion)
 
         // Inicializar repositorios encargados del acceso a datos
-        animalRepository = SqliteAnimalRepository(this)
-        produccionRepository = SqliteProduccionRepository(this)
+        animalRepository = SharedPrefsAnimalRepository(this)
+        produccionRepository = SharedPrefsProduccionRepository(this)
 
         // Vincular vistas del layout XML con los objetos Kotlin
         tvActiveMilkingCount = findViewById(R.id.tvActiveMilkingCount)

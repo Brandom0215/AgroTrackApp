@@ -2,11 +2,10 @@ package pa.ac.utp.agrotrackapp.data.mortalidad
 
 import android.content.Context
 import android.content.SharedPreferences
-import pa.ac.utp.agrotrackapp.data.alertas.AlertManager
 import pa.ac.utp.agrotrackapp.domain.model.MortalidadRecord
 import pa.ac.utp.agrotrackapp.domain.repository.MortalidadRepository
 
-class SharedPrefsMortalidadRepository(private val context: Context) : MortalidadRepository {
+class SharedPrefsMortalidadRepository(context: Context) : MortalidadRepository {
 
     private val sharedPreferences: SharedPreferences =
         context.getSharedPreferences("GanaDEXMortalidadPrefs", Context.MODE_PRIVATE)
@@ -65,7 +64,6 @@ class SharedPrefsMortalidadRepository(private val context: Context) : Mortalidad
                 putString("$PREFIX_RECORD$arete$SUFFIX_DETALLES", record.detalles)
                 apply()
             }
-            AlertManager(context).checkAlerts()
             Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)
@@ -86,7 +84,6 @@ class SharedPrefsMortalidadRepository(private val context: Context) : Mortalidad
                 remove("$PREFIX_RECORD$arete$SUFFIX_DETALLES")
                 apply()
             }
-            AlertManager(context).checkAlerts()
             Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)

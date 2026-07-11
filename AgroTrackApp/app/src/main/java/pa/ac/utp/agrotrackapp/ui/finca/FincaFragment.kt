@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment
 import com.google.android.material.card.MaterialCardView
 import pa.ac.utp.agrotrackapp.R
 import pa.ac.utp.agrotrackapp.domain.repository.AuthRepository
-import pa.ac.utp.agrotrackapp.data.auth.SqliteAuthRepository
+import pa.ac.utp.agrotrackapp.data.auth.SharedPrefsAuthRepository
 import pa.ac.utp.agrotrackapp.ui.main.MainActivity
 import pa.ac.utp.agrotrackapp.ui.animales.CrearAnimalActivity
 
@@ -21,7 +21,7 @@ class FincaFragment : Fragment(R.layout.fragment_finca) {
         super.onViewCreated(view, savedInstanceState)
         
         // Inicializamos el repositorio de datos de sesión
-        authRepository = SqliteAuthRepository(requireContext())
+        authRepository = SharedPrefsAuthRepository(requireContext())
         
         // Cargamos los datos reales del usuario logueado
         val tvFincaNombre = view.findViewById<TextView>(R.id.tvFincaNombreHome)

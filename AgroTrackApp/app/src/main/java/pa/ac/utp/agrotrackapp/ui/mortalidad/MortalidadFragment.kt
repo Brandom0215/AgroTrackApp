@@ -17,8 +17,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import pa.ac.utp.agrotrackapp.R
-import pa.ac.utp.agrotrackapp.data.animal.SqliteAnimalRepository
-import pa.ac.utp.agrotrackapp.data.mortalidad.SqliteMortalidadRepository
+import pa.ac.utp.agrotrackapp.data.animal.SharedPrefsAnimalRepository
+import pa.ac.utp.agrotrackapp.data.mortalidad.SharedPrefsMortalidadRepository
 import pa.ac.utp.agrotrackapp.domain.model.MortalidadRecord
 import pa.ac.utp.agrotrackapp.domain.repository.AnimalRepository
 import pa.ac.utp.agrotrackapp.domain.repository.MortalidadRepository
@@ -46,8 +46,8 @@ class MortalidadFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         // Inicializamos repositorios
-        animalRepository = SqliteAnimalRepository(requireContext())
-        mortalidadRepository = SqliteMortalidadRepository(requireContext())
+        animalRepository = SharedPrefsAnimalRepository(requireContext())
+        mortalidadRepository = SharedPrefsMortalidadRepository(requireContext())
 
         // Vincular vistas de la barra superior
         val toolbar = view.findViewById<Toolbar>(R.id.toolbar)

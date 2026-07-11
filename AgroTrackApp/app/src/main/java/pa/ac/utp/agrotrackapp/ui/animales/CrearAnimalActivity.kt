@@ -15,7 +15,7 @@ import com.google.android.material.card.MaterialCardView
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import pa.ac.utp.agrotrackapp.R
-import pa.ac.utp.agrotrackapp.data.animal.SqliteAnimalRepository
+import pa.ac.utp.agrotrackapp.data.animal.SharedPrefsAnimalRepository
 import pa.ac.utp.agrotrackapp.domain.model.Animal
 import pa.ac.utp.agrotrackapp.domain.repository.AnimalRepository
 import java.io.File
@@ -74,7 +74,7 @@ class CrearAnimalActivity : AppCompatActivity() {
         setContentView(R.layout.activity_crear_animal)
 
         // Inicializamos repositorio
-        animalRepository = SqliteAnimalRepository(this)
+        animalRepository = SharedPrefsAnimalRepository(this)
 
         // Bind Views de TextInputLayout
         tilNumeroAnimal = findViewById(R.id.tilNumeroAnimal)
@@ -453,7 +453,7 @@ class CrearAnimalActivity : AppCompatActivity() {
                 .setTitle("Criterio de Producción de Leche")
                 .setMessage(msg)
                 .setPositiveButton("Agregar a Producción") { _, _ ->
-                    val prodRepository = pa.ac.utp.agrotrackapp.data.produccion.SqliteProduccionRepository(this)
+                    val prodRepository = pa.ac.utp.agrotrackapp.data.produccion.SharedPrefsProduccionRepository(this)
                     val record = pa.ac.utp.agrotrackapp.domain.model.LecheRecord(
                         numeroAnimal = arete,
                         fechaRegistro = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(Date()),
@@ -480,7 +480,7 @@ class CrearAnimalActivity : AppCompatActivity() {
                 .setTitle("Criterio de Producción de Carne")
                 .setMessage(msg)
                 .setPositiveButton("Agregar a Producción") { _, _ ->
-                    val prodRepository = pa.ac.utp.agrotrackapp.data.produccion.SqliteProduccionRepository(this)
+                    val prodRepository = pa.ac.utp.agrotrackapp.data.produccion.SharedPrefsProduccionRepository(this)
                     val record = pa.ac.utp.agrotrackapp.domain.model.CarneRecord(
                         numeroAnimal = arete,
                         raza = animal.raza,

@@ -10,5 +10,6 @@ data class InventarioItem(
     val limiteNotificacion: Double? = null,
     val unidad: String,
     val costo: Double,
+    val precio: Double = 0.0,
     val fechaRegistro: String
 )

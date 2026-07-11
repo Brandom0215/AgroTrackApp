@@ -2,12 +2,11 @@ package pa.ac.utp.agrotrackapp.data.produccion
 
 import android.content.Context
 import android.content.SharedPreferences
-import pa.ac.utp.agrotrackapp.data.alertas.AlertManager
 import pa.ac.utp.agrotrackapp.domain.model.CarneRecord
 import pa.ac.utp.agrotrackapp.domain.model.LecheRecord
 import pa.ac.utp.agrotrackapp.domain.repository.ProduccionRepository
 
-class SharedPrefsProduccionRepository(private val context: Context) : ProduccionRepository {
+class SharedPrefsProduccionRepository(context: Context) : ProduccionRepository {
 
     private val sharedPreferences: SharedPreferences =
         context.getSharedPreferences("GanaDEXProduccionPrefs", Context.MODE_PRIVATE)
@@ -71,7 +70,6 @@ class SharedPrefsProduccionRepository(private val context: Context) : Produccion
             saveCarneAretesSet(aretes)
 
             persistCarneData(arete, record)
-            AlertManager(context).checkAlerts()
             Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)
@@ -112,7 +110,6 @@ class SharedPrefsProduccionRepository(private val context: Context) : Produccion
                 saveCarneAretesSet(aretes)
             }
             removeCarneData(arete)
-            AlertManager(context).checkAlerts()
             Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)
@@ -183,7 +180,6 @@ class SharedPrefsProduccionRepository(private val context: Context) : Produccion
             saveLecheAretesSet(aretes)
 
             persistLecheData(arete, record)
-            AlertManager(context).checkAlerts()
             Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)
@@ -221,7 +217,6 @@ class SharedPrefsProduccionRepository(private val context: Context) : Produccion
                 saveLecheAretesSet(aretes)
             }
             removeLecheData(arete)
-            AlertManager(context).checkAlerts()
             Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)

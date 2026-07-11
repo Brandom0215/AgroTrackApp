@@ -2,7 +2,6 @@ package pa.ac.utp.agrotrackapp.data.animal
 
 import android.content.Context
 import android.content.SharedPreferences
-import pa.ac.utp.agrotrackapp.data.alertas.AlertManager
 import pa.ac.utp.agrotrackapp.domain.model.Animal
 import pa.ac.utp.agrotrackapp.domain.repository.AnimalRepository
 
@@ -10,7 +9,7 @@ import pa.ac.utp.agrotrackapp.domain.repository.AnimalRepository
  * Implementación de [AnimalRepository] utilizando [SharedPreferences] como almacenamiento persistente local.
  * Diseñado para gestionar los datos de los animales (ganado) mediante el uso de "aretes" como identificador único.
  */
-class SharedPrefsAnimalRepository(private val context: Context) : AnimalRepository {
+class SharedPrefsAnimalRepository(context: Context) : AnimalRepository {
 
     // Archivo de SharedPreferences específico para los datos de ganado
     private val sharedPreferences: SharedPreferences =
@@ -94,7 +93,6 @@ class SharedPrefsAnimalRepository(private val context: Context) : AnimalReposito
 
             // Guardar los detalles del animal
             persistAnimalData(arete, animal)
-            AlertManager(context).checkAlerts()
             Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)
@@ -148,7 +146,6 @@ class SharedPrefsAnimalRepository(private val context: Context) : AnimalReposito
 
             // Sobrescribir los datos persistidos
             persistAnimalData(arete, animal)
-            AlertManager(context).checkAlerts()
             Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)
@@ -173,7 +170,6 @@ class SharedPrefsAnimalRepository(private val context: Context) : AnimalReposito
 
             // Limpiar todos los campos del SharedPreferences asociados a este arete
             removeAnimalData(arete)
-            AlertManager(context).checkAlerts()
             Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)

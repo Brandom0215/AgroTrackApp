@@ -8,7 +8,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
 
     companion object {
         const val DATABASE_NAME = "AgroTrack.db"
-        const val DATABASE_VERSION = 1
+        const val DATABASE_VERSION = 2
 
         // Table Names
         const val TABLE_USUARIOS = "usuarios"
@@ -86,6 +86,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         const val COL_INV_LIMITE = "limite_notificacion"
         const val COL_INV_UNIDAD = "unidad"
         const val COL_INV_COSTO = "costo"
+        const val COL_INV_PRECIO = "precio"
         const val COL_INV_FECHA = "fecha_registro"
 
         // Alertas Columns
@@ -184,6 +185,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
                 $COL_INV_LIMITE REAL,
                 $COL_INV_UNIDAD TEXT,
                 $COL_INV_COSTO REAL,
+                $COL_INV_PRECIO REAL,
                 $COL_INV_FECHA TEXT
             )
         """)

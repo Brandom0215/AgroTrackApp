@@ -19,8 +19,8 @@ import com.google.android.material.floatingactionbutton.ExtendedFloatingActionBu
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import pa.ac.utp.agrotrackapp.R
-import pa.ac.utp.agrotrackapp.data.animal.SqliteAnimalRepository
-import pa.ac.utp.agrotrackapp.data.produccion.SqliteProduccionRepository
+import pa.ac.utp.agrotrackapp.data.animal.SharedPrefsAnimalRepository
+import pa.ac.utp.agrotrackapp.data.produccion.SharedPrefsProduccionRepository
 import pa.ac.utp.agrotrackapp.domain.model.CarneRecord
 import pa.ac.utp.agrotrackapp.domain.repository.AnimalRepository
 import pa.ac.utp.agrotrackapp.domain.repository.ProduccionRepository
@@ -53,8 +53,8 @@ class CarneProduccionActivity : AppCompatActivity() {
         setContentView(R.layout.activity_carne_produccion)
 
         // Inicializar capas de datos
-        animalRepository = SqliteAnimalRepository(this)
-        produccionRepository = SqliteProduccionRepository(this)
+        animalRepository = SharedPrefsAnimalRepository(this)
+        produccionRepository = SharedPrefsProduccionRepository(this)
 
         // Vincular componentes de la interfaz
         tvCountCarne = findViewById(R.id.tvCountCarne)
