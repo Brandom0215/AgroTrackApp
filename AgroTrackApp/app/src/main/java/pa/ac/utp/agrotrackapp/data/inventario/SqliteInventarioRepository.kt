@@ -11,22 +11,7 @@ class SqliteInventarioRepository(private val context: Context) : InventarioRepos
 
     private val dbHelper = DatabaseHelper(context)
 
-    init {
-        // Precargar datos iniciales si la persistencia está vacía
-        val items = getItems()
-        if (items.isEmpty()) {
-            val initialItems = listOf(
-                InventarioItem("1", "LEVADURA", "Otro", "Levadura para ganado", null, 180.0, null, "Litros", 45.0, 60.0, "01/07/2026 09:30"),
-                InventarioItem("2", "SAL MINERAL", "Alimento", null, null, 60.0, 10.0, "Sacos", 25.0, 35.0, "02/07/2026 10:15"),
-                InventarioItem("3", "AFRECHO DE CERVEZA", "Alimento", null, null, 320.0, 50.0, "Sacos", 80.0, 100.0, "03/07/2026 11:00"),
-                InventarioItem("4", "GALLINAZA", "Alimento", null, null, 150.0, 20.0, "Sacos", 15.0, 20.0, "04/07/2026 14:20"),
-                InventarioItem("5", "MAÍZ MOLIDO", "Alimento", null, null, 200.0, 30.0, "Sacos", 35.0, 45.0, "05/07/2026 16:45")
-            )
-            for (item in initialItems) {
-                saveItem(item)
-            }
-        }
-    }
+    // La base de datos inicia vacía sin datos precargados.
 
     override fun getItems(): List<InventarioItem> {
         val list = mutableListOf<InventarioItem>()
