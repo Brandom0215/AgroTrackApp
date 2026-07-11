@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import pa.ac.utp.agrotrackapp.R
-import pa.ac.utp.agrotrackapp.data.inventario.SharedPrefsInventarioRepository
+import pa.ac.utp.agrotrackapp.data.inventario.SqliteInventarioRepository
 import pa.ac.utp.agrotrackapp.domain.model.InventarioItem
 import pa.ac.utp.agrotrackapp.domain.repository.InventarioRepository
 import pa.ac.utp.agrotrackapp.ui.main.MainActivity
@@ -28,7 +28,7 @@ class InventarioFragment : Fragment(R.layout.fragment_inventario) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        inventarioRepository = SharedPrefsInventarioRepository(requireContext())
+        inventarioRepository = SqliteInventarioRepository(requireContext())
 
         // 1. Configurar botón de menú lateral (Drawer)
         view.findViewById<ImageButton>(R.id.btnMenu)?.setOnClickListener {

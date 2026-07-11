@@ -17,8 +17,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
 import pa.ac.utp.agrotrackapp.R
-import pa.ac.utp.agrotrackapp.data.animal.SharedPrefsAnimalRepository
-import pa.ac.utp.agrotrackapp.data.produccion.SharedPrefsProduccionRepository
+import pa.ac.utp.agrotrackapp.data.animal.SqliteAnimalRepository
+import pa.ac.utp.agrotrackapp.data.produccion.SqliteProduccionRepository
 import pa.ac.utp.agrotrackapp.domain.model.Animal
 import pa.ac.utp.agrotrackapp.domain.model.CarneRecord
 import pa.ac.utp.agrotrackapp.domain.repository.AnimalRepository
@@ -57,8 +57,8 @@ class PesajeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         // Inicializar repositorios
-        animalRepository = SharedPrefsAnimalRepository(requireContext())
-        produccionRepository = SharedPrefsProduccionRepository(requireContext())
+        animalRepository = SqliteAnimalRepository(requireContext())
+        produccionRepository = SqliteProduccionRepository(requireContext())
 
         // Configurar Barra Superior
         val toolbar = view.findViewById<Toolbar>(R.id.toolbar)

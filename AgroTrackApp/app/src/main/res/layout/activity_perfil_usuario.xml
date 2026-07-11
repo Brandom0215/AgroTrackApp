@@ -271,6 +271,82 @@
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
+                <!-- Ajustes de Privacidad y Seguridad (Ley 81) -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="2dp"
+                    app:strokeWidth="0dp"
+                    app:cardBackgroundColor="?attr/colorSurface">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Privacidad y Seguridad (Ley N° 81)"
+                            android:textSize="14sp"
+                            android:textColor="@color/md_theme_light_primary"
+                            android:textStyle="bold"
+                            android:layout_marginBottom="8dp" />
+
+                        <com.google.android.material.switchmaterial.SwitchMaterial
+                            android:id="@+id/swAlertas"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Módulo de Recordatorios y Alertas"
+                            android:textSize="15sp"
+                            android:textColor="@color/md_theme_light_onBackground" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Permite desactivar por completo las alertas de stock, mortalidad y pesaje."
+                            android:textSize="11sp"
+                            android:textColor="@color/text_gray"
+                            android:layout_marginBottom="12dp" />
+
+                        <com.google.android.material.switchmaterial.SwitchMaterial
+                            android:id="@+id/swBiometrico"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Inicio de Sesión Biométrico"
+                            android:textSize="15sp"
+                            android:textColor="@color/md_theme_light_onBackground" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Habilita el ingreso rápido con huella dactilar o rostro."
+                            android:textSize="11sp"
+                            android:textColor="@color/text_gray"
+                            android:layout_marginBottom="12dp" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/divider"
+                            android:layout_marginVertical="8dp" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnAvisoPrivacidad"
+                            style="@style/Widget.Material3.Button.TextButton"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Ver Aviso de Privacidad y Términos"
+                            android:textColor="?attr/colorPrimary"
+                            android:gravity="start|center_vertical"
+                            app:icon="@drawable/ic_alertas" />
+
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
                 <!-- Botón de Destrucción de Datos -->
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnDestruirDatos"

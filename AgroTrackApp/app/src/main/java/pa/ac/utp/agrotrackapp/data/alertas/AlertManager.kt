@@ -8,10 +8,10 @@ import android.content.Intent
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import pa.ac.utp.agrotrackapp.R
-import pa.ac.utp.agrotrackapp.data.animal.SharedPrefsAnimalRepository
-import pa.ac.utp.agrotrackapp.data.inventario.SharedPrefsInventarioRepository
-import pa.ac.utp.agrotrackapp.data.mortalidad.SharedPrefsMortalidadRepository
-import pa.ac.utp.agrotrackapp.data.produccion.SharedPrefsProduccionRepository
+import pa.ac.utp.agrotrackapp.data.animal.SqliteAnimalRepository
+import pa.ac.utp.agrotrackapp.data.inventario.SqliteInventarioRepository
+import pa.ac.utp.agrotrackapp.data.mortalidad.SqliteMortalidadRepository
+import pa.ac.utp.agrotrackapp.data.produccion.SqliteProduccionRepository
 import pa.ac.utp.agrotrackapp.domain.model.Alerta
 import pa.ac.utp.agrotrackapp.domain.model.PrioridadAlerta
 import pa.ac.utp.agrotrackapp.domain.model.TipoAlerta
@@ -22,11 +22,11 @@ import java.util.concurrent.TimeUnit
 
 class AlertManager(private val context: Context) {
 
-    private val alertaRepo = SharedPrefsAlertaRepository(context)
-    private val inventarioRepo = SharedPrefsInventarioRepository(context)
-    private val animalRepo = SharedPrefsAnimalRepository(context)
-    private val mortalidadRepo = SharedPrefsMortalidadRepository(context)
-    private val produccionRepo = SharedPrefsProduccionRepository(context)
+    private val alertaRepo = SqliteAlertaRepository(context)
+    private val inventarioRepo = SqliteInventarioRepository(context)
+    private val animalRepo = SqliteAnimalRepository(context)
+    private val mortalidadRepo = SqliteMortalidadRepository(context)
+    private val produccionRepo = SqliteProduccionRepository(context)
     private val prefs = context.getSharedPreferences("AlertManagerState", Context.MODE_PRIVATE)
 
     companion object {
@@ -34,6 +34,12 @@ class AlertManager(private val context: Context) {
     }
 
     fun checkAlerts() {
+        val authPrefs = context.getSharedPreferences("GanaDEXAuthPrefs", Context.MODE_PRIVATE)
+        val alertsEnabled = authPrefs.getBoolean("alerts_enabled", true)
+        if (!alertsEnabled) {
+            return
+        }
+
         val sdf = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
         val todayDate = Date()
         val todayStr = sdf.format(todayDate)

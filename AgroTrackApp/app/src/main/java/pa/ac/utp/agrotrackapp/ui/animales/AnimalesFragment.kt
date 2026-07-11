@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.textfield.TextInputEditText
 import pa.ac.utp.agrotrackapp.R
-import pa.ac.utp.agrotrackapp.data.animal.SharedPrefsAnimalRepository
+import pa.ac.utp.agrotrackapp.data.animal.SqliteAnimalRepository
 import pa.ac.utp.agrotrackapp.domain.model.Animal
 import pa.ac.utp.agrotrackapp.domain.repository.AnimalRepository
 import pa.ac.utp.agrotrackapp.ui.main.MainActivity
@@ -42,7 +42,7 @@ class AnimalesFragment : Fragment(R.layout.fragment_animales) {
         super.onViewCreated(view, savedInstanceState)
 
         // Inicializamos repositorio
-        animalRepository = SharedPrefsAnimalRepository(requireContext())
+        animalRepository = SqliteAnimalRepository(requireContext())
 
         // Enlazar vistas de cabecera e inventario
         tvHeaderMachos = view.findViewById(R.id.tvHeaderMachosCount)

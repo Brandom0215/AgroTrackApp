@@ -13,7 +13,7 @@ import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import pa.ac.utp.agrotrackapp.R
 import pa.ac.utp.agrotrackapp.domain.repository.AuthRepository
-import pa.ac.utp.agrotrackapp.data.auth.SharedPrefsAuthRepository
+import pa.ac.utp.agrotrackapp.data.auth.SqliteAuthRepository
 import pa.ac.utp.agrotrackapp.ui.auth.LoginActivity
 import pa.ac.utp.agrotrackapp.ui.finca.FincaFragment
 import pa.ac.utp.agrotrackapp.ui.animales.AnimalesFragment
@@ -38,7 +38,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         // Inicializamos el repositorio de datos (desacoplado)
-        authRepository = SharedPrefsAuthRepository(this)
+        authRepository = SqliteAuthRepository(this)
 
         drawerLayout = findViewById(R.id.drawerLayout)
         bottomNavigation = findViewById(R.id.bottom_navigation)

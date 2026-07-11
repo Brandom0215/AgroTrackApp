@@ -10,7 +10,7 @@ import com.google.android.material.textfield.TextInputLayout
 import pa.ac.utp.agrotrackapp.R
 import pa.ac.utp.agrotrackapp.domain.model.User
 import pa.ac.utp.agrotrackapp.domain.repository.AuthRepository
-import pa.ac.utp.agrotrackapp.data.auth.SharedPrefsAuthRepository
+import pa.ac.utp.agrotrackapp.data.auth.SqliteAuthRepository
 import pa.ac.utp.agrotrackapp.utils.ValidationLens
 
 /**
@@ -52,7 +52,7 @@ class RegisterActivity : AppCompatActivity() {
         supportActionBar?.hide()
 
         // Inicializamos el repositorio de datos (desacoplado)
-        authRepository = SharedPrefsAuthRepository(this)
+        authRepository = SqliteAuthRepository(this)
 
         // Inicializamos las vistas
         inicializarVistas()
