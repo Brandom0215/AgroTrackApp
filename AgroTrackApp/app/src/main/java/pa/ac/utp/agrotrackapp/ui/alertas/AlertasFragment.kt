@@ -8,10 +8,10 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import pa.ac.utp.agrotrackapp.R
-import pa.ac.utp.agrotrackapp.data.animal.SharedPrefsAnimalRepository
-import pa.ac.utp.agrotrackapp.data.inventario.SharedPrefsInventarioRepository
-import pa.ac.utp.agrotrackapp.data.mortalidad.SharedPrefsMortalidadRepository
-import pa.ac.utp.agrotrackapp.data.produccion.SharedPrefsProduccionRepository
+import pa.ac.utp.agrotrackapp.data.animal.SqliteAnimalRepository
+import pa.ac.utp.agrotrackapp.data.inventario.SqliteInventarioRepository
+import pa.ac.utp.agrotrackapp.data.mortalidad.SqliteMortalidadRepository
+import pa.ac.utp.agrotrackapp.data.produccion.SqliteProduccionRepository
 import pa.ac.utp.agrotrackapp.domain.model.Alerta
 import pa.ac.utp.agrotrackapp.domain.model.PrioridadAlerta
 import pa.ac.utp.agrotrackapp.domain.model.TipoAlerta
@@ -33,7 +33,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import com.google.android.material.snackbar.Snackbar
 import pa.ac.utp.agrotrackapp.data.alertas.AlertManager
-import pa.ac.utp.agrotrackapp.data.alertas.SharedPrefsAlertaRepository
+import pa.ac.utp.agrotrackapp.data.alertas.SqliteAlertaRepository
 import pa.ac.utp.agrotrackapp.domain.repository.AlertaRepository
 
 class AlertasFragment : Fragment(R.layout.fragment_alertas) {
@@ -71,11 +71,11 @@ class AlertasFragment : Fragment(R.layout.fragment_alertas) {
         
         checkNotificationPermission()
         
-        inventarioRepository = SharedPrefsInventarioRepository(requireContext())
-        mortalidadRepository = SharedPrefsMortalidadRepository(requireContext())
-        animalRepository = SharedPrefsAnimalRepository(requireContext())
-        produccionRepository = SharedPrefsProduccionRepository(requireContext())
-        alertaRepository = SharedPrefsAlertaRepository(requireContext())
+        inventarioRepository = SqliteInventarioRepository(requireContext())
+        mortalidadRepository = SqliteMortalidadRepository(requireContext())
+        animalRepository = SqliteAnimalRepository(requireContext())
+        produccionRepository = SqliteProduccionRepository(requireContext())
+        alertaRepository = SqliteAlertaRepository(requireContext())
 
         view.findViewById<ImageButton>(R.id.btnMenu)?.setOnClickListener {
             (requireActivity() as MainActivity).openDrawer()
