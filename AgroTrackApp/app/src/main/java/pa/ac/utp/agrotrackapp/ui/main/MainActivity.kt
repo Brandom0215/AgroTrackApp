@@ -51,7 +51,12 @@ class MainActivity : AppCompatActivity() {
         actualizarHeaderUsuario()
 
         if (savedInstanceState == null) {
-            bottomNavigation.selectedItemId = R.id.nav_finca
+            val openAlertas = intent.getBooleanExtra("OPEN_ALERTAS", false)
+            if (openAlertas) {
+                bottomNavigation.selectedItemId = R.id.nav_alertas
+            } else {
+                bottomNavigation.selectedItemId = R.id.nav_finca
+            }
         }
     }
 
@@ -131,20 +136,41 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun navigateToTab(itemId: Int) {
-        bottomNavigation.menu.setGroupCheckable(0, true, true)
-        if (bottomNavigation.selectedItemId == itemId) {
-            val fragment: Fragment = when (itemId) {
-                R.id.nav_finca -> FincaFragment()
-                R.id.nav_animales -> AnimalesFragment()
-                R.id.nav_produccion -> ProduccionFragment()
-                R.id.nav_alertas -> AlertasFragment()
-                else -> FincaFragment()
+        val bottomIds = listOf(R.id.nav_finca, R.id.nav_animales, R.id.nav_produccion, R.id.nav_alertas)
+        
+        if (itemId in bottomIds) {
+            bottomNavigation.menu.setGroupCheckable(0, true, true)
+            if (bottomNavigation.selectedItemId == itemId) {
+                val fragment: Fragment = when (itemId) {
+                    R.id.nav_finca -> FincaFragment()
+                    R.id.nav_animales -> AnimalesFragment()
+                    R.id.nav_produccion -> ProduccionFragment()
+                    R.id.nav_alertas -> AlertasFragment()
+                    else -> FincaFragment()
+                }
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, fragment)
+                    .commit()
+            } else {
+                bottomNavigation.selectedItemId = itemId
             }
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, fragment)
-                .commit()
         } else {
-            bottomNavigation.selectedItemId = itemId
+            // Manejar navegación a fragmentos del Drawer que no están en el Bottom Nav
+            val fragment: Fragment? = when (itemId) {
+                R.id.drawer_control_sanitario -> ControlSanitarioFragment()
+                R.id.drawer_pesaje -> PesajeFragment()
+                R.id.drawer_mortalidad -> MortalidadFragment()
+                R.id.drawer_gestion_insumos -> InventarioFragment()
+                R.id.drawer_contabilidad -> ContabilidadFragment()
+                else -> null
+            }
+            
+            fragment?.let {
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, it)
+                    .commit()
+                bottomNavigation.menu.setGroupCheckable(0, false, true)
+            }
         }
     }
 

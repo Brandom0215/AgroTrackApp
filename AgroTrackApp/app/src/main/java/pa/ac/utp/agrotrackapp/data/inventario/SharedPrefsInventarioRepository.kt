@@ -2,10 +2,11 @@ package pa.ac.utp.agrotrackapp.data.inventario
 
 import android.content.Context
 import android.content.SharedPreferences
+import pa.ac.utp.agrotrackapp.data.alertas.AlertManager
 import pa.ac.utp.agrotrackapp.domain.model.InventarioItem
 import pa.ac.utp.agrotrackapp.domain.repository.InventarioRepository
 
-class SharedPrefsInventarioRepository(context: Context) : InventarioRepository {
+class SharedPrefsInventarioRepository(private val context: Context) : InventarioRepository {
 
     private val prefs: SharedPreferences =
         context.getSharedPreferences("GanaDEXInventarioPrefs", Context.MODE_PRIVATE)
@@ -93,6 +94,7 @@ class SharedPrefsInventarioRepository(context: Context) : InventarioRepository {
             ids.add(item.id)
             saveIdsSet(ids)
             persistItemData(item)
+            AlertManager(context).checkAlerts()
             Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)
@@ -106,6 +108,7 @@ class SharedPrefsInventarioRepository(context: Context) : InventarioRepository {
                 return Result.failure(Exception("Item no encontrado"))
             }
             persistItemData(item)
+            AlertManager(context).checkAlerts()
             Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)
@@ -121,6 +124,7 @@ class SharedPrefsInventarioRepository(context: Context) : InventarioRepository {
             ids.remove(id)
             saveIdsSet(ids)
             removeItemData(id)
+            AlertManager(context).checkAlerts()
             Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)
