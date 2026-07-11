@@ -10,6 +10,7 @@ import android.provider.MediaStore
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.textfield.TextInputEditText
@@ -18,6 +19,7 @@ import pa.ac.utp.agrotrackapp.R
 import pa.ac.utp.agrotrackapp.data.animal.SqliteAnimalRepository
 import pa.ac.utp.agrotrackapp.domain.model.Animal
 import pa.ac.utp.agrotrackapp.domain.repository.AnimalRepository
+import pa.ac.utp.agrotrackapp.services.BluetoothRfidService
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
@@ -25,8 +27,9 @@ import java.util.*
 /**
  * Pantalla que gestiona tanto el registro de un nuevo animal como la edición de uno existente.
  * Sigue el patrón Repository para la persistencia de datos y soporta captura de fotos con validación de entradas.
+ * Incorpora conexión Bluetooth REAL con bastón RFID inalámbrico y modos de registro Individual o Global (Lote).
  */
-class CrearAnimalActivity : AppCompatActivity() {
+class CrearAnimalActivity : AppCompatActivity(), BluetoothRfidService.BluetoothRfidCallback {
 
     // Repositorio y banderas de estado para el flujo de edición y foto
     private lateinit var animalRepository: AnimalRepository
@@ -64,9 +67,35 @@ class CrearAnimalActivity : AppCompatActivity() {
     private lateinit var etNotas: TextInputEditText
     private lateinit var btnCrear: MaterialButton
 
+    // Elementos para el escaneo Bluetooth y modos de registro
+    private var registroModo = "Individual" // "Individual" o "Global"
+    private val scannedTagsList = mutableListOf<String>()
+    
+    private lateinit var tvModoRegistroHeader: TextView
+    private lateinit var layoutModoRegistroSelector: LinearLayout
+    private lateinit var cardModoIndividual: MaterialCardView
+    private lateinit var cardModoGlobal: MaterialCardView
+    private lateinit var tvLabelIndividual: TextView
+    private lateinit var tvLabelGlobal: TextView
+    
+    private lateinit var layoutGlobalTags: LinearLayout
+    private lateinit var tvConexionBaston: TextView
+    private lateinit var btnConectarBaston: MaterialButton
+    private lateinit var tvContadorTags: TextView
+    private lateinit var tvListaTags: TextView
+    private lateinit var btnLimpiarTags: MaterialButton
+    private lateinit var btnBluetooth: ImageButton
+    
+    // Servicio Bluetooth RFID real
+    private lateinit var bluetoothRfidService: BluetoothRfidService
+    private var isBastonConectado = false
+    private var nombreBastonConectado: String? = null
+    private var isModoDemo = false // Bandera para simular lecturas en pruebas locales
+
     companion object {
         private const val REQUEST_IMAGE_CAPTURE = 1001
         private const val REQUEST_IMAGE_PICK = 1002
+        private const val REQUEST_PERMISSIONS_CODE = 4002
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -76,6 +105,9 @@ class CrearAnimalActivity : AppCompatActivity() {
         // Inicializamos repositorio
         animalRepository = SqliteAnimalRepository(this)
 
+        // Inicializar Servicio Bluetooth RFID Real
+        bluetoothRfidService = BluetoothRfidService(this, this)
+
         // Bind Views de TextInputLayout
         tilNumeroAnimal = findViewById(R.id.tilNumeroAnimal)
         tilTrazabilidad = findViewById(R.id.tilTrazabilidad)
@@ -83,7 +115,7 @@ class CrearAnimalActivity : AppCompatActivity() {
         tilFechaNacimiento = findViewById(R.id.tilFechaNacimiento)
         tilNotas = findViewById(R.id.tilNotas)
 
-        // Bind Views
+        // Bind Views comunes
         tvTitleActivity = findViewById(R.id.tvTitleActivity)
         cardMacho = findViewById(R.id.cardMacho)
         cardHembra = findViewById(R.id.cardHembra)
@@ -105,6 +137,22 @@ class CrearAnimalActivity : AppCompatActivity() {
         etNotas = findViewById(R.id.etNotas)
         btnCrear = findViewById(R.id.btnCrear)
 
+        // Bind nuevos elementos de Bluetooth y Registro
+        tvModoRegistroHeader = findViewById(R.id.tvModoRegistroHeader)
+        layoutModoRegistroSelector = findViewById(R.id.layoutModoRegistroSelector)
+        cardModoIndividual = findViewById(R.id.cardModoIndividual)
+        cardModoGlobal = findViewById(R.id.cardModoGlobal)
+        tvLabelIndividual = findViewById(R.id.tvLabelIndividual)
+        tvLabelGlobal = findViewById(R.id.tvLabelGlobal)
+        
+        layoutGlobalTags = findViewById(R.id.layoutGlobalTags)
+        tvConexionBaston = findViewById(R.id.tvConexionBaston)
+        btnConectarBaston = findViewById(R.id.btnConectarBaston)
+        tvContadorTags = findViewById(R.id.tvContadorTags)
+        tvListaTags = findViewById(R.id.tvListaTags)
+        btnLimpiarTags = findViewById(R.id.btnLimpiarTags)
+        btnBluetooth = findViewById(R.id.btnBluetooth)
+
         // Setup Back Button
         findViewById<ImageButton>(R.id.btnBack).setOnClickListener {
             finish()
@@ -122,20 +170,323 @@ class CrearAnimalActivity : AppCompatActivity() {
         // Setup DatePicker Dialog
         setupDatePicker()
 
-        // Setup Dropdowns with values
+        // Setup Dropdowns con valores
         setupDropdowns()
+
+        // Listeners para modos de registro (Individual / Global)
+        cardModoIndividual.setOnClickListener { selectRegistroModo("Individual") }
+        cardModoGlobal.setOnClickListener { selectRegistroModo("Global") }
+
+        // Listeners de Bluetooth / Bastón RFID
+        btnBluetooth.setOnClickListener { verificarYMostrarDispositivos() }
+        btnConectarBaston.setOnClickListener { verificarYMostrarDispositivos() }
+
+        btnLimpiarTags.setOnClickListener {
+            androidx.appcompat.app.AlertDialog.Builder(this)
+                .setTitle("Limpiar Lista")
+                .setMessage("¿Está seguro de que desea limpiar todos los aretes escaneados?")
+                .setPositiveButton("Sí") { _, _ ->
+                    scannedTagsList.clear()
+                    actualizarVistaTagsGlobales()
+                }
+                .setNegativeButton("No", null)
+                .show()
+        }
 
         // Detectar si estamos en modo edición
         editArete = intent.getStringExtra("EXTRA_NUMERO_ANIMAL")
         isEditMode = editArete != null
 
         if (isEditMode) {
+            // El modo de registro en lote no aplica para edición de un animal existente
+            tvModoRegistroHeader.visibility = View.GONE
+            layoutModoRegistroSelector.visibility = View.GONE
             cargarDatosParaEdicion()
+        } else {
+            selectRegistroModo("Individual")
         }
 
         // Setup Create/Save Button
         btnCrear.setOnClickListener {
             guardarAnimal()
+        }
+
+        // Solicitar permisos al iniciar
+        if (!bluetoothRfidService.hasPermissions()) {
+            ActivityCompat.requestPermissions(
+                this,
+                bluetoothRfidService.getRequiredPermissions(),
+                REQUEST_PERMISSIONS_CODE
+            )
+        }
+    }
+
+    /**
+     * Alterna la interfaz y visibilidad de los campos dependiendo del modo seleccionado.
+     */
+    private fun selectRegistroModo(modo: String) {
+        registroModo = modo
+        val surfaceColor = getColor(com.google.android.material.R.color.m3_sys_color_light_surface)
+        
+        if (modo == "Individual") {
+            // Activar Individual (Celeste)
+            cardModoIndividual.setCardBackgroundColor(Color.parseColor("#4FC3F7"))
+            cardModoIndividual.strokeWidth = 0
+            tvLabelIndividual.setTextColor(Color.WHITE)
+            
+            // Desactivar Global
+            cardModoGlobal.setCardBackgroundColor(surfaceColor)
+            cardModoGlobal.strokeWidth = 2
+            cardModoGlobal.strokeColor = Color.parseColor("#E0E0E0")
+            tvLabelGlobal.setTextColor(Color.parseColor("#9E9E9E"))
+            
+            // Visibilidades de campos individuales
+            tilNumeroAnimal.visibility = View.VISIBLE
+            tilNumeroChip.visibility = View.VISIBLE
+            layoutGlobalTags.visibility = View.GONE
+            btnCrear.text = "Crear"
+        } else {
+            // Activar Global (Celeste)
+            cardModoGlobal.setCardBackgroundColor(Color.parseColor("#4FC3F7"))
+            cardModoGlobal.strokeWidth = 0
+            tvLabelGlobal.setTextColor(Color.WHITE)
+            
+            // Desactivar Individual
+            cardModoIndividual.setCardBackgroundColor(surfaceColor)
+            cardModoIndividual.strokeWidth = 2
+            cardModoIndividual.strokeColor = Color.parseColor("#E0E0E0")
+            tvLabelIndividual.setTextColor(Color.parseColor("#9E9E9E"))
+            
+            // Visibilidades de campos de lote
+            tilNumeroAnimal.visibility = View.GONE
+            tilNumeroChip.visibility = View.GONE
+            layoutGlobalTags.visibility = View.VISIBLE
+            actualizarVistaTagsGlobales()
+        }
+    }
+
+    /**
+     * Actualiza el listado visual de tags leídos en modo Global.
+     */
+    private fun actualizarVistaTagsGlobales() {
+        tvContadorTags.text = "Tags Escaneados: ${scannedTagsList.size}"
+        if (scannedTagsList.isEmpty()) {
+            tvListaTags.text = "Ningún tag escaneado aún. Conecte el bastón y realice escaneos."
+            tvListaTags.setTextColor(Color.GRAY)
+            btnLimpiarTags.visibility = View.GONE
+            btnCrear.text = "Registrar Lote"
+        } else {
+            val builder = StringBuilder()
+            scannedTagsList.forEachIndexed { index, tag ->
+                builder.append("${index + 1}. RFID (Trazabilidad): $tag\n")
+            }
+            tvListaTags.text = builder.toString().trim()
+            tvListaTags.setTextColor(Color.parseColor("#37474F"))
+            btnLimpiarTags.visibility = View.VISIBLE
+            btnCrear.text = "Registrar Lote (${scannedTagsList.size})"
+        }
+    }
+
+    /**
+     * Valida permisos y comprueba si Bluetooth está activo antes de mostrar los dispositivos.
+     */
+    private fun verificarYMostrarDispositivos() {
+        if (!bluetoothRfidService.isBluetoothSupported()) {
+            Toast.makeText(this, "El dispositivo no cuenta con soporte Bluetooth", Toast.LENGTH_LONG).show()
+            return
+        }
+
+        if (!bluetoothRfidService.hasPermissions()) {
+            ActivityCompat.requestPermissions(
+                this,
+                bluetoothRfidService.getRequiredPermissions(),
+                REQUEST_PERMISSIONS_CODE
+            )
+            return
+        }
+
+        if (!bluetoothRfidService.isBluetoothEnabled()) {
+            Toast.makeText(this, "Por favor active el Bluetooth en los ajustes del dispositivo", Toast.LENGTH_LONG).show()
+            return
+        }
+
+        mostrarDialogoBluetooth()
+    }
+
+    /**
+     * Despliega la lista de dispositivos vinculados (pareados) de forma real utilizando un diseño premium.
+     */
+    private fun mostrarDialogoBluetooth() {
+        if (isBastonConectado) {
+            val opciones = mutableListOf<CharSequence>()
+            if (isModoDemo) {
+                opciones.add("Simular Lectura de Arete (Demo)")
+            }
+            opciones.add("Desconectar Bastón")
+            opciones.add("Cancelar")
+
+            androidx.appcompat.app.AlertDialog.Builder(this)
+                .setTitle("Bastón RFID: $nombreBastonConectado")
+                .setItems(opciones.toTypedArray()) { dialog, item ->
+                    val seleccion = opciones[item].toString()
+                    when (seleccion) {
+                        "Simular Lectura de Arete (Demo)" -> {
+                            simularLecturaTagDemo()
+                        }
+                        "Desconectar Bastón" -> {
+                            if (isModoDemo) {
+                                onDisconnected()
+                            } else {
+                                bluetoothRfidService.disconnect()
+                            }
+                        }
+                        else -> dialog.dismiss()
+                    }
+                }
+                .show()
+        } else {
+            val pairedDevices = bluetoothRfidService.getPairedDevices()
+            
+            // Inflar el diseño personalizado para el diálogo
+            val dialogView = layoutInflater.inflate(R.layout.dialog_bluetooth_devices, null)
+            val layoutDeviceListContainer = dialogView.findViewById<LinearLayout>(R.id.layoutDeviceListContainer)
+
+            val dialog = androidx.appcompat.app.AlertDialog.Builder(this)
+                .setView(dialogView)
+                .setNegativeButton("Cerrar", null)
+                .create()
+
+            // Función auxiliar para agregar filas de dispositivos de forma dinámica
+            fun agregarDispositivoALista(nombre: String, mac: String, onClick: () -> Unit) {
+                val rowView = layoutInflater.inflate(R.layout.item_bluetooth_device, layoutDeviceListContainer, false)
+                val tvDeviceName = rowView.findViewById<TextView>(R.id.tvDeviceName)
+                val tvDeviceAddress = rowView.findViewById<TextView>(R.id.tvDeviceAddress)
+                val cardDeviceRow = rowView.findViewById<MaterialCardView>(R.id.cardDeviceRow)
+                val ivDeviceIcon = rowView.findViewById<ImageView>(R.id.ivDeviceIcon)
+
+                tvDeviceName.text = nombre
+                tvDeviceAddress.text = mac
+                
+                // Darle una distinción visual especial si es la opción de simulación
+                if (nombre.startsWith("[Simulador]")) {
+                    ivDeviceIcon.setColorFilter(Color.parseColor("#9C27B0"))
+                    ivDeviceIcon.alpha = 0.8f
+                } else {
+                    ivDeviceIcon.setColorFilter(Color.parseColor("#4FC3F7"))
+                }
+
+                cardDeviceRow.setOnClickListener {
+                    onClick()
+                    dialog.dismiss()
+                }
+
+                layoutDeviceListContainer.addView(rowView)
+            }
+
+            // 1. Agregar los dispositivos vinculados reales del usuario
+            pairedDevices.forEach { device ->
+                var name = "Dispositivo Desconocido"
+                try {
+                    name = device.name ?: "Lector RFID SPP"
+                } catch (e: SecurityException) {
+                    e.printStackTrace()
+                }
+                val address = device.address
+                agregarDispositivoALista(name, address) {
+                    isModoDemo = false
+                    Toast.makeText(this, "Conectando al lector RFID...", Toast.LENGTH_SHORT).show()
+                    bluetoothRfidService.connect(device)
+                }
+            }
+
+            // 2. Agregar siempre el simulador virtual para pruebas locales sencillas
+            agregarDispositivoALista(
+                "[Simulador] Bastón RFID Virtual (Demo)",
+                "DE:AD:BE:EF:00:FF"
+            ) {
+                isModoDemo = true
+                onConnected("Bastón RFID Tru-Test SRS2 (Simulado)")
+            }
+
+            dialog.show()
+        }
+    }
+
+    /**
+     * Simulación local de lecturas de arete (sólo si se elige el dispositivo virtual).
+     */
+    private fun simularLecturaTagDemo() {
+        val countryCode = "982" // Código ISO/Identificación para la finca
+        val rest = "${(100000..999999).random()}${(100000..999999).random()}"
+        val tagSimulado = "$countryCode$rest"
+        onTagRead(tagSimulado)
+    }
+
+    // --- Callbacks de BluetoothRfidService.BluetoothRfidCallback ---
+
+    override fun onConnected(deviceName: String) {
+        isBastonConectado = true
+        nombreBastonConectado = deviceName
+        tvConexionBaston.text = "Bastón: Conectado ($deviceName)"
+        tvConexionBaston.setTextColor(Color.parseColor("#2E7D32")) // Verde de éxito
+        btnConectarBaston.text = "Desconectar"
+        Toast.makeText(this, "Lector $deviceName conectado exitosamente", Toast.LENGTH_SHORT).show()
+        
+        if (registroModo == "Global") {
+            actualizarVistaTagsGlobales()
+        }
+    }
+
+    override fun onDisconnected() {
+        isBastonConectado = false
+        nombreBastonConectado = null
+        isModoDemo = false
+        tvConexionBaston.text = "Bastón RFID: Desconectado"
+        tvConexionBaston.setTextColor(Color.GRAY)
+        btnConectarBaston.text = "Conectar"
+        Toast.makeText(this, "Lector RFID desconectado", Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onError(message: String) {
+        Toast.makeText(this, "Error Bluetooth: $message", Toast.LENGTH_LONG).show()
+        onDisconnected()
+    }
+
+    /**
+     * Recibe la lectura real o simulada del tag RFID desde el lector de bastón Bluetooth.
+     * CRÍTICO: Registra la información en el campo de Trazabilidad como lo solicitó el usuario.
+     */
+    override fun onTagRead(tag: String) {
+        if (registroModo == "Individual") {
+            // Ingresa el tag escaneado en el campo de Trazabilidad
+            etTrazabilidad.setText(tag)
+            
+            // Para comodidad del usuario, también autocompletamos el Arete para que la clave primaria esté lista
+            etNumeroAnimal.setText(tag)
+            
+            Toast.makeText(this, "RFID escaneado en Trazabilidad y Arete: $tag", Toast.LENGTH_SHORT).show()
+        } else {
+            // En modo Global, lo acumulamos en la lista de aretes de lote
+            if (scannedTagsList.contains(tag)) {
+                Toast.makeText(this, "El arete $tag ya está en la lista del lote", Toast.LENGTH_SHORT).show()
+            } else {
+                scannedTagsList.add(tag)
+                Toast.makeText(this, "Arete leído: $tag", Toast.LENGTH_SHORT).show()
+                actualizarVistaTagsGlobales()
+            }
+        }
+    }
+
+    // --- Fin Callbacks de Bluetooth ---
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == REQUEST_PERMISSIONS_CODE) {
+            if (bluetoothRfidService.hasPermissions()) {
+                Toast.makeText(this, "Permisos de Bluetooth concedidos", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(this, "Se requieren permisos para escanear y conectar con el lector RFID", Toast.LENGTH_LONG).show()
+            }
         }
     }
 
@@ -208,22 +559,18 @@ class CrearAnimalActivity : AppCompatActivity() {
     private fun selectSex(isMacho: Boolean) {
         if (isMacho) {
             sexoSeleccionado = "Macho"
-            // Activar Macho (Celeste)
             cardMacho.setCardBackgroundColor(Color.parseColor("#4FC3F7"))
             cardMacho.strokeWidth = 0
             
-            // Desactivar Hembra
             val surfaceColor = getColor(com.google.android.material.R.color.m3_sys_color_light_surface)
             cardHembra.setCardBackgroundColor(surfaceColor)
             cardHembra.strokeWidth = 2
             cardHembra.strokeColor = Color.parseColor("#E0E0E0")
         } else {
             sexoSeleccionado = "Hembra"
-            // Activar Hembra (Morado claro)
             cardHembra.setCardBackgroundColor(Color.parseColor("#E1BEE7"))
             cardHembra.strokeWidth = 0
             
-            // Desactivar Macho
             val surfaceColor = getColor(com.google.android.material.R.color.m3_sys_color_light_surface)
             cardMacho.setCardBackgroundColor(surfaceColor)
             cardMacho.strokeWidth = 2
@@ -269,18 +616,14 @@ class CrearAnimalActivity : AppCompatActivity() {
         val arete = editArete ?: return
         val animal = animalRepository.getAnimal(arete) ?: return
 
-        // Cambiar títulos
         tvTitleActivity.text = "Editar Animal"
         btnCrear.text = "Guardar Cambios"
         
-        // Bloquear número de arete
         etNumeroAnimal.setText(animal.numeroAnimal)
         etNumeroAnimal.isEnabled = false
 
-        // Seleccionar sexo
         selectSex(animal.sexo == "Macho")
 
-        // Cargar otros campos
         etTrazabilidad.setText(animal.trazabilidad)
         etNumeroChip.setText(animal.numeroChip)
         etFechaNacimiento.setText(animal.fechaNacimiento)
@@ -295,7 +638,6 @@ class CrearAnimalActivity : AppCompatActivity() {
         etMadre.setText(animal.madre, false)
         etNotas.setText(animal.notas)
 
-        // Cargar imagen si existe y el archivo está guardado localmente
         if (animal.imagenPath.isNotEmpty()) {
             val file = File(animal.imagenPath)
             if (file.exists()) {
@@ -311,6 +653,9 @@ class CrearAnimalActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Valida la información del formulario y ejecuta el registro individual o global en lote.
+     */
     private fun guardarAnimal() {
         val arete = etNumeroAnimal.text.toString().trim()
         val trazabilidad = etTrazabilidad.text.toString().trim()
@@ -328,33 +673,38 @@ class CrearAnimalActivity : AppCompatActivity() {
         tilFechaNacimiento.error = null
         tilNotas.error = null
 
-        // 1. Validaciones para Arete (Mínimo 15 y máximo 30 números, sin letras ni caracteres especiales)
-        if (arete.isEmpty()) {
-            tilNumeroAnimal.error = "El número de arete es requerido"
-            etNumeroAnimal.requestFocus()
-            return
-        }
-        if (!arete.matches(Regex("^[0-9]{15,30}$"))) {
-            tilNumeroAnimal.error = "El arete debe tener entre 15 y 30 números (sin letras ni caracteres especiales)"
-            etNumeroAnimal.requestFocus()
-            return
+        // 1. Validaciones en Modo Individual
+        if (registroModo == "Individual") {
+            if (arete.isEmpty()) {
+                tilNumeroAnimal.error = "El número de arete es requerido"
+                etNumeroAnimal.requestFocus()
+                return
+            }
+            if (!arete.matches(Regex("^[0-9]{15,30}$"))) {
+                tilNumeroAnimal.error = "El arete debe tener entre 15 y 30 números (sin letras ni caracteres especiales)"
+                etNumeroAnimal.requestFocus()
+                return
+            }
+            if (chip.isNotEmpty() && !chip.matches(Regex("^[0-9]{15,30}$"))) {
+                tilNumeroChip.error = "El número de chip debe tener entre 15 y 30 números (sin letras ni caracteres especiales)"
+                etNumeroChip.requestFocus()
+                return
+            }
+        } else {
+            // 2. Validaciones en Modo Global
+            if (scannedTagsList.isEmpty()) {
+                Toast.makeText(this, "Debe escanear al menos un arete usando el bastón RFID", Toast.LENGTH_LONG).show()
+                return
+            }
         }
 
-        // 2. Validaciones para Trazabilidad (Misma validación: si existe, de 15 a 30 números, sin caracteres especiales)
+        // Validaciones comunes compartidas
         if (trazabilidad.isNotEmpty() && !trazabilidad.matches(Regex("^[0-9]{15,30}$"))) {
             tilTrazabilidad.error = "La trazabilidad debe tener entre 15 y 30 números (sin letras ni caracteres especiales)"
             etTrazabilidad.requestFocus()
             return
         }
 
-        // 3. Validaciones para Número de Chip (Misma validación: si existe, de 15 a 30 números, sin caracteres especiales)
-        if (chip.isNotEmpty() && !chip.matches(Regex("^[0-9]{15,30}$"))) {
-            tilNumeroChip.error = "El número de chip debe tener entre 15 y 30 números (sin letras ni caracteres especiales)"
-            etNumeroChip.requestFocus()
-            return
-        }
-
-        // 4. Validaciones de Información básica
         if (raza.isEmpty()) {
             Toast.makeText(this, "Por favor seleccione una raza", Toast.LENGTH_SHORT).show()
             return
@@ -369,7 +719,6 @@ class CrearAnimalActivity : AppCompatActivity() {
             return
         }
 
-        // 5. Validaciones para Notas/Observación (Máximo 100 caracteres y evitar especiales excepto el ':')
         if (notas.length > 100) {
             tilNotas.error = "Las observaciones deben tener como máximo 100 caracteres"
             etNotas.requestFocus()
@@ -381,65 +730,118 @@ class CrearAnimalActivity : AppCompatActivity() {
             return
         }
 
-        // Mover imagen temporal a permanente usando el arete como clave
-        var finalImagenPath = ""
-        if (imagenPathLocal != null) {
-            val tempFile = File(imagenPathLocal!!)
-            if (tempFile.exists() && tempFile.name == "temp_animal_image.png") {
-                val permanentFile = File(filesDir, "animal_$arete.png")
-                try {
-                    if (permanentFile.exists()) {
-                        permanentFile.delete()
+        if (registroModo == "Individual") {
+            // Lógica de guardado individual original
+            var finalImagenPath = ""
+            if (imagenPathLocal != null) {
+                val tempFile = File(imagenPathLocal!!)
+                if (tempFile.exists() && tempFile.name == "temp_animal_image.png") {
+                    val permanentFile = File(filesDir, "animal_$arete.png")
+                    try {
+                        if (permanentFile.exists()) {
+                            permanentFile.delete()
+                        }
+                        tempFile.renameTo(permanentFile)
+                        finalImagenPath = permanentFile.absolutePath
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                        finalImagenPath = tempFile.absolutePath
                     }
-                    tempFile.renameTo(permanentFile)
-                    finalImagenPath = permanentFile.absolutePath
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                    finalImagenPath = tempFile.absolutePath
+                } else {
+                    finalImagenPath = imagenPathLocal!!
                 }
+            } else if (isEditMode) {
+                val animalPrevio = animalRepository.getAnimal(arete)
+                if (animalPrevio != null) {
+                    finalImagenPath = animalPrevio.imagenPath
+                }
+            }
+
+            val animal = Animal(
+                numeroAnimal = arete,
+                sexo = sexoSeleccionado,
+                trazabilidad = trazabilidad,
+                numeroChip = chip,
+                fechaNacimiento = fechaNac,
+                raza = raza,
+                proposito = proposito,
+                manga = etManga.text.toString().trim(),
+                peso = peso,
+                padre = etPadre.text.toString().trim(),
+                madre = etMadre.text.toString().trim(),
+                notas = notas,
+                imagenPath = finalImagenPath
+            )
+
+            val resultado = if (isEditMode) {
+                animalRepository.updateAnimal(animal)
             } else {
-                finalImagenPath = imagenPathLocal!!
+                animalRepository.saveAnimal(animal)
             }
-        } else if (isEditMode) {
-            val animalPrevio = animalRepository.getAnimal(arete)
-            if (animalPrevio != null) {
-                finalImagenPath = animalPrevio.imagenPath
-            }
-        }
 
-        // Crear objeto Animal
-        val animal = Animal(
-            numeroAnimal = arete,
-            sexo = sexoSeleccionado,
-            trazabilidad = trazabilidad,
-            numeroChip = chip,
-            fechaNacimiento = fechaNac,
-            raza = raza,
-            proposito = proposito,
-            manga = etManga.text.toString().trim(),
-            peso = peso,
-            padre = etPadre.text.toString().trim(),
-            madre = etMadre.text.toString().trim(),
-            notas = notas,
-            imagenPath = finalImagenPath
-        )
-
-        val resultado = if (isEditMode) {
-            animalRepository.updateAnimal(animal)
+            resultado.fold(
+                onSuccess = {
+                    val mensaje = if (isEditMode) "Datos actualizados correctamente" else "Animal registrado exitosamente"
+                    Toast.makeText(this, mensaje, Toast.LENGTH_SHORT).show()
+                    evaluarYNotificarProduccion(animal)
+                },
+                onFailure = { error ->
+                    Toast.makeText(this, "Error: ${error.message}", Toast.LENGTH_LONG).show()
+                }
+            )
         } else {
-            animalRepository.saveAnimal(animal)
-        }
+            // Lógica de registro global en lote
+            var guardados = 0
+            var duplicados = 0
+            
+            for (tag in scannedTagsList) {
+                // Verificar duplicados locales en la base de datos
+                if (animalRepository.getAnimal(tag) != null) {
+                    duplicados++
+                    continue
+                }
 
-        resultado.fold(
-            onSuccess = {
-                val mensaje = if (isEditMode) "Datos actualizados correctamente" else "Animal registrado exitosamente"
-                Toast.makeText(this, mensaje, Toast.LENGTH_SHORT).show()
-                evaluarYNotificarProduccion(animal)
-            },
-            onFailure = { error ->
-                Toast.makeText(this, "Error: ${error.message}", Toast.LENGTH_LONG).show()
+                var finalImagenPath = ""
+                if (imagenPathLocal != null) {
+                    val tempFile = File(imagenPathLocal!!)
+                    if (tempFile.exists()) {
+                        val permanentFile = File(filesDir, "animal_$tag.png")
+                        try {
+                            tempFile.copyTo(permanentFile, overwrite = true)
+                            finalImagenPath = permanentFile.absolutePath
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                            finalImagenPath = tempFile.absolutePath
+                        }
+                    }
+                }
+
+                val animal = Animal(
+                    numeroAnimal = tag,
+                    sexo = sexoSeleccionado,
+                    trazabilidad = tag, // Registra el tag escaneado en Trazabilidad para el lote
+                    numeroChip = "", // En lote, el RFID es la trazabilidad y la clave primaria
+                    fechaNacimiento = fechaNac,
+                    raza = raza,
+                    proposito = proposito,
+                    manga = etManga.text.toString().trim(),
+                    peso = peso,
+                    padre = etPadre.text.toString().trim(),
+                    madre = etMadre.text.toString().trim(),
+                    notas = notas,
+                    imagenPath = finalImagenPath
+                )
+
+                val result = animalRepository.saveAnimal(animal)
+                if (result.isSuccess) {
+                    guardados++
+                }
             }
-        )
+
+            val resultMsg = "Registro global exitoso: se guardaron $guardados bovinos ($duplicados omitidos por existir previamente)"
+            Toast.makeText(this, resultMsg, Toast.LENGTH_LONG).show()
+            finish()
+        }
     }
 
     private fun evaluarYNotificarProduccion(animal: Animal) {
@@ -532,6 +934,14 @@ class CrearAnimalActivity : AppCompatActivity() {
             if (totalMonths < 0) 0 else totalMonths
         } catch (e: Exception) {
             0
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        // Asegurar desconexión del socket al salir de la pantalla
+        if (isBastonConectado && !isModoDemo) {
+            bluetoothRfidService.disconnect()
         }
     }
 }

@@ -52,24 +52,6 @@
                 android:orientation="horizontal">
 
                 <ImageButton
-                    android:id="@+id/btnQr"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:layout_marginEnd="16dp"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:src="@drawable/ic_qr_code"
-                    app:tint="?attr/colorOnPrimary" />
-
-                <ImageButton
-                    android:id="@+id/btnNfc"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:layout_marginEnd="16dp"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:src="@drawable/ic_nfc"
-                    app:tint="?attr/colorOnPrimary" />
-
-                <ImageButton
                     android:id="@+id/btnBluetooth"
                     android:layout_width="32dp"
                     android:layout_height="32dp"
@@ -123,7 +105,7 @@
                         android:layout_gravity="center"
                         android:src="@drawable/ic_camera_alt"
                         app:tint="#4FC3F7" />
-                        
+
                 </com.google.android.material.card.MaterialCardView>
             </FrameLayout>
 
@@ -132,6 +114,160 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:padding="16dp">
+
+                <!-- Modo de Registro Selector (Individual vs. Global/Lote) -->
+                <TextView
+                    android:id="@+id/tvModoRegistroHeader"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Modo de Registro *"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/md_theme_light_primary"
+                    android:layout_marginBottom="8dp" />
+
+                <LinearLayout
+                    android:id="@+id/layoutModoRegistroSelector"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="2"
+                    android:layout_marginBottom="16dp">
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/cardModoIndividual"
+                        android:layout_width="0dp"
+                        android:layout_height="48dp"
+                        android:layout_weight="1"
+                        android:layout_marginEnd="8dp"
+                        app:cardCornerRadius="24dp"
+                        app:cardBackgroundColor="#4FC3F7"
+                        app:strokeWidth="0dp"
+                        android:clickable="true"
+                        android:focusable="true">
+
+                         <TextView
+                            android:id="@+id/tvLabelIndividual"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:text="Individual"
+                            android:textColor="@android:color/white"
+                            android:textStyle="bold" />
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/cardModoGlobal"
+                        android:layout_width="0dp"
+                        android:layout_height="48dp"
+                        android:layout_weight="1"
+                        android:layout_marginStart="8dp"
+                        app:cardCornerRadius="24dp"
+                        app:cardBackgroundColor="?attr/colorSurface"
+                        app:strokeColor="#E0E0E0"
+                        app:strokeWidth="1dp"
+                        android:clickable="true"
+                        android:focusable="true">
+
+                        <TextView
+                            android:id="@+id/tvLabelGlobal"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:text="Global (Lote)"
+                            android:textColor="#9E9E9E"
+                            android:textStyle="bold" />
+                    </com.google.android.material.card.MaterialCardView>
+                </LinearLayout>
+
+                <!-- Contenedor de Tags Globales (Lote) -->
+                <LinearLayout
+                    android:id="@+id/layoutGlobalTags"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    android:layout_marginBottom="16dp">
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:cardCornerRadius="16dp"
+                        app:cardElevation="2dp"
+                        app:strokeColor="@color/md_theme_light_primary"
+                        app:strokeWidth="1dp"
+                        app:cardBackgroundColor="#F1F8E9">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="16dp">
+
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+
+                                <TextView
+                                    android:id="@+id/tvConexionBaston"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Bastón RFID: Desconectado"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/text_gray"
+                                    android:layout_alignParentStart="true"
+                                    android:layout_centerVertical="true" />
+
+                                <com.google.android.material.button.MaterialButton
+                                    android:id="@+id/btnConectarBaston"
+                                    style="@style/Widget.Material3.Button.ElevatedButton"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignParentEnd="true"
+                                    android:text="Conectar"
+                                    android:textSize="12sp"
+                                    app:cornerRadius="8dp" />
+
+                            </RelativeLayout>
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:background="@color/divider"
+                                android:layout_marginVertical="12dp" />
+
+                            <TextView
+                                android:id="@+id/tvContadorTags"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Tags Escaneados: 0"
+                                android:textSize="16sp"
+                                android:textStyle="bold"
+                                android:textColor="@color/md_theme_light_primary" />
+
+                            <TextView
+                                android:id="@+id/tvListaTags"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Ningún tag escaneado aún. Conecte el bastón y simule escaneos."
+                                android:textColor="#757575"
+                                android:textSize="13sp"
+                                android:layout_marginTop="8dp" />
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnLimpiarTags"
+                                style="@style/Widget.Material3.Button.TextButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Limpiar Lista"
+                                android:textColor="#E53935"
+                                android:layout_gravity="end"
+                                android:layout_marginTop="8dp"
+                                android:visibility="gone" />
+
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+                </LinearLayout>
 
                 <!-- Sex Toggle Buttons -->
                 <LinearLayout
