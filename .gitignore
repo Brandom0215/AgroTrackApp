@@ -11,7 +11,8 @@ build/
 *.iml
 *.iws
 *.ipr
-
+*.zip
+*.rar
 
 # OS 
 .DS_Store

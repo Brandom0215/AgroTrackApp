@@ -102,7 +102,11 @@ class InventarioFragment : Fragment(R.layout.fragment_inventario) {
             try {
                 val dateA = format.parse(a.fechaRegistro)
                 val dateB = format.parse(b.fechaRegistro)
-                dateB.compareTo(dateA) // Descendente (más reciente primero)
+                if (dateA != null && dateB != null) {
+                    dateB.compareTo(dateA) // Descendente (más reciente primero)
+                } else {
+                    b.fechaRegistro.compareTo(a.fechaRegistro)
+                }
             } catch (e: Exception) {
                 b.fechaRegistro.compareTo(a.fechaRegistro) // Ordenación por string si falla
             }
