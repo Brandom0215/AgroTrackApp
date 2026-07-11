@@ -205,34 +205,37 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun mostrarDialogoPrivacidad(obligatorio: Boolean) {
-        val builder = AlertDialog.Builder(this)
-        builder.setTitle("Aviso de Privacidad (Ley N° 81)")
-        builder.setMessage(
-            "En cumplimiento de la Ley N° 81 de 26 de marzo de 2019 de la República de Panamá, " +
-            "le informamos que esta aplicación recopila y procesa de forma estrictamente local datos personales " +
-            "y de producción/monitoreo de su finca.\n\n" +
-            "Principios aplicados:\n" +
-            "• Lealtad y Finalidad: Sus datos se procesan únicamente para el monitoreo y gestión de su finca.\n" +
-            "• Proporcionalidad: Solo se solicitan datos estrictamente necesarios.\n" +
-            "• Seguridad: Su información se almacena localmente en la base de datos segura de su dispositivo.\n" +
-            "• Transparencia y Derechos ARCO: Usted tiene derecho a acceder, rectificar, cancelar (eliminar) u oponerse al tratamiento de sus datos en cualquier momento desde la pantalla de perfil.\n\n" +
-            "Al hacer clic en Aceptar, usted otorga su consentimiento expreso e inequívoco para el tratamiento de sus datos en los términos descritos."
-        )
-        builder.setCancelable(!obligatorio)
-        builder.setPositiveButton("Aceptar") { dialog, _ ->
+        val dialogView = layoutInflater.inflate(R.layout.dialog_aviso_privacidad, null)
+        val dialog = AlertDialog.Builder(this)
+            .setView(dialogView)
+            .setCancelable(!obligatorio)
+            .create()
+
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+
+        val btnAccept = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnAcceptConsent)
+        val btnDecline = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnDeclineConsent)
+
+        if (obligatorio) {
+            btnDecline.text = "Salir"
+        } else {
+            btnDecline.text = "Cerrar"
+        }
+
+        btnAccept.setOnClickListener {
             val prefs = getSharedPreferences("GanaDEXAuthPrefs", MODE_PRIVATE)
             prefs.edit().putBoolean("privacy_policy_accepted", true).apply()
             dialog.dismiss()
         }
-        if (obligatorio) {
-            builder.setNegativeButton("Salir") { _, _ ->
+
+        btnDecline.setOnClickListener {
+            if (obligatorio) {
                 finishAffinity()
-            }
-        } else {
-            builder.setNegativeButton("Cerrar") { dialog, _ ->
+            } else {
                 dialog.dismiss()
             }
         }
-        builder.show()
+
+        dialog.show()
     }
 }

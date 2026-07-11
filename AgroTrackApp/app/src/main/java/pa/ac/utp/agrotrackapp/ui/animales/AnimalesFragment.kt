@@ -37,6 +37,8 @@ class AnimalesFragment : Fragment(R.layout.fragment_animales) {
     private lateinit var spinnerFilterSexo: Spinner
     private lateinit var rvAnimalesTabla: RecyclerView
     private lateinit var tvEmptyState: TextView
+    private lateinit var llRecentActivityContainer: LinearLayout
+    private lateinit var tvEmptyRecentActivity: TextView
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -57,6 +59,8 @@ class AnimalesFragment : Fragment(R.layout.fragment_animales) {
         spinnerFilterSexo = view.findViewById(R.id.spinnerFilterSexo)
         rvAnimalesTabla = view.findViewById(R.id.rvAnimalesTabla)
         tvEmptyState = view.findViewById(R.id.tvEmptyState)
+        llRecentActivityContainer = view.findViewById(R.id.llRecentActivityContainer)
+        tvEmptyRecentActivity = view.findViewById(R.id.tvEmptyRecentActivity)
 
         // Setup Drawer Menu
         view.findViewById<ImageButton>(R.id.btnMenu)?.setOnClickListener {
@@ -130,6 +134,8 @@ class AnimalesFragment : Fragment(R.layout.fragment_animales) {
 
         // Actualizar la lista de la tabla con los filtros actuales
         filtrarAnimales()
+        // Cargar actividad reciente dinámicamente
+        cargarActividadReciente()
     }
 
     private fun filtrarAnimales() {
@@ -228,5 +234,97 @@ class AnimalesFragment : Fragment(R.layout.fragment_animales) {
         val intent = Intent(requireContext(), CrearAnimalActivity::class.java)
         intent.putExtra("EXTRA_NUMERO_ANIMAL", animal.numeroAnimal)
         startActivity(intent)
+    }
+
+    private fun cargarActividadReciente() {
+        llRecentActivityContainer.removeAllViews()
+        val lastAnimals = allAnimals.takeLast(3).reversed()
+        if (lastAnimals.isEmpty()) {
+            tvEmptyRecentActivity.visibility = View.VISIBLE
+            llRecentActivityContainer.addView(tvEmptyRecentActivity)
+        } else {
+            tvEmptyRecentActivity.visibility = View.GONE
+            val inflater = LayoutInflater.from(requireContext())
+            for (animal in lastAnimals) {
+                val itemLayout = RelativeLayout(requireContext()).apply {
+                    layoutParams = LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                    ).apply {
+                        setMargins(0, 0, 0, 20)
+                    }
+                }
+
+                val cardView = com.google.android.material.card.MaterialCardView(requireContext()).apply {
+                    id = View.generateViewId()
+                    layoutParams = RelativeLayout.LayoutParams(120, 120).apply {
+                        addRule(RelativeLayout.ALIGN_PARENT_START)
+                    }
+                    radius = 22f
+                    cardElevation = 0f
+                    strokeWidth = 0
+                }
+
+                val imageView = ImageView(requireContext()).apply {
+                    layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+                    scaleType = ImageView.ScaleType.CENTER_CROP
+                    if (animal.imagenPath.isNotEmpty() && java.io.File(animal.imagenPath).exists()) {
+                        val optBitmap = pa.ac.utp.agrotrackapp.utils.ImageResizer.decodeSampledBitmapFromFile(animal.imagenPath, 100, 100)
+                        if (optBitmap != null) {
+                            setImageBitmap(optBitmap)
+                        } else {
+                            setImageResource(R.drawable.vaca)
+                        }
+                    } else {
+                        setImageResource(R.drawable.vaca)
+                    }
+                }
+                cardView.addView(imageView)
+                itemLayout.addView(cardView)
+
+                val infoLayout = LinearLayout(requireContext()).apply {
+                    layoutParams = RelativeLayout.LayoutParams(
+                        RelativeLayout.LayoutParams.WRAP_CONTENT,
+                        RelativeLayout.LayoutParams.WRAP_CONTENT
+                    ).apply {
+                        addRule(RelativeLayout.END_OF, cardView.id)
+                        marginStart = 30
+                    }
+                    orientation = LinearLayout.VERTICAL
+                }
+
+                val titleView = TextView(requireContext()).apply {
+                    text = "Bovino Registrado"
+                    setTextAppearance(android.R.style.TextAppearance_Medium)
+                    textSize = 14f
+                    setTypeface(typeface, android.graphics.Typeface.BOLD)
+                }
+
+                val subtitleView = TextView(requireContext()).apply {
+                    text = "Arete: ${animal.numeroAnimal} • ${animal.raza} • ${animal.peso} kg"
+                    textSize = 12f
+                    setTextColor(Color.GRAY)
+                }
+
+                infoLayout.addView(titleView)
+                infoLayout.addView(subtitleView)
+                itemLayout.addView(infoLayout)
+
+                val dateView = TextView(requireContext()).apply {
+                    layoutParams = RelativeLayout.LayoutParams(
+                        RelativeLayout.LayoutParams.WRAP_CONTENT,
+                        RelativeLayout.LayoutParams.WRAP_CONTENT
+                    ).apply {
+                        addRule(RelativeLayout.ALIGN_PARENT_END)
+                    }
+                    text = animal.fechaNacimiento
+                    textSize = 11f
+                    setTextColor(Color.GRAY)
+                }
+                itemLayout.addView(dateView)
+
+                llRecentActivityContainer.addView(itemLayout)
+            }
+        }
     }
 }
