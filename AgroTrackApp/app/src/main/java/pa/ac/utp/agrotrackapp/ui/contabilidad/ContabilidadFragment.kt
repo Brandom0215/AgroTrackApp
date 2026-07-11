@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import pa.ac.utp.agrotrackapp.R
-import pa.ac.utp.agrotrackapp.data.inventario.SharedPrefsInventarioRepository
+import pa.ac.utp.agrotrackapp.data.inventario.SqliteInventarioRepository
 import pa.ac.utp.agrotrackapp.domain.repository.InventarioRepository
 import pa.ac.utp.agrotrackapp.ui.main.MainActivity
 import java.util.Locale
@@ -26,7 +26,7 @@ class ContabilidadFragment : Fragment(R.layout.fragment_contabilidad) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        inventarioRepository = SharedPrefsInventarioRepository(requireContext())
+        inventarioRepository = SqliteInventarioRepository(requireContext())
 
         // Configurar Drawer Button
         view.findViewById<ImageButton>(R.id.btnMenu)?.setOnClickListener {
