@@ -148,6 +148,37 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    fun navigateToDestination(itemId: Int) {
+        when (itemId) {
+            R.id.nav_finca, R.id.nav_animales, R.id.nav_produccion, R.id.nav_alertas -> {
+                navigateToTab(itemId)
+            }
+            R.id.drawer_inicio -> navigateToTab(R.id.nav_finca)
+            R.id.drawer_gestion_ganado -> navigateToTab(R.id.nav_animales)
+            R.id.drawer_produccion -> navigateToTab(R.id.nav_produccion)
+            R.id.drawer_control_sanitario -> {
+                supportFragmentManager.beginTransaction().replace(R.id.fragment_container, ControlSanitarioFragment()).commit()
+                bottomNavigation.menu.setGroupCheckable(0, false, true)
+            }
+            R.id.drawer_pesaje -> {
+                supportFragmentManager.beginTransaction().replace(R.id.fragment_container, PesajeFragment()).commit()
+                bottomNavigation.menu.setGroupCheckable(0, false, true)
+            }
+            R.id.drawer_mortalidad -> {
+                supportFragmentManager.beginTransaction().replace(R.id.fragment_container, MortalidadFragment()).commit()
+                bottomNavigation.menu.setGroupCheckable(0, false, true)
+            }
+            R.id.drawer_gestion_insumos -> {
+                supportFragmentManager.beginTransaction().replace(R.id.fragment_container, InventarioFragment()).commit()
+                bottomNavigation.menu.setGroupCheckable(0, false, true)
+            }
+            R.id.drawer_contabilidad -> {
+                supportFragmentManager.beginTransaction().replace(R.id.fragment_container, ContabilidadFragment()).commit()
+                bottomNavigation.menu.setGroupCheckable(0, false, true)
+            }
+        }
+    }
+
     fun openDrawer() {
         drawerLayout.openDrawer(GravityCompat.START)
     }
