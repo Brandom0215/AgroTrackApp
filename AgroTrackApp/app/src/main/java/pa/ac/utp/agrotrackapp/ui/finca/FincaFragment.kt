@@ -6,6 +6,11 @@ import android.view.View
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import com.github.mikephil.charting.charts.PieChart
+import com.github.mikephil.charting.data.PieData
+import com.github.mikephil.charting.data.PieDataSet
+import com.github.mikephil.charting.data.PieEntry
+import android.graphics.Color
 import com.google.android.material.card.MaterialCardView
 import pa.ac.utp.agrotrackapp.R
 import pa.ac.utp.agrotrackapp.domain.repository.AuthRepository
@@ -76,6 +81,33 @@ class FincaFragment : Fragment(R.layout.fragment_finca) {
         view.findViewById<TextView>(R.id.tvTorosCount)?.text = " Machos: $machos"
         view.findViewById<TextView>(R.id.tvVacasCount)?.text = " Hembras: $hembras"
         view.findViewById<TextView>(R.id.tvTernerosCount)?.text = " Total Registros: $totalAnimals"
+
+        val pieChart = view.findViewById<PieChart>(R.id.donutChart)
+        if (pieChart != null) {
+            pieChart.setNoDataText("Sin datos")
+            pieChart.setNoDataTextColor(Color.parseColor("#999999"))
+            
+            val entries = ArrayList<PieEntry>()
+            if (machos > 0) entries.add(PieEntry(machos.toFloat(), "Machos"))
+            if (hembras > 0) entries.add(PieEntry(hembras.toFloat(), "Hembras"))
+            
+            if (entries.isNotEmpty()) {
+                val dataSet = PieDataSet(entries, "")
+                dataSet.colors = listOf(Color.parseColor("#4CAF50"), Color.parseColor("#81C784"))
+                dataSet.valueTextColor = Color.WHITE
+                dataSet.valueTextSize = 12f
+                
+                pieChart.data = PieData(dataSet)
+                pieChart.description.isEnabled = false
+                pieChart.legend.isEnabled = false
+                pieChart.isDrawHoleEnabled = true
+                pieChart.setHoleColor(Color.TRANSPARENT)
+                pieChart.animateY(1000)
+                pieChart.invalidate()
+            } else {
+                pieChart.clear()
+            }
+        }
 
         // 2. Alertas y Cuarentena
         val activeAlerts = alertRepo.getAlertas().filter { !it.isDismissed }
