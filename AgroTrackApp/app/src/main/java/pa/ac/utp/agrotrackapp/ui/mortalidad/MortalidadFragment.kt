@@ -23,6 +23,7 @@ import pa.ac.utp.agrotrackapp.domain.model.MortalidadRecord
 import pa.ac.utp.agrotrackapp.domain.repository.AnimalRepository
 import pa.ac.utp.agrotrackapp.domain.repository.MortalidadRepository
 import pa.ac.utp.agrotrackapp.ui.main.MainActivity
+import java.text.SimpleDateFormat
 import java.util.*
 
 class MortalidadFragment : Fragment() {
@@ -152,10 +153,14 @@ class MortalidadFragment : Fragment() {
             val month = calendar.get(Calendar.MONTH)
             val day = calendar.get(Calendar.DAY_OF_MONTH)
             
-            DatePickerDialog(requireContext(), { _, selectedYear, selectedMonth, selectedDay ->
+            val datePicker = DatePickerDialog(requireContext(), { _, selectedYear, selectedMonth, selectedDay ->
                 val dateString = String.format("%02d/%02d/%04d", selectedDay, selectedMonth + 1, selectedYear)
                 etMortalidadFecha.setText(dateString)
-            }, year, month, day).show()
+            }, year, month, day)
+            
+            // La fecha no se puede elegir una fecha futura
+            datePicker.datePicker.maxDate = System.currentTimeMillis()
+            datePicker.show()
         }
 
         dialogView.findViewById<MaterialButton>(R.id.btnCancelMortalidad).setOnClickListener {
@@ -201,6 +206,26 @@ class MortalidadFragment : Fragment() {
             // 3. Validar Fecha
             if (fecha.isEmpty()) {
                 tilMortalidadFecha.error = "La fecha de muerte es requerida"
+                return@setOnClickListener
+            }
+            
+            // Validar que la fecha no sea futura
+            try {
+                val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+                val selectedDate = sdf.parse(fecha)
+                val today = Calendar.getInstance().apply {
+                    set(Calendar.HOUR_OF_DAY, 23)
+                    set(Calendar.MINUTE, 59)
+                    set(Calendar.SECOND, 59)
+                    set(Calendar.MILLISECOND, 999)
+                }.time
+                
+                if (selectedDate != null && selectedDate.after(today)) {
+                    tilMortalidadFecha.error = "No se permiten fechas futuras"
+                    return@setOnClickListener
+                }
+            } catch (e: Exception) {
+                tilMortalidadFecha.error = "Formato de fecha inválido"
                 return@setOnClickListener
             }
 

@@ -85,12 +85,15 @@
                 android:layout_marginBottom="12dp"
                 android:hint="Escriba la Causa *"
                 android:visibility="gone"
+                app:counterEnabled="true"
+                app:counterMaxLength="30"
                 app:errorEnabled="true">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etMortalidadOtraCausa"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:maxLength="30"
                     android:inputType="text" />
             </com.google.android.material.textfield.TextInputLayout>
 
