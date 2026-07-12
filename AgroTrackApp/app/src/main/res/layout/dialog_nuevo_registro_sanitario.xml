@@ -85,7 +85,8 @@
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etVacuna"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:maxLength="15"/>
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
 
@@ -105,7 +106,8 @@
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etTipoTratamiento"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:maxLength="15"/>
             </com.google.android.material.textfield.TextInputLayout>
             <com.google.android.material.textfield.TextInputLayout
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -116,7 +118,8 @@
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etPropositoTratamiento"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:maxLength="15"/>
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
 
@@ -157,7 +160,8 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etProductoComun"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:maxLength="15"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <!-- DOSIS Y VETERINARIO -->
@@ -171,7 +175,8 @@
                 android:id="@+id/etDosis"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="numberDecimal"/>
+                android:inputType="text"
+                android:maxLength="15"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -184,7 +189,8 @@
                 android:id="@+id/etVeterinario"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textCapWords"/>
+                android:inputType="textCapWords"
+                android:maxLength="15"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <!-- PLANIFICACIÓN -->

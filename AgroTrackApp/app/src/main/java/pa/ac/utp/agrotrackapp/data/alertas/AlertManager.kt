@@ -155,7 +155,7 @@ class AlertManager(private val context: Context) {
                 if (nextDate != null) {
                     val diff = nextDate.time - todayDateMidnight.time
                     diasRestantes = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS)
-                    sanidadPendiente = true
+                    sanidadPendiente = diasRestantes <= 3
                     isUrgente = diasRestantes <= 0
                 }
             } catch (e: Exception) {}
