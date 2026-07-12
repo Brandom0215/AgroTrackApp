@@ -681,15 +681,27 @@ class CrearAnimalActivity : AppCompatActivity(), BluetoothRfidService.BluetoothR
                 etNumeroAnimal.requestFocus()
                 return
             }
-            if (!arete.matches(Regex("^[0-9]{15,30}$"))) {
-                tilNumeroAnimal.error = "El arete debe tener entre 15 y 30 números (sin letras ni caracteres especiales)"
+            val areteNum = arete.toIntOrNull()
+            if (areteNum == null || areteNum < 1 || areteNum > 9999) {
+                tilNumeroAnimal.error = "El arete debe ser un número entre 1 y 9999"
                 etNumeroAnimal.requestFocus()
                 return
             }
-            if (chip.isNotEmpty() && !chip.matches(Regex("^[0-9]{15,30}$"))) {
-                tilNumeroChip.error = "El número de chip debe tener entre 15 y 30 números (sin letras ni caracteres especiales)"
-                etNumeroChip.requestFocus()
-                return
+            if (trazabilidad.isNotEmpty()) {
+                val trazaNum = trazabilidad.toIntOrNull()
+                if (trazaNum == null || trazaNum < 1 || trazaNum > 9999) {
+                    tilTrazabilidad.error = "La trazabilidad debe ser un número entre 1 y 9999"
+                    etTrazabilidad.requestFocus()
+                    return
+                }
+            }
+            if (chip.isNotEmpty()) {
+                val chipNum = chip.toIntOrNull()
+                if (chipNum == null || chipNum < 1 || chipNum > 9999) {
+                    tilNumeroChip.error = "El número de chip debe ser un número entre 1 y 9999"
+                    etNumeroChip.requestFocus()
+                    return
+                }
             }
         } else {
             // 2. Validaciones en Modo Global

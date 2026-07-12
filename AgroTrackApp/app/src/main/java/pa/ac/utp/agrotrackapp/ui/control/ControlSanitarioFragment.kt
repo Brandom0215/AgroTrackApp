@@ -131,6 +131,11 @@ class ControlSanitarioFragment : Fragment(R.layout.fragment_control_sanitario) {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        cargarRegistros()
+        actualizarKPIs()
+    }
     private fun agruparPorGrupoId(all: List<RegistroSanitario>): List<List<RegistroSanitario>> {
         val map = linkedMapOf<String, MutableList<RegistroSanitario>>()
         all.forEach { r ->
