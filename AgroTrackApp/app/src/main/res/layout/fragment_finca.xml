@@ -13,8 +13,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fitsSystemWindows="true"
-        android:background="?attr/colorPrimary"
-        app:elevation="2dp">
+        app:liftOnScroll="false"
+        style="@style/Widget.MaterialComponents.AppBarLayout.PrimarySurface"
+        app:elevation="0dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
