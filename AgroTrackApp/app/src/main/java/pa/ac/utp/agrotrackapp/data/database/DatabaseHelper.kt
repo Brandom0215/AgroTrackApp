@@ -8,7 +8,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
 
     companion object {
         const val DATABASE_NAME = "AgroTrack.db"
-        const val DATABASE_VERSION = 2
+        const val DATABASE_VERSION = 5
 
         // Table Names
         const val TABLE_USUARIOS = "usuarios"
@@ -18,6 +18,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         const val TABLE_MORTALIDAD_RECORDS = "mortalidad_records"
         const val TABLE_INVENTARIO_ITEMS = "inventario_items"
         const val TABLE_ALERTAS = "alertas"
+        const val TABLE_SANITARIA = "registros_sanitarios"
 
         // Usuarios Columns
         const val COL_USER_USUARIO = "usuario"
@@ -99,6 +100,22 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         const val COL_ALERTA_DISMISSED = "is_dismissed"
         const val COL_ALERTA_DEST = "destination_id"
         const val COL_ALERTA_REF = "reference_id"
+        const val COL_ALERTA_FECHA_PROG = "fecha_programada"
+
+        // Sanitaria Columns
+        const val COL_SAN_ID = "id"
+        const val COL_SAN_IDENTIFICADOR = "identificador"
+        const val COL_SAN_ALCANCE = "alcance"
+        const val COL_SAN_CATEGORIA = "categoria"
+        const val COL_SAN_DETALLE = "detalle"
+        const val COL_SAN_PRODUCTO = "producto"
+        const val COL_SAN_DOSIS = "dosis"
+        const val COL_SAN_FECHA = "fecha"
+        const val COL_SAN_PROXIMA_DOSIS = "proxima_dosis"
+        const val COL_SAN_VETERINARIO = "veterinario"
+        const val COL_SAN_NOTAS = "notas"
+        const val COL_SAN_ESTADO = "estado"
+        const val COL_SAN_GRUPO_ID = "grupo_id"
     }
 
     override fun onCreate(db: SQLiteDatabase) {
@@ -200,20 +217,59 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
                 $COL_ALERTA_PRIO TEXT,
                 $COL_ALERTA_DISMISSED INTEGER,
                 $COL_ALERTA_DEST INTEGER,
-                $COL_ALERTA_REF TEXT
+                $COL_ALERTA_REF TEXT,
+                $COL_ALERTA_FECHA_PROG TEXT
+            )
+        """)
+
+        db.execSQL("""
+            CREATE TABLE IF NOT EXISTS $TABLE_SANITARIA (
+                $COL_SAN_ID TEXT PRIMARY KEY,
+                $COL_SAN_IDENTIFICADOR TEXT,
+                $COL_SAN_ALCANCE TEXT,
+                $COL_SAN_CATEGORIA TEXT,
+                $COL_SAN_DETALLE TEXT,
+                $COL_SAN_PRODUCTO TEXT,
+                $COL_SAN_DOSIS TEXT,
+                $COL_SAN_FECHA TEXT,
+                $COL_SAN_PROXIMA_DOSIS TEXT,
+                $COL_SAN_VETERINARIO TEXT,
+                $COL_SAN_NOTAS TEXT,
+                $COL_SAN_ESTADO TEXT,
+                $COL_SAN_GRUPO_ID TEXT
             )
         """)
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
-        db.execSQL("DROP TABLE IF EXISTS $TABLE_USUARIOS")
-        db.execSQL("DROP TABLE IF EXISTS $TABLE_ANIMALES")
-        db.execSQL("DROP TABLE IF EXISTS $TABLE_CARNE_RECORDS")
-        db.execSQL("DROP TABLE IF EXISTS $TABLE_LECHE_RECORDS")
-        db.execSQL("DROP TABLE IF EXISTS $TABLE_MORTALIDAD_RECORDS")
-        db.execSQL("DROP TABLE IF EXISTS $TABLE_INVENTARIO_ITEMS")
-        db.execSQL("DROP TABLE IF EXISTS $TABLE_ALERTAS")
-        onCreate(db)
+        if (oldVersion < 3) {
+            db.execSQL("""
+                CREATE TABLE IF NOT EXISTS $TABLE_SANITARIA (
+                    $COL_SAN_ID TEXT PRIMARY KEY,
+                    $COL_SAN_IDENTIFICADOR TEXT,
+                    $COL_SAN_ALCANCE TEXT,
+                    $COL_SAN_CATEGORIA TEXT,
+                    $COL_SAN_DETALLE TEXT,
+                    $COL_SAN_PRODUCTO TEXT,
+                    $COL_SAN_DOSIS TEXT,
+                    $COL_SAN_FECHA TEXT,
+                    $COL_SAN_PROXIMA_DOSIS TEXT,
+                    $COL_SAN_VETERINARIO TEXT,
+                    $COL_SAN_NOTAS TEXT,
+                    $COL_SAN_ESTADO TEXT
+                )
+            """)
+        }
+        if (oldVersion < 4) {
+            try {
+                db.execSQL("ALTER TABLE $TABLE_ALERTAS ADD COLUMN $COL_ALERTA_FECHA_PROG TEXT")
+            } catch (e: Exception) { /* column may already exist */ }
+        }
+        if (oldVersion < 5) {
+            try {
+                db.execSQL("ALTER TABLE $TABLE_SANITARIA ADD COLUMN $COL_SAN_GRUPO_ID TEXT DEFAULT ''")
+            } catch (e: Exception) { /* column may already exist */ }
+        }
     }
 
     fun clearAllTables() {
@@ -227,6 +283,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
             db.delete(TABLE_MORTALIDAD_RECORDS, null, null)
             db.delete(TABLE_INVENTARIO_ITEMS, null, null)
             db.delete(TABLE_ALERTAS, null, null)
+            db.delete(TABLE_SANITARIA, null, null)
             db.setTransactionSuccessful()
         } finally {
             db.endTransaction()

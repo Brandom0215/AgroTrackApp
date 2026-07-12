@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bottom_sheet_bg">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <!-- Header row: icon + title + chip -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="16dp">
+
+            <ImageView
+                android:id="@+id/ivDetalleIcono"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/gestion_sanitaria"
+                android:layout_marginEnd="12dp"/>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvDetalleIdentificador"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Arete: 001"
+                    android:textColor="#1A202C"
+                    android:textSize="18sp"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:id="@+id/tvDetalleAlcance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Individual"
+                    android:textColor="#718096"
+                    android:textSize="12sp"
+                    android:layout_marginTop="2dp"/>
+            </LinearLayout>
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipDetalleCategoria"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Vacunación"
+                android:textSize="12sp"
+                app:chipMinHeight="28dp"
+                app:chipCornerRadius="8dp"/>
+        </LinearLayout>
+
+        <!-- Divider -->
+        <View android:layout_width="match_parent" android:layout_height="1dp"
+            android:background="#EDF2F7" android:layout_marginBottom="16dp"/>
+
+        <!-- Sección: Procedimiento -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="📋  Procedimiento"
+            android:textColor="#4A5568"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:textAllCaps="true"
+            android:letterSpacing="0.08"
+            android:layout_marginBottom="10dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="8dp">
+            <TextView android:layout_width="100dp" android:layout_height="wrap_content"
+                android:text="Tipo" android:textColor="#718096" android:textSize="13sp"/>
+            <TextView android:id="@+id/tvDetalleCategoria" android:layout_width="0dp"
+                android:layout_weight="1" android:layout_height="wrap_content"
+                android:text="Vacunación" android:textColor="#2D3748"
+                android:textSize="13sp" android:textStyle="bold"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="8dp">
+            <TextView android:layout_width="100dp" android:layout_height="wrap_content"
+                android:text="Detalle" android:textColor="#718096" android:textSize="13sp"/>
+            <TextView android:id="@+id/tvDetalleDetalle" android:layout_width="0dp"
+                android:layout_weight="1" android:layout_height="wrap_content"
+                android:text="Clostridial" android:textColor="#2D3748"
+                android:textSize="13sp" android:textStyle="bold"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/rowProducto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="8dp"
+            android:visibility="gone">
+            <TextView android:layout_width="100dp" android:layout_height="wrap_content"
+                android:text="Medicamento" android:textColor="#718096" android:textSize="13sp"/>
+            <TextView android:id="@+id/tvDetalleProducto" android:layout_width="0dp"
+                android:layout_weight="1" android:layout_height="wrap_content"
+                android:text="Penicilina" android:textColor="#2D3748"
+                android:textSize="13sp" android:textStyle="bold"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="16dp">
+            <TextView android:layout_width="100dp" android:layout_height="wrap_content"
+                android:text="Dosis" android:textColor="#718096" android:textSize="13sp"/>
+            <TextView android:id="@+id/tvDetalleDosis" android:layout_width="0dp"
+                android:layout_weight="1" android:layout_height="wrap_content"
+                android:text="5 ml" android:textColor="#2D3748"
+                android:textSize="13sp" android:textStyle="bold"/>
+        </LinearLayout>
+
+        <!-- Divider -->
+        <View android:layout_width="match_parent" android:layout_height="1dp"
+            android:background="#EDF2F7" android:layout_marginBottom="16dp"/>
+
+        <!-- Sección: Aplicación -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="📅  Aplicación"
+            android:textColor="#4A5568"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:textAllCaps="true"
+            android:letterSpacing="0.08"
+            android:layout_marginBottom="10dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="8dp">
+            <TextView android:layout_width="100dp" android:layout_height="wrap_content"
+                android:text="Fecha" android:textColor="#718096" android:textSize="13sp"/>
+            <TextView android:id="@+id/tvDetalleFecha" android:layout_width="0dp"
+                android:layout_weight="1" android:layout_height="wrap_content"
+                android:text="2024-07-11" android:textColor="#2D3748"
+                android:textSize="13sp" android:textStyle="bold"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="8dp">
+            <TextView android:layout_width="100dp" android:layout_height="wrap_content"
+                android:text="Veterinario" android:textColor="#718096" android:textSize="13sp"/>
+            <TextView android:id="@+id/tvDetalleVet" android:layout_width="0dp"
+                android:layout_weight="1" android:layout_height="wrap_content"
+                android:text="Dr. Pérez" android:textColor="#2D3748"
+                android:textSize="13sp" android:textStyle="bold"/>
+        </LinearLayout>
+
+        <!-- Estado badge -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="8dp">
+            <TextView android:layout_width="100dp" android:layout_height="wrap_content"
+                android:text="Estado" android:textColor="#718096" android:textSize="13sp"/>
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipDetalleEstado"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Aplicado"
+                android:textSize="12sp"
+                app:chipMinHeight="24dp"
+                app:chipCornerRadius="8dp"/>
+        </LinearLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCerrarDetalle"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:text="Cerrar"
+            android:layout_marginTop="16dp"
+            app:cornerRadius="8dp"
+            app:backgroundTint="#E2E8F0"
+            android:textColor="#4A5568"/>
+
+    </LinearLayout>
+</ScrollView>

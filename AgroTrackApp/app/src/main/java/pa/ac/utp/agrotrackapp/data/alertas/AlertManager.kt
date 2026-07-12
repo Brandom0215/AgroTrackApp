@@ -12,6 +12,7 @@ import pa.ac.utp.agrotrackapp.data.animal.SqliteAnimalRepository
 import pa.ac.utp.agrotrackapp.data.inventario.SqliteInventarioRepository
 import pa.ac.utp.agrotrackapp.data.mortalidad.SqliteMortalidadRepository
 import pa.ac.utp.agrotrackapp.data.produccion.SqliteProduccionRepository
+import pa.ac.utp.agrotrackapp.data.sanidad.SqliteSanidadRepository
 import pa.ac.utp.agrotrackapp.domain.model.Alerta
 import pa.ac.utp.agrotrackapp.domain.model.PrioridadAlerta
 import pa.ac.utp.agrotrackapp.domain.model.TipoAlerta
@@ -27,6 +28,7 @@ class AlertManager(private val context: Context) {
     private val animalRepo = SqliteAnimalRepository(context)
     private val mortalidadRepo = SqliteMortalidadRepository(context)
     private val produccionRepo = SqliteProduccionRepository(context)
+    private val sanidadRepo = SqliteSanidadRepository(context)
     private val prefs = context.getSharedPreferences("AlertManagerState", Context.MODE_PRIVATE)
 
     companion object {
@@ -134,6 +136,95 @@ class AlertManager(private val context: Context) {
                     )
                 }
             )
+        }
+
+        // 4. Sanidad Pendiente
+        val sdfDateOnly = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val todayStrOnlyDate = sdfDateOnly.format(todayDate)
+        val todayDateMidnight = sdfDateOnly.parse(todayStrOnlyDate) ?: todayDate
+        
+        val proximosSanidad = sanidadRepo.getProximos()
+        for (registro in proximosSanidad) {
+            val refId = "sanidad_${registro.id}"
+            var sanidadPendiente = false
+            var isUrgente = false
+            var diasRestantes = 0L
+
+            try {
+                val nextDate = sdfDateOnly.parse(registro.proximaDosis)
+                if (nextDate != null) {
+                    val diff = nextDate.time - todayDateMidnight.time
+                    diasRestantes = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS)
+                    sanidadPendiente = true
+                    isUrgente = diasRestantes <= 0
+                }
+            } catch (e: Exception) {}
+
+            processCondition(
+                refId = refId,
+                isMet = sanidadPendiente,
+                createAlerta = {
+                    val isAtrasada = diasRestantes < 0
+                    val isHoy      = diasRestantes == 0L
+                    val diasAtraso = Math.abs(diasRestantes)
+
+                    val titulo = when {
+                        isAtrasada -> "⚠️ ${registro.categoria} ATRASADA: ${registro.identificador}"
+                        isHoy      -> "📅 ${registro.categoria} para HOY: ${registro.identificador}"
+                        else       -> "${registro.categoria} Pendiente: ${registro.identificador}"
+                    }
+
+                    val desc = when {
+                        isAtrasada && diasAtraso == 1L ->
+                            "Debía aplicarse ${registro.detalle} AYER (${registro.proximaDosis}). Por favor aplícala cuanto antes."
+                        isAtrasada ->
+                            "Debía aplicarse ${registro.detalle} hace $diasAtraso días (${registro.proximaDosis}). Está atrasada."
+                        isHoy ->
+                            "La aplicación de ${registro.detalle} está programada para HOY (${registro.proximaDosis})."
+                        diasRestantes == 1L ->
+                            "La aplicación de ${registro.detalle} es MAÑANA (${registro.proximaDosis})."
+                        diasRestantes <= 5 ->
+                            "Faltan $diasRestantes días para aplicar ${registro.detalle} (${registro.proximaDosis})."
+                        diasRestantes <= 14 ->
+                            "En $diasRestantes días: aplicación de ${registro.detalle} (${registro.proximaDosis})."
+                        else ->
+                            "Aplicación de ${registro.detalle} programada para ${registro.proximaDosis}."
+                    }
+
+                    val prioridad = when {
+                        isAtrasada         -> PrioridadAlerta.ALTA
+                        isHoy              -> PrioridadAlerta.ALTA
+                        diasRestantes <= 5 -> PrioridadAlerta.MEDIA
+                        else               -> PrioridadAlerta.BAJA
+                    }
+
+                    Alerta(
+                        id = UUID.randomUUID().toString(),
+                        titulo = titulo,
+                        descripcion = desc,
+                        tipo = TipoAlerta.SANIDAD_PENDIENTE,
+                        fecha = todayStr,
+                        prioridad = prioridad,
+                        destinationId = R.id.drawer_control_sanitario,
+                        referenceId = refId,
+                        fechaProgramada = registro.proximaDosis
+                    )
+                }
+            )
+        }
+
+        // Cleanup: dismiss alerts for sanidad records that are no longer pending (were applied or deleted)
+        val activeSanidadAlerts = alertaRepo.getAlertas(includeDismissed = false).filter { it.tipo == TipoAlerta.SANIDAD_PENDIENTE }
+        val proximosIds = proximosSanidad.map { "sanidad_${it.id}" }
+        for (alerta in activeSanidadAlerts) {
+            val ref = alerta.referenceId
+            if (ref != null && !proximosIds.contains(ref)) {
+                processCondition(
+                    refId = ref,
+                    isMet = false,
+                    createAlerta = { alerta }
+                )
+            }
         }
     }
 

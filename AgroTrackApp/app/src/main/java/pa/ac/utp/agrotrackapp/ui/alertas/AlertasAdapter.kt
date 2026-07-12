@@ -39,6 +39,7 @@ class AlertasAdapter(
         private val tvFecha: TextView = itemView.findViewById(R.id.tvAlertaFecha)
         private val ivIcon: ImageView = itemView.findViewById(R.id.ivAlertaIcon)
         private val btnIr: View = itemView.findViewById(R.id.btnIr)
+        private val tvFechaProgramada: TextView = itemView.findViewById(R.id.tvFechaProgramada)
 
         fun bind(alerta: Alerta, isHistoryMode: Boolean) {
             tvTitulo.text = alerta.titulo
@@ -61,8 +62,17 @@ class AlertasAdapter(
                 TipoAlerta.MORTALIDAD_ALTA -> R.drawable.mortalidad
                 TipoAlerta.PESAJE_PENDIENTE -> R.drawable.pesaje
                 TipoAlerta.RECORDATORIO -> R.drawable.ic_alertas
+                TipoAlerta.SANIDAD_PENDIENTE -> R.drawable.gestion_sanitaria
             }
             ivIcon.setImageResource(iconRes)
+
+            // Show fecha programada badge only for SANIDAD_PENDIENTE
+            if (alerta.tipo == TipoAlerta.SANIDAD_PENDIENTE && !alerta.fechaProgramada.isNullOrEmpty()) {
+                tvFechaProgramada.visibility = View.VISIBLE
+                tvFechaProgramada.text = "Programada: ${alerta.fechaProgramada}"
+            } else {
+                tvFechaProgramada.visibility = View.GONE
+            }
 
             if (isHistoryMode) {
                 itemView.alpha = 0.5f
