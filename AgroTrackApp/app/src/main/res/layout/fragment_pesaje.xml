@@ -211,8 +211,9 @@
                     android:id="@+id/etPeso"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:hint="0.00"
                     android:inputType="numberDecimal"
-                    android:text="0.00" />
+                    android:maxLength="7" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <!-- Botones -->

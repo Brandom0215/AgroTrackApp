@@ -16,6 +16,12 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import com.github.mikephil.charting.charts.BarChart
+import com.github.mikephil.charting.components.XAxis
+import com.github.mikephil.charting.data.BarData
+import com.github.mikephil.charting.data.BarDataSet
+import com.github.mikephil.charting.data.BarEntry
+import com.github.mikephil.charting.formatter.ValueFormatter
 import pa.ac.utp.agrotrackapp.R
 import pa.ac.utp.agrotrackapp.data.animal.SqliteAnimalRepository
 import pa.ac.utp.agrotrackapp.data.mortalidad.SqliteMortalidadRepository
@@ -23,6 +29,7 @@ import pa.ac.utp.agrotrackapp.domain.model.MortalidadRecord
 import pa.ac.utp.agrotrackapp.domain.repository.AnimalRepository
 import pa.ac.utp.agrotrackapp.domain.repository.MortalidadRepository
 import pa.ac.utp.agrotrackapp.ui.main.MainActivity
+import java.text.SimpleDateFormat
 import java.util.*
 
 class MortalidadFragment : Fragment() {
@@ -33,6 +40,7 @@ class MortalidadFragment : Fragment() {
 
     private lateinit var tvTasaMortalidad: TextView
     private lateinit var tvCausaPrincipal: TextView
+    private lateinit var barChartMortalidad: BarChart
     private lateinit var rvHistorial: RecyclerView
 
     override fun onCreateView(
@@ -60,7 +68,10 @@ class MortalidadFragment : Fragment() {
         // Vincular KPIs e Historial
         tvTasaMortalidad = view.findViewById(R.id.tvTasaMortalidad)
         tvCausaPrincipal = view.findViewById(R.id.tvCausaPrincipal)
+        barChartMortalidad = view.findViewById(R.id.barChartMortalidad)
         rvHistorial = view.findViewById(R.id.rvHistorial)
+
+        setupBarChart()
 
         // Configurar RecyclerView
         adapter = MortalidadAdapter()
@@ -103,6 +114,90 @@ class MortalidadFragment : Fragment() {
                 .maxByOrNull { it.value.size }?.key ?: "Ninguna"
             tvCausaPrincipal.text = causaMode
         }
+
+        actualizarGrafica(records)
+    }
+
+    private fun setupBarChart() {
+        barChartMortalidad.description.isEnabled = false
+        barChartMortalidad.setNoDataText("Cargando datos...")
+        barChartMortalidad.setDrawGridBackground(false)
+        barChartMortalidad.setDrawBarShadow(false)
+        barChartMortalidad.setDrawValueAboveBar(true)
+        barChartMortalidad.setPinchZoom(false)
+        barChartMortalidad.setScaleEnabled(false)
+
+        val xAxis = barChartMortalidad.xAxis
+        xAxis.position = XAxis.XAxisPosition.BOTTOM
+        xAxis.setDrawGridLines(false)
+        xAxis.granularity = 1f
+        xAxis.setDrawLabels(true)
+
+        barChartMortalidad.axisLeft.setDrawGridLines(true)
+        barChartMortalidad.axisLeft.axisMinimum = 0f
+        barChartMortalidad.axisRight.isEnabled = false
+        barChartMortalidad.legend.isEnabled = false
+    }
+
+    private fun actualizarGrafica(records: List<MortalidadRecord>) {
+        if (records.isEmpty()) {
+            barChartMortalidad.clear()
+            barChartMortalidad.setNoDataText("No hay muertes registradas")
+            barChartMortalidad.invalidate()
+            return
+        }
+
+        // Obtener los últimos 6 meses (incluyendo el actual)
+        val calendar = Calendar.getInstance()
+        val monthFormat = SimpleDateFormat("MMM", Locale.getDefault())
+        val keyFormat = SimpleDateFormat("MM/yyyy", Locale.getDefault())
+        val monthLabels = mutableListOf<String>()
+        val monthKeys = mutableListOf<String>()
+
+        for (i in 5 downTo 0) {
+            val tempCal = calendar.clone() as Calendar
+            tempCal.add(Calendar.MONTH, -i)
+            monthLabels.add(monthFormat.format(tempCal.time))
+            monthKeys.add(keyFormat.format(tempCal.time))
+        }
+
+        // Contar muertes por mes
+        val countsByMonth = records.groupBy { record ->
+            try {
+                val date = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).parse(record.fechaMuerte)
+                if (date != null) {
+                    SimpleDateFormat("MM/yyyy", Locale.getDefault()).format(date)
+                } else ""
+            } catch (e: Exception) { "" }
+        }.mapValues { it.value.size }
+
+        val entries = mutableListOf<BarEntry>()
+        monthKeys.forEachIndexed { index, key ->
+            val count = countsByMonth[key] ?: 0
+            entries.add(BarEntry(index.toFloat(), count.toFloat()))
+        }
+
+        val dataSet = BarDataSet(entries, "Muertes")
+        dataSet.color = Color.parseColor("#D32F2F") // Rojo
+        dataSet.valueTextSize = 10f
+        dataSet.valueTextColor = Color.BLACK
+        // Formatear valores como enteros
+        dataSet.valueFormatter = object : com.github.mikephil.charting.formatter.ValueFormatter() {
+            override fun getFormattedValue(value: Float): String = value.toInt().toString()
+        }
+
+        val barData = BarData(dataSet)
+        barData.barWidth = 0.6f
+
+        barChartMortalidad.xAxis.valueFormatter = object : ValueFormatter() {
+            override fun getFormattedValue(value: Float): String {
+                val index = value.toInt()
+                return if (index >= 0 && index < monthLabels.size) monthLabels[index] else ""
+            }
+        }
+        barChartMortalidad.data = barData
+        barChartMortalidad.animateY(1000)
+        barChartMortalidad.invalidate()
     }
 
     private fun mostrarDialogRegistroMortalidad() {
@@ -152,10 +247,14 @@ class MortalidadFragment : Fragment() {
             val month = calendar.get(Calendar.MONTH)
             val day = calendar.get(Calendar.DAY_OF_MONTH)
             
-            DatePickerDialog(requireContext(), { _, selectedYear, selectedMonth, selectedDay ->
+            val datePicker = DatePickerDialog(requireContext(), { _, selectedYear, selectedMonth, selectedDay ->
                 val dateString = String.format("%02d/%02d/%04d", selectedDay, selectedMonth + 1, selectedYear)
                 etMortalidadFecha.setText(dateString)
-            }, year, month, day).show()
+            }, year, month, day)
+            
+            // La fecha no se puede elegir una fecha futura
+            datePicker.datePicker.maxDate = System.currentTimeMillis()
+            datePicker.show()
         }
 
         dialogView.findViewById<MaterialButton>(R.id.btnCancelMortalidad).setOnClickListener {
@@ -201,6 +300,26 @@ class MortalidadFragment : Fragment() {
             // 3. Validar Fecha
             if (fecha.isEmpty()) {
                 tilMortalidadFecha.error = "La fecha de muerte es requerida"
+                return@setOnClickListener
+            }
+            
+            // Validar que la fecha no sea futura
+            try {
+                val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+                val selectedDate = sdf.parse(fecha)
+                val today = Calendar.getInstance().apply {
+                    set(Calendar.HOUR_OF_DAY, 23)
+                    set(Calendar.MINUTE, 59)
+                    set(Calendar.SECOND, 59)
+                    set(Calendar.MILLISECOND, 999)
+                }.time
+                
+                if (selectedDate != null && selectedDate.after(today)) {
+                    tilMortalidadFecha.error = "No se permiten fechas futuras"
+                    return@setOnClickListener
+                }
+            } catch (e: Exception) {
+                tilMortalidadFecha.error = "Formato de fecha inválido"
                 return@setOnClickListener
             }
 

@@ -5,6 +5,8 @@ import android.app.TimePickerDialog
 import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
+import android.text.InputFilter
+import android.text.Spanned
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
@@ -71,6 +73,10 @@ class PesajeFragment : Fragment() {
         etHora = view.findViewById(R.id.etHora)
         etBuscar = view.findViewById(R.id.etBuscar)
         etPeso = view.findViewById(R.id.etPeso)
+
+        // Filtro para máximo 4 dígitos y 2 decimales (ej. 9999.99)
+        etPeso.filters = arrayOf<InputFilter>(DecimalDigitsInputFilter(4, 2))
+
         rvPesajeAnimales = view.findViewById(R.id.rvPesajeAnimales)
         btnCancelar = view.findViewById(R.id.btnCancelar)
         btnRegistrar = view.findViewById(R.id.btnRegistrar)
@@ -142,10 +148,14 @@ class PesajeFragment : Fragment() {
             val month = calendar.get(Calendar.MONTH)
             val day = calendar.get(Calendar.DAY_OF_MONTH)
 
-            DatePickerDialog(requireContext(), { _, selectedYear, selectedMonth, selectedDay ->
+            val datePicker = DatePickerDialog(requireContext(), { _, selectedYear, selectedMonth, selectedDay ->
                 val dateString = String.format("%02d/%02d/%04d", selectedDay, selectedMonth + 1, selectedYear)
                 editText.setText(dateString)
-            }, year, month, day).show()
+            }, year, month, day)
+
+            // La fecha no se puede elegir una fecha futura
+            datePicker.datePicker.maxDate = System.currentTimeMillis()
+            datePicker.show()
         }
     }
 
@@ -193,9 +203,34 @@ class PesajeFragment : Fragment() {
             return
         }
 
+        if (pesoStr.replace(".", "").length > 6) {
+            Toast.makeText(requireContext(), "El peso ingresado no es válido", Toast.LENGTH_SHORT).show()
+            return
+        }
+
         val fechaText = etFecha.text.toString().trim()
         if (fechaText.isEmpty()) {
             Toast.makeText(requireContext(), "La fecha de registro es requerida", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        // Validar que la fecha no sea futura
+        try {
+            val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+            val selectedDate = sdf.parse(fechaText)
+            val today = Calendar.getInstance().apply {
+                set(Calendar.HOUR_OF_DAY, 23)
+                set(Calendar.MINUTE, 59)
+                set(Calendar.SECOND, 59)
+                set(Calendar.MILLISECOND, 999)
+            }.time
+
+            if (selectedDate != null && selectedDate.after(today)) {
+                Toast.makeText(requireContext(), "No se puede registrar un pesaje con fecha futura", Toast.LENGTH_SHORT).show()
+                return
+            }
+        } catch (e: Exception) {
+            Toast.makeText(requireContext(), "Formato de fecha inválido", Toast.LENGTH_SHORT).show()
             return
         }
 
@@ -228,7 +263,7 @@ class PesajeFragment : Fragment() {
         }
 
         Toast.makeText(requireContext(), "Pesaje registrado y sincronizado exitosamente", Toast.LENGTH_SHORT).show()
-        
+
         // Recargar listados y limpiar
         cargarAnimales()
         limpiarFormulario()
@@ -253,7 +288,7 @@ class PesajeFragment : Fragment() {
 
     // Adaptador Interno del Listado de Selección de Animales
     private inner class PesajeAnimalAdapter : RecyclerView.Adapter<PesajeAnimalAdapter.ViewHolder>() {
-        
+
         private var list: List<Animal> = emptyList()
 
         fun submitList(newList: List<Animal>) {
@@ -305,5 +340,16 @@ class PesajeFragment : Fragment() {
         }
 
         override fun getItemCount(): Int = list.size
+    }
+
+    /**
+     * Filtro para limitar la cantidad de dígitos y decimales en un EditText.
+     */
+    inner class DecimalDigitsInputFilter(digitsBeforeZero: Int, digitsAfterZero: Int) : InputFilter {
+        private val mPattern = java.util.regex.Pattern.compile("[0-9]{0,$digitsBeforeZero}+((\\.[0-9]{0,$digitsAfterZero})?)||(\\.)?")
+        override fun filter(source: CharSequence, start: Int, end: Int, dest: Spanned, dstart: Int, dend: Int): CharSequence? {
+            val matcher = mPattern.matcher(dest.subSequence(0, dstart).toString() + source.subSequence(start, end).toString() + dest.subSequence(dend, dest.length).toString())
+            return if (!matcher.matches()) "" else null
+        }
     }
 }
