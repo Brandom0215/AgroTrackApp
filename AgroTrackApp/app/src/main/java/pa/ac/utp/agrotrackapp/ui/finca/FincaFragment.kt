@@ -78,10 +78,12 @@ class FincaFragment : Fragment(R.layout.fragment_finca) {
         val machos = animals.count { it.sexo.equals("Macho", ignoreCase = true) }
         val hembras = animals.count { it.sexo.equals("Hembra", ignoreCase = true) }
 
+        val lotesCount = pa.ac.utp.agrotrackapp.data.animal.SqliteLoteRepository(context).getLotes().size
+
         view.findViewById<TextView>(R.id.tvActiveAnimalsCount)?.text = totalAnimals.toString()
         view.findViewById<TextView>(R.id.tvTorosCount)?.text = " Machos: $machos"
         view.findViewById<TextView>(R.id.tvVacasCount)?.text = " Hembras: $hembras"
-        view.findViewById<TextView>(R.id.tvTernerosCount)?.text = " Total Registros: $totalAnimals"
+        view.findViewById<TextView>(R.id.tvLotesCount)?.text = " Lotes: $lotesCount"
 
         val pieChart = view.findViewById<PieChart>(R.id.donutChart)
         if (pieChart != null) {
@@ -89,13 +91,24 @@ class FincaFragment : Fragment(R.layout.fragment_finca) {
             pieChart.setNoDataTextColor(Color.parseColor("#999999"))
             
             val entries = ArrayList<PieEntry>()
-            if (machos > 0) entries.add(PieEntry(machos.toFloat(), "Machos"))
-            if (hembras > 0) entries.add(PieEntry(hembras.toFloat(), "Hembras"))
+            val chartColors = ArrayList<Int>()
+            
+            if (machos > 0) {
+                entries.add(PieEntry(machos.toFloat(), "Machos"))
+                chartColors.add(Color.parseColor("#03A9F4"))
+            }
+            if (hembras > 0) {
+                entries.add(PieEntry(hembras.toFloat(), "Hembras"))
+                chartColors.add(Color.parseColor("#9C27B0"))
+            }
+            if (lotesCount > 0) {
+                entries.add(PieEntry(lotesCount.toFloat(), "Lotes"))
+                chartColors.add(Color.parseColor("#4CAF50"))
+            }
             
             if (entries.isNotEmpty()) {
                 val dataSet = PieDataSet(entries, "")
-                // Colores que coincidan con la leyenda (Marrón para Machos, Verde para Hembras)
-                dataSet.colors = listOf(Color.parseColor("#795548"), Color.parseColor("#1B5E20"))
+                dataSet.colors = chartColors
                 dataSet.setDrawValues(false) // No mostrar valores dentro para evitar amontonamiento
                 
                 pieChart.data = PieData(dataSet)

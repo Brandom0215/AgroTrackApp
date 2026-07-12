@@ -47,6 +47,8 @@ class PesajeFragment : Fragment() {
     private var allAnimalsList: List<Animal> = emptyList()
     private var filteredAnimalsList: List<Animal> = emptyList()
     private var selectedAnimal: Animal? = null
+    
+    private var currentFiltroSexo: String = "Todos"
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -103,10 +105,28 @@ class PesajeFragment : Fragment() {
         etBuscar.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                filtrarAnimales(s.toString())
+                aplicarFiltros()
             }
             override fun afterTextChanged(s: Editable?) {}
         })
+
+        // Filtro por Sexo
+        val cardFiltroSexo = view.findViewById<View>(R.id.cardFiltroSexo)
+        val tvFiltroSexo = view.findViewById<TextView>(R.id.tvFiltroSexo)
+        
+        cardFiltroSexo.setOnClickListener {
+            val popup = PopupMenu(requireContext(), cardFiltroSexo)
+            popup.menu.add("Todos")
+            popup.menu.add("Machos")
+            popup.menu.add("Hembras")
+            popup.setOnMenuItemClickListener { item ->
+                currentFiltroSexo = item.title.toString()
+                tvFiltroSexo.text = "$currentFiltroSexo ▾"
+                aplicarFiltros()
+                true
+            }
+            popup.show()
+        }
 
         // Botones de acción
         btnCancelar.setOnClickListener {
@@ -131,12 +151,24 @@ class PesajeFragment : Fragment() {
         }
     }
 
-    private fun filtrarAnimales(query: String) {
-        filteredAnimalsList = if (query.isEmpty()) {
-            allAnimalsList
-        } else {
-            allAnimalsList.filter { it.numeroAnimal.contains(query, ignoreCase = true) }
+    private fun aplicarFiltros() {
+        val query = etBuscar.text.toString().trim()
+        
+        var list = allAnimalsList
+        
+        // 1. Filtrar por búsqueda de arete
+        if (query.isNotEmpty()) {
+            list = list.filter { it.numeroAnimal.contains(query, ignoreCase = true) }
         }
+        
+        // 2. Filtrar por sexo
+        list = when (currentFiltroSexo) {
+            "Machos" -> list.filter { it.sexo.equals("Macho", ignoreCase = true) }
+            "Hembras" -> list.filter { it.sexo.equals("Hembra", ignoreCase = true) }
+            else -> list // "Todos"
+        }
+        
+        filteredAnimalsList = list
         adapter.submitList(filteredAnimalsList)
     }
 

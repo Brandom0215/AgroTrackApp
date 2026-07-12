@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -11,12 +11,10 @@
     <!-- Top app bar -->
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
-        app:liftOnScroll="false"
-        style="@style/Widget.MaterialComponents.AppBarLayout.PrimarySurface"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fitsSystemWindows="true"
-        app:elevation="0dp">
+        android:background="@color/md_theme_light_primary" app:liftOnScroll="false" style="@style/Widget.MaterialComponents.AppBarLayout.PrimarySurface" app:elevation="0dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -40,10 +38,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:text="Producción"
-                android:textColor="?attr/colorOnPrimary"
+                android:text="Dashboard de Producción"
+                android:textColor="@android:color/white"
                 android:textStyle="bold"
-                android:textSize="20sp" />
+                android:textSize="18sp" />
 
         </RelativeLayout>
     </com.google.android.material.appbar.AppBarLayout>
