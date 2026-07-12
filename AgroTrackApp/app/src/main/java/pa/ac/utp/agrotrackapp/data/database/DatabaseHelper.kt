@@ -8,11 +8,12 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
 
     companion object {
         const val DATABASE_NAME = "AgroTrack.db"
-        const val DATABASE_VERSION = 6
+        const val DATABASE_VERSION = 7
 
         // Table Names
         const val TABLE_USUARIOS = "usuarios"
         const val TABLE_ANIMALES = "animales"
+        const val TABLE_LOTES = "lotes"
         const val TABLE_CARNE_RECORDS = "carne_records"
         const val TABLE_LECHE_RECORDS = "leche_records"
         const val TABLE_MORTALIDAD_RECORDS = "mortalidad_records"
@@ -46,6 +47,11 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         const val COL_ANIMAL_MADRE = "madre"
         const val COL_ANIMAL_NOTAS = "notas"
         const val COL_ANIMAL_IMAGEN = "imagen_path"
+        const val COL_ANIMAL_LOTE = "lote_nombre"
+
+        // Lotes Columns
+        const val COL_LOTE_ID = "id"
+        const val COL_LOTE_NOMBRE = "nombre"
 
         // Carne Columns
         const val COL_CARNE_NUMERO = "numero_animal"
@@ -159,7 +165,15 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
                 $COL_ANIMAL_PADRE TEXT,
                 $COL_ANIMAL_MADRE TEXT,
                 $COL_ANIMAL_NOTAS TEXT,
-                $COL_ANIMAL_IMAGEN TEXT
+                $COL_ANIMAL_IMAGEN TEXT,
+                $COL_ANIMAL_LOTE TEXT
+            )
+        """)
+
+        db.execSQL("""
+            CREATE TABLE $TABLE_LOTES (
+                $COL_LOTE_ID INTEGER PRIMARY KEY AUTOINCREMENT,
+                $COL_LOTE_NOMBRE TEXT UNIQUE NOT NULL
             )
         """)
 
@@ -311,6 +325,17 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
                 )
             """)
         }
+        if (oldVersion < 7) {
+            try {
+                db.execSQL("ALTER TABLE $TABLE_ANIMALES ADD COLUMN $COL_ANIMAL_LOTE TEXT DEFAULT ''")
+            } catch (e: Exception) { /* column may already exist */ }
+            db.execSQL("""
+                CREATE TABLE IF NOT EXISTS $TABLE_LOTES (
+                    $COL_LOTE_ID INTEGER PRIMARY KEY AUTOINCREMENT,
+                    $COL_LOTE_NOMBRE TEXT UNIQUE NOT NULL
+                )
+            """)
+        }
     }
 
     fun clearAllTables() {
@@ -319,6 +344,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         try {
             db.delete(TABLE_USUARIOS, null, null)
             db.delete(TABLE_ANIMALES, null, null)
+            db.delete(TABLE_LOTES, null, null)
             db.delete(TABLE_CARNE_RECORDS, null, null)
             db.delete(TABLE_LECHE_RECORDS, null, null)
             db.delete(TABLE_MORTALIDAD_RECORDS, null, null)
@@ -374,12 +400,29 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
                         $COL_ANIMAL_NUMERO, $COL_ANIMAL_SEXO, $COL_ANIMAL_TRAZABILIDAD, 
                         $COL_ANIMAL_CHIP, $COL_ANIMAL_FECHA_NACIMIENTO, $COL_ANIMAL_RAZA, 
                         $COL_ANIMAL_PROPOSITO, $COL_ANIMAL_MANGA, $COL_ANIMAL_PESO, 
-                        $COL_ANIMAL_PADRE, $COL_ANIMAL_MADRE, $COL_ANIMAL_NOTAS, $COL_ANIMAL_IMAGEN
+                        $COL_ANIMAL_PADRE, $COL_ANIMAL_MADRE, $COL_ANIMAL_NOTAS, $COL_ANIMAL_IMAGEN, $COL_ANIMAL_LOTE
                     ) VALUES 
-                    ('1001', 'Macho', '740000000000001', 'CHIP1001', '15/05/2024', 'Brahman', 'Carne', 'Lote 1', '420', 'Padre 1', 'Madre 1', 'Macho Brahman para ceba', ''),
-                    ('1002', 'Hembra', '740000000000002', 'CHIP1002', '10/01/2024', 'Holando', 'Leche', 'Lote 2', '380', 'Padre 2', 'Madre 2', 'Vaca lechera alta producción', ''),
-                    ('1003', 'Hembra', '740000000000003', 'CHIP1003', '20/02/2024', 'Jersey', 'Leche', 'Lote 2', '350', 'Padre 3', 'Madre 3', 'Novilla lechera primeriza', ''),
-                    ('1004', 'Hembra', '740000000000004', 'CHIP1004', '05/03/2024', 'Gyr', 'Doble propósito', 'Lote 1', '390', 'Padre 4', 'Madre 4', 'Doble propósito adaptada', '')
+                    ('1001', 'Macho', '740000000000001', 'CHIP1001', '15/05/2024', 'Brahman', 'Carne', 'Ceba', '420', 'Padre 1', 'Madre 1', 'Macho Brahman para ceba', '', 'Ceba'),
+                    ('1002', 'Hembra', '740000000000002', 'CHIP1002', '10/01/2024', 'Holando', 'Leche', 'Ordeño', '380', 'Padre 2', 'Madre 2', 'Vaca lechera alta producción', '', 'Ordeño'),
+                    ('1003', 'Hembra', '740000000000003', 'CHIP1003', '20/02/2024', 'Jersey', 'Leche', 'Secado', '350', 'Padre 3', 'Madre 3', 'Novilla lechera primeriza', '', 'Secado'),
+                    ('1004', 'Hembra', '740000000000004', 'CHIP1004', '05/03/2024', 'Gyr', 'Doble propósito', 'Ceba', '390', 'Padre 4', 'Madre 4', 'Doble propósito adaptada', '', 'Ceba')
+                """)
+            }
+
+            // 2.5 Seed Lotes
+            val loteCursor = db.rawQuery("SELECT COUNT(*) FROM $TABLE_LOTES", null)
+            var loteCount = 0
+            if (loteCursor.moveToFirst()) {
+                loteCount = loteCursor.getInt(0)
+            }
+            loteCursor.close()
+
+            if (loteCount == 0) {
+                db.execSQL("""
+                    INSERT INTO $TABLE_LOTES ($COL_LOTE_NOMBRE) VALUES 
+                    ('Secado'),
+                    ('Ordeño'),
+                    ('Ceba')
                 """)
             }
 

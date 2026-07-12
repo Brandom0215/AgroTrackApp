@@ -70,21 +70,50 @@ class SqliteAnimalRepository(private val context: Context) : AnimalRepository {
         return animal
     }
 
-    override fun updateAnimal(animal: Animal): Result<Unit> {
+    override fun updateAnimal(oldArete: String, animal: Animal): Result<Unit> {
         return try {
-            val arete = animal.numeroAnimal.trim()
-            if (!animalExists(arete)) {
-                return Result.failure(Exception("El animal con arete $arete no existe"))
+            val db = dbHelper.writableDatabase
+            val areteActual = oldArete.trim()
+            val nuevoArete = animal.numeroAnimal.trim()
+
+            if (!animalExists(areteActual)) {
+                return Result.failure(Exception("El animal con arete $areteActual no existe"))
             }
 
-            val db = dbHelper.writableDatabase
-            val values = animalToValues(animal)
-            db.update(
-                DatabaseHelper.TABLE_ANIMALES,
-                values,
-                "${DatabaseHelper.COL_ANIMAL_NUMERO} = ?",
-                arrayOf(arete)
-            )
+            if (areteActual != nuevoArete && animalExists(nuevoArete)) {
+                return Result.failure(Exception("Ya existe un animal con el nuevo arete $nuevoArete"))
+            }
+
+            db.beginTransaction()
+            try {
+                // Actualizar animal
+                val values = animalToValues(animal)
+                db.update(
+                    DatabaseHelper.TABLE_ANIMALES,
+                    values,
+                    "${DatabaseHelper.COL_ANIMAL_NUMERO} = ?",
+                    arrayOf(areteActual)
+                )
+
+                // Actualizar referencias si el arete cambió
+                if (areteActual != nuevoArete) {
+                    val updateValues = ContentValues().apply { put(DatabaseHelper.COL_CARNE_NUMERO, nuevoArete) }
+                    db.update(DatabaseHelper.TABLE_CARNE_RECORDS, updateValues, "${DatabaseHelper.COL_CARNE_NUMERO} = ?", arrayOf(areteActual))
+                    
+                    val updateLeche = ContentValues().apply { put(DatabaseHelper.COL_LECHE_NUMERO, nuevoArete) }
+                    db.update(DatabaseHelper.TABLE_LECHE_RECORDS, updateLeche, "${DatabaseHelper.COL_LECHE_NUMERO} = ?", arrayOf(areteActual))
+                    
+                    val updateMort = ContentValues().apply { put(DatabaseHelper.COL_MORT_NUMERO, nuevoArete) }
+                    db.update(DatabaseHelper.TABLE_MORTALIDAD_RECORDS, updateMort, "${DatabaseHelper.COL_MORT_NUMERO} = ?", arrayOf(areteActual))
+                    
+                    val updateSan = ContentValues().apply { put(DatabaseHelper.COL_SAN_IDENTIFICADOR, nuevoArete) }
+                    db.update(DatabaseHelper.TABLE_SANITARIA, updateSan, "${DatabaseHelper.COL_SAN_IDENTIFICADOR} = ?", arrayOf(areteActual))
+                }
+
+                db.setTransactionSuccessful()
+            } finally {
+                db.endTransaction()
+            }
 
             AlertManager(context).checkAlerts()
             Result.success(Unit)
@@ -142,7 +171,8 @@ class SqliteAnimalRepository(private val context: Context) : AnimalRepository {
             padre = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_ANIMAL_PADRE)),
             madre = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_ANIMAL_MADRE)),
             notas = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_ANIMAL_NOTAS)),
-            imagenPath = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_ANIMAL_IMAGEN))
+            imagenPath = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_ANIMAL_IMAGEN)),
+            lote = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_ANIMAL_LOTE)) ?: ""
         )
     }
 
@@ -161,6 +191,7 @@ class SqliteAnimalRepository(private val context: Context) : AnimalRepository {
             put(DatabaseHelper.COL_ANIMAL_MADRE, animal.madre)
             put(DatabaseHelper.COL_ANIMAL_NOTAS, animal.notas)
             put(DatabaseHelper.COL_ANIMAL_IMAGEN, animal.imagenPath)
+            put(DatabaseHelper.COL_ANIMAL_LOTE, animal.lote)
         }
     }
 }

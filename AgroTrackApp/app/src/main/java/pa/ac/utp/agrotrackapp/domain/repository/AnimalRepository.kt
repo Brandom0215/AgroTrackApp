@@ -21,7 +21,7 @@ interface AnimalRepository {
     /**
      * Actualiza los datos de un animal existente.
      */
-    fun updateAnimal(animal: Animal): Result<Unit>
+    fun updateAnimal(oldArete: String, animal: Animal): Result<Unit>
 
     /**
      * Elimina un animal por su número de arete.

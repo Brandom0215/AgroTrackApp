@@ -13,31 +13,54 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.textfield.TextInputEditText
-import com.github.mikephil.charting.charts.PieChart
-import com.github.mikephil.charting.data.PieData
-import com.github.mikephil.charting.data.PieDataSet
-import com.github.mikephil.charting.data.PieEntry
 import pa.ac.utp.agrotrackapp.R
 import pa.ac.utp.agrotrackapp.data.animal.SqliteAnimalRepository
 import pa.ac.utp.agrotrackapp.domain.model.Animal
 import pa.ac.utp.agrotrackapp.domain.repository.AnimalRepository
 import pa.ac.utp.agrotrackapp.ui.main.MainActivity
+import androidx.activity.result.contract.ActivityResultContracts
+import pa.ac.utp.agrotrackapp.data.animal.SqliteLoteRepository
 
 class AnimalesFragment : Fragment(R.layout.fragment_animales) {
 
     private lateinit var animalRepository: AnimalRepository
+    private lateinit var loteRepository: SqliteLoteRepository
     private lateinit var adapter: AnimalAdapter
     private var allAnimals = listOf<Animal>()
 
-    private lateinit var tvHeaderMachos: TextView
-    private lateinit var tvHeaderHembras: TextView
-    
-    private lateinit var tvCountHembras: TextView
-    private lateinit var tvCountMachos: TextView
-    private lateinit var tvCountTerneros: TextView
-
     private lateinit var etSearchArete: TextInputEditText
-    private lateinit var spinnerFilterSexo: Spinner
+    
+    private lateinit var llFilterMachos: LinearLayout
+    private lateinit var llFilterHembras: LinearLayout
+    private lateinit var llFilterLotes: LinearLayout
+    private lateinit var tvCountMachos: TextView
+    private lateinit var tvCountHembras: TextView
+    private lateinit var tvCountLotes: TextView
+
+    private var currentFilter = "Todos"
+    private var selectedLoteName = ""
+
+    private val selectLoteLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == android.app.Activity.RESULT_OK) {
+            val loteName = result.data?.getStringExtra("EXTRA_LOTE_NOMBRE")
+            if (!loteName.isNullOrEmpty()) {
+                currentFilter = "Lotes"
+                selectedLoteName = loteName
+                llFilterLotes.isSelected = true
+                llFilterMachos.isSelected = false
+                llFilterHembras.isSelected = false
+                filtrarAnimales()
+            }
+        } else {
+            // Si cancela la selección, revertir el filtro
+            if (currentFilter != "Lotes") {
+                llFilterLotes.isSelected = false
+            }
+        }
+    }
+
+    private lateinit var btnToggleSearch: ImageButton
+    private lateinit var searchContainer: LinearLayout
     private lateinit var rvAnimalesTabla: RecyclerView
     private lateinit var tvEmptyState: TextView
     private lateinit var llRecentActivityContainer: LinearLayout
@@ -48,17 +71,20 @@ class AnimalesFragment : Fragment(R.layout.fragment_animales) {
 
         // Inicializamos repositorio
         animalRepository = SqliteAnimalRepository(requireContext())
-
-        // Enlazar vistas de cabecera e inventario
-        tvHeaderMachos = view.findViewById(R.id.tvHeaderMachosCount)
-        tvHeaderHembras = view.findViewById(R.id.tvHeaderHembrasCount)
-        tvCountHembras = view.findViewById(R.id.tvCountHembras)
-        tvCountMachos = view.findViewById(R.id.tvCountMachos)
-        tvCountTerneros = view.findViewById(R.id.tvCountTerneros)
+        loteRepository = SqliteLoteRepository(requireContext())
 
         // Enlazar filtros y tabla
         etSearchArete = view.findViewById(R.id.etSearchArete)
-        spinnerFilterSexo = view.findViewById(R.id.spinnerFilterSexo)
+        
+        llFilterMachos = view.findViewById(R.id.llFilterMachos)
+        llFilterHembras = view.findViewById(R.id.llFilterHembras)
+        llFilterLotes = view.findViewById(R.id.llFilterLotes)
+        tvCountMachos = view.findViewById(R.id.tvCountMachos)
+        tvCountHembras = view.findViewById(R.id.tvCountHembras)
+        tvCountLotes = view.findViewById(R.id.tvCountLotes)
+
+        btnToggleSearch = view.findViewById(R.id.btnToggleSearch)
+        searchContainer = view.findViewById(R.id.searchContainer)
         rvAnimalesTabla = view.findViewById(R.id.rvAnimalesTabla)
         tvEmptyState = view.findViewById(R.id.tvEmptyState)
         llRecentActivityContainer = view.findViewById(R.id.llRecentActivityContainer)
@@ -75,11 +101,16 @@ class AnimalesFragment : Fragment(R.layout.fragment_animales) {
             startActivity(intent)
         }
 
-        // Setup Spinner
-        val sexOptions = arrayOf("Todos", "Machos", "Hembras")
-        val spinnerAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, sexOptions)
-        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        spinnerFilterSexo.adapter = spinnerAdapter
+        // Setup Search Toggle
+        btnToggleSearch.setOnClickListener {
+            if (searchContainer.visibility == View.VISIBLE) {
+                searchContainer.visibility = View.GONE
+                etSearchArete.text?.clear()
+            } else {
+                searchContainer.visibility = View.VISIBLE
+                etSearchArete.requestFocus()
+            }
+        }
 
         // Setup RecyclerView Adapter
         adapter = AnimalAdapter(
@@ -98,12 +129,49 @@ class AnimalesFragment : Fragment(R.layout.fragment_animales) {
             override fun afterTextChanged(s: Editable?) {}
         })
 
-        spinnerFilterSexo.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+        val filterClickListener = View.OnClickListener { v ->
+            // Unselect all
+            llFilterMachos.isSelected = false
+            llFilterHembras.isSelected = false
+            llFilterLotes.isSelected = false
+
+            when (v.id) {
+                R.id.llFilterMachos -> {
+                    if (currentFilter == "Macho") {
+                        currentFilter = "Todos"
+                    } else {
+                        currentFilter = "Macho"
+                        llFilterMachos.isSelected = true
+                    }
+                }
+                R.id.llFilterHembras -> {
+                    if (currentFilter == "Hembra") {
+                        currentFilter = "Todos"
+                    } else {
+                        currentFilter = "Hembra"
+                        llFilterHembras.isSelected = true
+                    }
+                }
+                R.id.llFilterLotes -> {
+                    if (currentFilter == "Lotes") {
+                        currentFilter = "Todos"
+                        selectedLoteName = ""
+                        filtrarAnimales()
+                    } else {
+                        val intent = Intent(requireContext(), LotesActivity::class.java)
+                        selectLoteLauncher.launch(intent)
+                        return@OnClickListener // No filtrar todavía
+                    }
+                }
+            }
+            if (v.id != R.id.llFilterLotes) {
                 filtrarAnimales()
             }
-            override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
+
+        llFilterMachos.setOnClickListener(filterClickListener)
+        llFilterHembras.setOnClickListener(filterClickListener)
+        llFilterLotes.setOnClickListener(filterClickListener)
     }
 
     override fun onResume() {
@@ -115,57 +183,16 @@ class AnimalesFragment : Fragment(R.layout.fragment_animales) {
     private fun cargarDatosYActualizarUI() {
         allAnimals = animalRepository.getAnimals()
 
-        // 1. Calcular inventarios reales
-        val totalCount = allAnimals.size
-        val machosHeader = allAnimals.count { it.sexo == "Macho" }
-        val hembrasHeader = allAnimals.count { it.sexo == "Hembra" }
+        // Actualizar contadores
+        val totalMachos = allAnimals.count { it.sexo == "Macho" }
+        val totalHembras = allAnimals.count { it.sexo == "Hembra" }
+        val totalLotes = loteRepository.getLotes().size
 
-        // Clasificación para gráfico donut
-        // Se considera "Ternero" si el propósito es "Cría"
-        val ternerosCount = allAnimals.count { it.proposito == "Cría" }
-        val machosCount = allAnimals.count { it.sexo == "Macho" && it.proposito != "Cría" }
-        val hembrasCount = allAnimals.count { it.sexo == "Hembra" && it.proposito != "Cría" }
+        tvCountMachos.text = totalMachos.toString()
+        tvCountHembras.text = totalHembras.toString()
+        tvCountLotes.text = totalLotes.toString()
 
-        // Actualizar UI del inventario
-        tvHeaderMachos.text = "$machosHeader Machos"
-        tvHeaderHembras.text = "$hembrasHeader Hembras"
-        tvCountHembras.text = "$hembrasCount"
-        tvCountMachos.text = "$machosCount"
-        tvCountTerneros.text = "$ternerosCount"
 
-        val pieChart = view?.findViewById<PieChart>(R.id.donutChart)
-        if (pieChart != null) {
-            pieChart.setNoDataText("Sin datos")
-            pieChart.setNoDataTextColor(Color.parseColor("#999999"))
-
-            val entries = ArrayList<PieEntry>()
-            if (machosCount > 0) entries.add(PieEntry(machosCount.toFloat(), "Machos"))
-            if (hembrasCount > 0) entries.add(PieEntry(hembrasCount.toFloat(), "Hembras"))
-            if (ternerosCount > 0) entries.add(PieEntry(ternerosCount.toFloat(), "Crías"))
-            
-            if (entries.isNotEmpty()) {
-                val dataSet = PieDataSet(entries, "")
-                dataSet.colors = listOf(Color.parseColor("#4CAF50"), Color.parseColor("#81C784"), Color.parseColor("#A5D6A7"))
-                dataSet.setDrawValues(false) // No numbers inside the slices
-                
-                pieChart.data = PieData(dataSet)
-                pieChart.description.isEnabled = false
-                pieChart.legend.isEnabled = false
-                pieChart.isDrawHoleEnabled = true
-                pieChart.holeRadius = 70f
-                pieChart.setHoleColor(Color.TRANSPARENT)
-                
-                // Set the center text to the total amount
-                pieChart.centerText = "Total\n$totalCount"
-                pieChart.setCenterTextSize(14f)
-                pieChart.setCenterTextColor(Color.BLACK)
-                
-                pieChart.animateY(1000)
-                pieChart.invalidate()
-            } else {
-                pieChart.clear()
-            }
-        }
 
         // Actualizar la lista de la tabla con los filtros actuales
         filtrarAnimales()
@@ -175,13 +202,14 @@ class AnimalesFragment : Fragment(R.layout.fragment_animales) {
 
     private fun filtrarAnimales() {
         val query = etSearchArete.text.toString().trim().lowercase()
-        val sexFilter = spinnerFilterSexo.selectedItem?.toString() ?: "Todos"
+        val sexFilter = currentFilter
 
         val filteredList = allAnimals.filter { animal ->
             val matchesArete = animal.numeroAnimal.lowercase().contains(query)
             val matchesSex = when (sexFilter) {
-                "Machos" -> animal.sexo == "Macho"
-                "Hembras" -> animal.sexo == "Hembra"
+                "Macho" -> animal.sexo == "Macho"
+                "Hembra" -> animal.sexo == "Hembra"
+                "Lotes" -> animal.lote == selectedLoteName
                 else -> true
             }
             matchesArete && matchesSex
