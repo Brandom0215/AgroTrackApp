@@ -10,9 +10,10 @@
         android:id="@+id/appBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
-        app:elevation="2dp"
-        android:fitsSystemWindows="true">
+        android:fitsSystemWindows="true"
+        app:liftOnScroll="false"
+        style="@style/Widget.MaterialComponents.AppBarLayout.PrimarySurface"
+        app:elevation="0dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -21,8 +22,8 @@
 
             <ImageButton
                 android:id="@+id/btnMenu"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:layout_centerVertical="true"
                 android:layout_alignParentStart="true"
                 android:background="?attr/selectableItemBackgroundBorderless"
@@ -33,24 +34,11 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_toEndOf="@id/btnMenu"
-                android:layout_marginStart="8dp"
+                android:layout_centerInParent="true"
                 android:text="Inventario General"
                 android:textColor="?attr/colorOnPrimary"
                 android:textSize="20sp"
                 android:textStyle="bold" />
-
-            <ImageButton
-                android:id="@+id/btnAdd"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_centerVertical="true"
-                android:layout_alignParentEnd="true"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:src="@android:drawable/ic_input_add"
-                app:tint="?attr/colorOnPrimary"
-                android:contentDescription="Agregar producto" />
 
         </RelativeLayout>
     </com.google.android.material.appbar.AppBarLayout>
@@ -205,5 +193,16 @@
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btnAdd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="16dp"
+        app:backgroundTint="?attr/colorPrimary"
+        app:srcCompat="@android:drawable/ic_input_add"
+        app:tint="@color/white"
+        app:elevation="6dp" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

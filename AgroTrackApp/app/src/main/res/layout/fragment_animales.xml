@@ -40,7 +40,7 @@
                 android:text="Gestión de Animales"
                 android:textColor="?attr/colorOnPrimary"
                 android:textStyle="bold"
-                android:textSize="18sp" />
+                android:textSize="20sp" />
 
             <ImageButton
                 android:id="@+id/btnToggleSearch"

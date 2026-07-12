@@ -24,10 +24,11 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="12dp"
         android:hint="Seleccione el producto *">
-        <AutoCompleteTextView
+        <com.google.android.material.textfield.MaterialAutoCompleteTextView
             android:id="@+id/etSelectProductoConsumo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:padding="16dp"
             android:inputType="none" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -123,10 +124,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Número de Arete *">
-        <com.google.android.material.textfield.TextInputEditText
+        <com.google.android.material.textfield.MaterialAutoCompleteTextView
             android:id="@+id/etIdentificadorConsumo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:padding="16dp"
             android:inputType="textCapCharacters" />
     </com.google.android.material.textfield.TextInputLayout>
 

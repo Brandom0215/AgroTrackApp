@@ -7,9 +7,14 @@ import android.widget.ImageButton
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.github.mikephil.charting.charts.PieChart
+import com.github.mikephil.charting.charts.LineChart
+import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
+import com.github.mikephil.charting.data.Entry
+import com.github.mikephil.charting.data.LineData
+import com.github.mikephil.charting.data.LineDataSet
 import android.graphics.Color
 import com.google.android.material.card.MaterialCardView
 import pa.ac.utp.agrotrackapp.R
@@ -89,15 +94,18 @@ class FincaFragment : Fragment(R.layout.fragment_finca) {
             
             if (entries.isNotEmpty()) {
                 val dataSet = PieDataSet(entries, "")
-                dataSet.colors = listOf(Color.parseColor("#4CAF50"), Color.parseColor("#81C784"))
-                dataSet.valueTextColor = Color.WHITE
-                dataSet.valueTextSize = 12f
+                // Colores que coincidan con la leyenda (Marrón para Machos, Verde para Hembras)
+                dataSet.colors = listOf(Color.parseColor("#795548"), Color.parseColor("#1B5E20"))
+                dataSet.setDrawValues(false) // No mostrar valores dentro para evitar amontonamiento
                 
                 pieChart.data = PieData(dataSet)
                 pieChart.description.isEnabled = false
                 pieChart.legend.isEnabled = false
+                pieChart.setDrawEntryLabels(false) // Quitar etiquetas "Macho/Hembra" de adentro
                 pieChart.isDrawHoleEnabled = true
                 pieChart.setHoleColor(Color.TRANSPARENT)
+                pieChart.setTransparentCircleRadius(0f)
+                pieChart.holeRadius = 75f // Hacer el hueco más grande (estilo donut fino)
                 pieChart.animateY(1000)
                 pieChart.invalidate()
             } else {
@@ -116,9 +124,49 @@ class FincaFragment : Fragment(R.layout.fragment_finca) {
         }
 
         // 3. Rendimiento y Producción
-        val lecheRecords = prodRepo.getLecheRecords().filter { it.activo }
+        val lecheRecords = prodRepo.getLecheRecords().filter { it.activo }.sortedBy { it.fechaRegistro }
         val totalLeche = lecheRecords.sumOf { it.litros }
         view.findViewById<TextView>(R.id.tvProduccionHome)?.text = String.format(java.util.Locale.US, "%.1f Ltrs", totalLeche)
+
+        val lineChart = view.findViewById<LineChart>(R.id.ivTrendChartHome)
+        if (lineChart != null) {
+            val entries = ArrayList<Entry>()
+            for ((index, record) in lecheRecords.withIndex()) {
+                entries.add(Entry(index.toFloat(), record.litros.toFloat()))
+            }
+            
+            lineChart.setNoDataText("Sin datos")
+            lineChart.setNoDataTextColor(Color.parseColor("#999999"))
+
+            if (entries.isNotEmpty()) {
+                val dataSet = LineDataSet(entries, "Litros")
+                dataSet.color = Color.parseColor("#4CAF50")
+                dataSet.valueTextColor = Color.TRANSPARENT // No mostrar valores en el home para no saturar
+                dataSet.lineWidth = 1.5f
+                dataSet.circleRadius = 3f
+                dataSet.setCircleColor(Color.parseColor("#388E3C"))
+                dataSet.setDrawValues(false)
+                dataSet.mode = LineDataSet.Mode.CUBIC_BEZIER
+
+                lineChart.data = LineData(dataSet)
+                lineChart.description.isEnabled = false
+                lineChart.xAxis.isEnabled = false 
+                lineChart.axisLeft.isEnabled = false
+                lineChart.axisRight.isEnabled = false
+                lineChart.legend.isEnabled = false
+                lineChart.setTouchEnabled(false)
+                lineChart.setDrawGridBackground(false)
+                lineChart.setDrawBorders(false)
+                
+                // Ajustar paddings internos para que la línea no toque los bordes del cuadro
+                lineChart.setViewPortOffsets(5f, 5f, 5f, 5f)
+
+                lineChart.animateX(1000)
+                lineChart.invalidate()
+            } else {
+                lineChart.clear()
+            }
+        }
 
         val carneRecords = prodRepo.getCarneRecords().filter { it.activo }
         val avgGdp = if (carneRecords.isNotEmpty()) carneRecords.map { it.gdp }.average() else 0.0

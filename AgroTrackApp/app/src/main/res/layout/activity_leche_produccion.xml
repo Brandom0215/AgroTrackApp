@@ -8,14 +8,14 @@
     android:background="#F8F9FA"
     android:fitsSystemWindows="true">
 
-    <!-- Top AppBar -->
     <com.google.android.material.appbar.AppBarLayout
-        app:liftOnScroll="false"
-        style="@style/Widget.MaterialComponents.AppBarLayout.PrimarySurface"
-        app:elevation="0dp"
+        android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:backgroundTint="@color/md_theme_light_primary">
+        android:fitsSystemWindows="true"
+        app:liftOnScroll="false"
+        style="@style/Widget.MaterialComponents.AppBarLayout.PrimarySurface"
+        app:elevation="0dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -42,7 +42,7 @@
                 android:text="Producción de Leche"
                 android:textColor="@android:color/white"
                 android:textStyle="bold"
-                android:textSize="18sp" />
+                android:textSize="20sp" />
 
         </RelativeLayout>
     </com.google.android.material.appbar.AppBarLayout>

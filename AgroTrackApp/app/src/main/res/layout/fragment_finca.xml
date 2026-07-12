@@ -421,13 +421,22 @@
 
                         </LinearLayout>
 
-                        <ImageView
+                        <com.google.android.material.card.MaterialCardView
                             android:layout_width="0dp"
-                            android:layout_height="70dp"
+                            android:layout_height="85dp"
                             android:layout_weight="1.8"
-                            android:src="@drawable/grafica_produccion"
-                            android:scaleType="fitCenter"
-                            android:contentDescription="Grafico de produccion" />
+                            app:cardCornerRadius="12dp"
+                            app:cardElevation="0dp"
+                            app:strokeWidth="1dp"
+                            app:strokeColor="#F0F0F0"
+                            app:cardBackgroundColor="#FAFAFA">
+
+                            <com.github.mikephil.charting.charts.LineChart
+                                android:id="@+id/ivTrendChartHome"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_margin="4dp" />
+                        </com.google.android.material.card.MaterialCardView>
                     </LinearLayout>
 
                     <View
