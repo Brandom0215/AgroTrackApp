@@ -8,11 +8,13 @@
     android:background="?android:colorBackground">
 
     <com.google.android.material.appbar.AppBarLayout
+        app:liftOnScroll="false"
+        style="@style/Widget.MaterialComponents.AppBarLayout.PrimarySurface"
+        app:elevation="0dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fitsSystemWindows="true"
-        android:background="?attr/colorPrimary"
-        app:elevation="2dp">
+        android:background="?attr/colorPrimary">
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="56dp"

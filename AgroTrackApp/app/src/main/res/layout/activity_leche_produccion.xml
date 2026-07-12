@@ -10,10 +10,12 @@
 
     <!-- Top AppBar -->
     <com.google.android.material.appbar.AppBarLayout
+        app:liftOnScroll="false"
+        style="@style/Widget.MaterialComponents.AppBarLayout.PrimarySurface"
+        app:elevation="0dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/md_theme_light_primary"
-        app:elevation="2dp">
+        app:backgroundTint="@color/md_theme_light_primary">
 
         <RelativeLayout
             android:layout_width="match_parent"

@@ -9,6 +9,8 @@
 
     <!-- Top App Bar -->
     <com.google.android.material.appbar.AppBarLayout
+        app:liftOnScroll="false"
+        style="@style/Widget.MaterialComponents.AppBarLayout.PrimarySurface"
         android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
