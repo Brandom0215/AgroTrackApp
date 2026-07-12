@@ -111,8 +111,10 @@ class AlertasFragment : Fragment(R.layout.fragment_alertas) {
                     Snackbar.make(rvAlertas, "Alerta eliminada", Snackbar.LENGTH_LONG)
                         .setAction("DESHACER") {
                             alertaRepository.restoreAlerta(alerta.id)
+                            AlertasWidgetProvider.updateAllWidgets(requireContext())
                             cargarAlertas()
                         }.show()
+                    AlertasWidgetProvider.updateAllWidgets(requireContext())
                 } else {
                     Toast.makeText(requireContext(), "El historial no se puede deslizar", Toast.LENGTH_SHORT).show()
                 }
