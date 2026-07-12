@@ -99,7 +99,8 @@ class ControlSanitarioFragment : Fragment(R.layout.fragment_control_sanitario) {
 
     override fun onResume() {
         super.onResume()
-        cargarDatos()
+        cargarRegistros()
+        actualizarKPIs()
     }
 
     /** Groups records by grupoId, each legacy record (empty grupoId) becomes its own group.
