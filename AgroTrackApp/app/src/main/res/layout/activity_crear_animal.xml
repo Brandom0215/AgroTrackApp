@@ -9,13 +9,12 @@
 
     <!-- Top App Bar -->
     <com.google.android.material.appbar.AppBarLayout
-        app:liftOnScroll="false"
-        style="@style/Widget.MaterialComponents.AppBarLayout.PrimarySurface"
         android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fitsSystemWindows="true"
-        android:background="?attr/colorPrimary"
+        app:liftOnScroll="false"
+        style="@style/Widget.MaterialComponents.AppBarLayout.PrimarySurface"
         app:elevation="0dp">
 
         <RelativeLayout
@@ -39,11 +38,11 @@
                 android:id="@+id/tvTitleActivity"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toEndOf="@id/btnBack"
-                android:layout_centerVertical="true"
+                android:layout_centerInParent="true"
                 android:text="Crear Animal"
                 android:textColor="?attr/colorOnPrimary"
-                android:textSize="20sp" />
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
             <!-- Icons on the right -->
             <LinearLayout

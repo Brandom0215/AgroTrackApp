@@ -24,10 +24,11 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="12dp"
         android:hint="Seleccione el producto *">
-        <AutoCompleteTextView
+        <com.google.android.material.textfield.MaterialAutoCompleteTextView
             android:id="@+id/etSelectProductoVenta"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:padding="16dp"
             android:inputType="none" />
     </com.google.android.material.textfield.TextInputLayout>
 
