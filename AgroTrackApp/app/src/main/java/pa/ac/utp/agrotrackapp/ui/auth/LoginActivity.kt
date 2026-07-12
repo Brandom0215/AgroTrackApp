@@ -65,8 +65,11 @@ class LoginActivity : AppCompatActivity() {
             mostrarDialogoRecuperacion()
         }
 
-        // Configurar detección biométrica
-        if (biometricService.isBiometricAvailable()) {
+        // Configurar detección biométrica (Sujeto a habilitación bajo Ley N° 81)
+        val prefs = getSharedPreferences("GanaDEXAuthPrefs", MODE_PRIVATE)
+        val biometricEnabled = prefs.getBoolean("biometric_enabled", false)
+
+        if (biometricService.isBiometricAvailable() && biometricEnabled) {
             btnBiometria.visibility = android.view.View.VISIBLE
             btnBiometria.setOnClickListener {
                 realizarLoginBiometrico()
@@ -74,6 +77,9 @@ class LoginActivity : AppCompatActivity() {
         } else {
             btnBiometria.visibility = android.view.View.GONE
         }
+
+        // Verificar consentimiento de privacidad de la Ley N° 81
+        verificarConsentimientoPrivacidad()
     }
 
     private fun realizarLogin() {

@@ -66,6 +66,8 @@ class PerfilUsuarioActivity : AppCompatActivity() {
     
     private lateinit var btnGuardarPerfil: MaterialButton
     private lateinit var btnDestruirDatos: MaterialButton
+    private lateinit var switchBiometria: com.google.android.material.switchmaterial.SwitchMaterial
+    private lateinit var switchAlertas: com.google.android.material.switchmaterial.SwitchMaterial
 
     companion object {
         private const val REQUEST_IMAGE_CAPTURE = 3001
@@ -150,6 +152,36 @@ class PerfilUsuarioActivity : AppCompatActivity() {
 
         btnDestruirDatos.setOnClickListener {
             destruirDatosPersonalesYFinca()
+        }
+
+        findViewById<View>(R.id.btnVerAvisoPrivacidad)?.setOnClickListener {
+            mostrarAvisoPrivacidadTransparencia()
+        }
+
+        // Bind and initialize privacy switches (Ley N° 81 - Oposición)
+        switchBiometria = findViewById(R.id.switchBiometria)
+        switchAlertas = findViewById(R.id.switchAlertas)
+
+        val authPrefs = getSharedPreferences("GanaDEXAuthPrefs", MODE_PRIVATE)
+        switchBiometria.isChecked = authPrefs.getBoolean("biometric_enabled", false)
+        switchAlertas.isChecked = authPrefs.getBoolean("alerts_enabled", true)
+
+        switchBiometria.setOnCheckedChangeListener { _, isChecked ->
+            authPrefs.edit().putBoolean("biometric_enabled", isChecked).apply()
+            if (isChecked) {
+                Toast.makeText(this, "Acceso biométrico activado", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(this, "Acceso biométrico desactivado", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        switchAlertas.setOnCheckedChangeListener { _, isChecked ->
+            authPrefs.edit().putBoolean("alerts_enabled", isChecked).apply()
+            if (isChecked) {
+                Toast.makeText(this, "Recordatorios y alertas activados", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(this, "Recordatorios y alertas desactivados", Toast.LENGTH_SHORT).show()
+            }
         }
 
         // Initialize state (Read-Only mode by default)

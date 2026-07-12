@@ -714,6 +714,11 @@ class CrearAnimalActivity : AppCompatActivity(), BluetoothRfidService.BluetoothR
             Toast.makeText(this, "Por favor seleccione un propósito", Toast.LENGTH_SHORT).show()
             return
         }
+
+        if (sexoSeleccionado.equals("Macho", ignoreCase = true) && proposito.equals("Leche", ignoreCase = true)) {
+            Toast.makeText(this, "Un animal macho no puede tener el propósito de leche", Toast.LENGTH_LONG).show()
+            return
+        }
         if (fechaNac.isEmpty()) {
             tilFechaNacimiento.error = "La fecha de nacimiento es requerida"
             etFechaNacimiento.requestFocus()

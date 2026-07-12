@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Registrar Venta de Producto"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="#2E7D32"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Selector de Producto -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilSelectProductoVenta"
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
+        android:hint="Seleccione el producto *">
+        <AutoCompleteTextView
+            android:id="@+id/etSelectProductoVenta"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="none" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Contenedor Resumen Producto (Oculto al inicio) -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cardResumenProductoVenta"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="0dp"
+        app:strokeWidth="1dp"
+        app:strokeColor="#CFD8DC"
+        app:cardBackgroundColor="#F8F9FA"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="12dp">
+
+            <TextView
+                android:id="@+id/tvStockVentaResumen"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Stock Disponible: 0 Sacos"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:textColor="#37474F" />
+
+            <TextView
+                android:id="@+id/tvPrecioVentaResumen"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Precio de Venta Unitario: $0.00"
+                android:textSize="13sp"
+                android:textColor="#37474F"
+                android:layout_marginTop="4dp" />
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilCantidadVenta"
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Cantidad a vender *">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etCantidadVenta"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+</LinearLayout>
