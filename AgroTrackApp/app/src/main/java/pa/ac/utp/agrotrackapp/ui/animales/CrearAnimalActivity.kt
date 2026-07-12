@@ -17,6 +17,7 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import pa.ac.utp.agrotrackapp.R
 import pa.ac.utp.agrotrackapp.data.animal.SqliteAnimalRepository
+import pa.ac.utp.agrotrackapp.data.animal.SqliteLoteRepository
 import pa.ac.utp.agrotrackapp.data.produccion.SqliteProduccionRepository
 import pa.ac.utp.agrotrackapp.domain.model.Animal
 import pa.ac.utp.agrotrackapp.domain.repository.AnimalRepository
@@ -34,6 +35,7 @@ class CrearAnimalActivity : AppCompatActivity(), BluetoothRfidService.BluetoothR
 
     // Repositorio y banderas de estado para el flujo de edición y foto
     private lateinit var animalRepository: AnimalRepository
+    private lateinit var loteRepository: SqliteLoteRepository
     private var isEditMode = false
     private var editArete: String? = null
     private var sexoSeleccionado = "Macho" // Valor por defecto
@@ -67,6 +69,7 @@ class CrearAnimalActivity : AppCompatActivity(), BluetoothRfidService.BluetoothR
     private lateinit var etMadre: AutoCompleteTextView
     private lateinit var etNotas: TextInputEditText
     private lateinit var btnCrear: MaterialButton
+    private lateinit var btnDeleteAnimal: MaterialButton
 
     // Elementos para el escaneo Bluetooth y modos de registro
     private var registroModo = "Individual" // "Individual" o "Global"
@@ -105,6 +108,7 @@ class CrearAnimalActivity : AppCompatActivity(), BluetoothRfidService.BluetoothR
 
         // Inicializamos repositorio
         animalRepository = SqliteAnimalRepository(this)
+        loteRepository = SqliteLoteRepository(this)
 
         // Inicializar Servicio Bluetooth RFID Real
         bluetoothRfidService = BluetoothRfidService(this, this)
@@ -137,6 +141,7 @@ class CrearAnimalActivity : AppCompatActivity(), BluetoothRfidService.BluetoothR
         etMadre = findViewById(R.id.etMadre)
         etNotas = findViewById(R.id.etNotas)
         btnCrear = findViewById(R.id.btnCrear)
+        btnDeleteAnimal = findViewById(R.id.btnDeleteAnimal)
 
         // Bind nuevos elementos de Bluetooth y Registro
         tvModoRegistroHeader = findViewById(R.id.tvModoRegistroHeader)
@@ -605,12 +610,23 @@ class CrearAnimalActivity : AppCompatActivity(), BluetoothRfidService.BluetoothR
         val propositoAdapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, arrayOf("Doble propósito", "Carne", "Leche", "Cría"))
         etProposito.setAdapter(propositoAdapter)
         
-        val mangaAdapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, arrayOf("Lote 1", "Lote 2", "Corral Principal", "Cuarentena"))
+        val lotes = loteRepository.getLotes().map { it.nombre }
+        val mangaAdapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, lotes)
         etManga.setAdapter(mangaAdapter)
 
-        val padreMadreAdapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, arrayOf("Desconocido", "Toro 001", "Vaca 102", "Inseminación Artificial"))
-        etPadre.setAdapter(padreMadreAdapter)
-        etMadre.setAdapter(padreMadreAdapter)
+        val allAnimals = animalRepository.getAnimals()
+        
+        val machos = mutableListOf("Desconocido", "Inseminación Artificial")
+        machos.addAll(allAnimals.filter { it.sexo.equals("Macho", ignoreCase = true) }.map { it.numeroAnimal })
+        
+        val hembras = mutableListOf("Desconocido")
+        hembras.addAll(allAnimals.filter { it.sexo.equals("Hembra", ignoreCase = true) }.map { it.numeroAnimal })
+
+        val padreAdapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, machos)
+        etPadre.setAdapter(padreAdapter)
+
+        val madreAdapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, hembras)
+        etMadre.setAdapter(madreAdapter)
     }
 
     private fun cargarDatosParaEdicion() {
@@ -620,8 +636,25 @@ class CrearAnimalActivity : AppCompatActivity(), BluetoothRfidService.BluetoothR
         tvTitleActivity.text = "Editar Animal"
         btnCrear.text = "Guardar Cambios"
         
+        btnDeleteAnimal.visibility = View.VISIBLE
+        btnDeleteAnimal.setOnClickListener {
+            androidx.appcompat.app.AlertDialog.Builder(this)
+                .setTitle("Eliminar Animal")
+                .setMessage("¿Estás seguro que deseas eliminar este animal?")
+                .setPositiveButton("Eliminar") { _, _ ->
+                    val result = animalRepository.deleteAnimal(animal.numeroAnimal)
+                    if (result.isSuccess) {
+                        Toast.makeText(this, "Animal eliminado", Toast.LENGTH_SHORT).show()
+                        finish()
+                    } else {
+                        Toast.makeText(this, "Error: ${result.exceptionOrNull()?.message}", Toast.LENGTH_SHORT).show()
+                    }
+                }
+                .setNegativeButton("Cancelar", null)
+                .show()
+        }
+        
         etNumeroAnimal.setText(animal.numeroAnimal)
-        etNumeroAnimal.isEnabled = false
 
         selectSex(animal.sexo == "Macho")
 
@@ -712,11 +745,6 @@ class CrearAnimalActivity : AppCompatActivity(), BluetoothRfidService.BluetoothR
         }
 
         // Validaciones comunes compartidas
-        if (trazabilidad.isNotEmpty() && !trazabilidad.matches(Regex("^[0-9]{15,30}$"))) {
-            tilTrazabilidad.error = "La trazabilidad debe tener entre 15 y 30 números (sin letras ni caracteres especiales)"
-            etTrazabilidad.requestFocus()
-            return
-        }
 
         if (raza.isEmpty()) {
             Toast.makeText(this, "Por favor seleccione una raza", Toast.LENGTH_SHORT).show()
@@ -769,7 +797,7 @@ class CrearAnimalActivity : AppCompatActivity(), BluetoothRfidService.BluetoothR
                     finalImagenPath = imagenPathLocal!!
                 }
             } else if (isEditMode) {
-                val animalPrevio = animalRepository.getAnimal(arete)
+                val animalPrevio = animalRepository.getAnimal(editArete!!)
                 if (animalPrevio != null) {
                     finalImagenPath = animalPrevio.imagenPath
                 }
@@ -788,11 +816,12 @@ class CrearAnimalActivity : AppCompatActivity(), BluetoothRfidService.BluetoothR
                 padre = etPadre.text.toString().trim(),
                 madre = etMadre.text.toString().trim(),
                 notas = notas,
-                imagenPath = finalImagenPath
+                imagenPath = finalImagenPath,
+                lote = etManga.text.toString().trim()
             )
 
             val resultado = if (isEditMode) {
-                animalRepository.updateAnimal(animal)
+                animalRepository.updateAnimal(editArete!!, animal)
             } else {
                 animalRepository.saveAnimal(animal)
             }
@@ -847,7 +876,8 @@ class CrearAnimalActivity : AppCompatActivity(), BluetoothRfidService.BluetoothR
                     padre = etPadre.text.toString().trim(),
                     madre = etMadre.text.toString().trim(),
                     notas = notas,
-                    imagenPath = finalImagenPath
+                    imagenPath = finalImagenPath,
+                    lote = etManga.text.toString().trim()
                 )
 
                 val result = animalRepository.saveAnimal(animal)

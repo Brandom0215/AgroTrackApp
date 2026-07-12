@@ -60,6 +60,12 @@
         <activity
             android:name=".ui.produccion.LecheProduccionActivity"
             android:exported="false" />
+        <activity
+            android:name=".ui.animales.LotesActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.animales.CrearLoteActivity"
+            android:exported="false" />
 
         <!-- Widget de Alertas -->
         <receiver

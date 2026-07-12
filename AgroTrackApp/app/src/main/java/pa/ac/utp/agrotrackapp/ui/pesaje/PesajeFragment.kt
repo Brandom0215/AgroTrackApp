@@ -201,7 +201,7 @@ class PesajeFragment : Fragment() {
 
         // 1. Sincronizar en Hato General: actualizar el peso en el registro del animal
         val animalActualizado = animal.copy(peso = pesoVal.toString())
-        animalRepository.updateAnimal(animalActualizado)
+        animalRepository.updateAnimal(animalActualizado.numeroAnimal, animalActualizado)
 
         // 2. Sincronizar en Producción de Carne: si el animal está en ceba, actualizar su registro de carne
         val recordCarnePrevio = produccionRepository.getCarneRecord(animal.numeroAnimal)

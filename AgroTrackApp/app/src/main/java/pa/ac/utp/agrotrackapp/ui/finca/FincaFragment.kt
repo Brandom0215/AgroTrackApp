@@ -56,11 +56,7 @@ class FincaFragment : Fragment(R.layout.fragment_finca) {
             (requireActivity() as MainActivity).navigateToTab(R.id.nav_produccion)
         }
 
-        // Configurar botón flotante para registrar un nuevo animal
-        view.findViewById<View>(R.id.fabAddAnimalHome)?.setOnClickListener {
-            val intent = Intent(requireContext(), CrearAnimalActivity::class.java)
-            startActivity(intent)
-        }
+
     }
 
     private fun cargarEstadisticasDinamicas(view: View) {

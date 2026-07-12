@@ -13,5 +13,6 @@ data class Animal(
     val padre: String = "",
     val madre: String = "",
     val notas: String = "",            // Largo < 30, sin caracteres especiales excepto ':'
-    val imagenPath: String = ""        // Ruta local de la foto del animal
+    val imagenPath: String = "",       // Ruta local de la foto del animal
+    val lote: String = ""              // Nombre del lote al que pertenece
 )

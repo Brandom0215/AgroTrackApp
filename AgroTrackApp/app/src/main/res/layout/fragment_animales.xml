@@ -41,40 +41,42 @@
                 android:textColor="?attr/colorOnPrimary"
                 android:textStyle="bold"
                 android:textSize="18sp" />
+
+            <ImageButton
+                android:id="@+id/btnToggleSearch"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_centerVertical="true"
+                android:layout_alignParentEnd="true"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@android:drawable/ic_menu_search"
+                app:tint="?attr/colorOnPrimary"
+                android:contentDescription="Buscar" />
         </RelativeLayout>
 
-        <!-- Filter bar from screenshot (Dynamic values) -->
         <LinearLayout
+            android:id="@+id/searchContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?android:colorBackground"
-            android:padding="10dp"
-            android:orientation="horizontal"
-            android:gravity="center"
-            android:elevation="1dp">
+            android:visibility="gone"
+            android:padding="8dp"
+            android:background="?attr/colorPrimary">
             
-            <TextView 
-                android:id="@+id/tvHeaderMachosCount"
-                android:layout_width="wrap_content" 
-                android:layout_height="wrap_content" 
-                android:text="0 Machos" 
-                android:paddingHorizontal="16dp"
-                android:paddingVertical="6dp"
-                android:textStyle="bold"
-                android:textColor="@color/md_theme_light_primary"
-                android:textSize="13sp" />
-                
-            <TextView 
-                android:id="@+id/tvHeaderHembrasCount"
-                android:layout_width="wrap_content" 
-                android:layout_height="wrap_content" 
-                android:text="0 Hembras" 
-                android:paddingHorizontal="16dp"
-                android:paddingVertical="6dp"
-                android:textStyle="bold"
-                android:textColor="@color/md_theme_light_primary"
-                android:textSize="13sp" />
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etSearchArete"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="@drawable/bg_widget_rounded"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:hint="Buscar por arete..."
+                android:textSize="14sp"
+                android:textColor="@color/black"
+                android:textColorHint="@color/text_gray"
+                android:inputType="text" />
         </LinearLayout>
+
+
     </com.google.android.material.appbar.AppBarLayout>
 
     <!-- Scrollable Content -->
@@ -91,208 +93,127 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- 1. Animal Inventory Detail Card -->
-            <com.google.android.material.card.MaterialCardView
+
+
+            <!-- Filtros Personalizados -->
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                app:cardBackgroundColor="@color/white"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="2dp"
-                app:strokeColor="@color/divider"
-                app:strokeWidth="1dp">
+                android:orientation="horizontal"
+                android:weightSum="3"
+                android:baselineAligned="false">
                 
+                <!-- Machos -->
                 <LinearLayout
-                    android:layout_width="match_parent"
+                    android:id="@+id/llFilterMachos"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
+                    android:layout_weight="1"
+                    android:layout_marginEnd="8dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:background="@drawable/bg_filter_button_selector"
+                    android:padding="4dp"
+                    android:clickable="true"
+                    android:focusable="true">
                     
+                    <TextView
+                        android:id="@+id/tvCountMachos"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:background="@drawable/bg_circle_solid"
+                        android:backgroundTint="#03A9F4"
+                        android:gravity="center"
+                        android:text="0"
+                        android:textColor="@color/white"
+                        android:textStyle="bold"
+                        android:textSize="14sp"/>
+                        
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Inventario de Hato"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/md_theme_light_primary" />
-
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp">
-
-                        <!-- Donut Chart -->
-                        <com.github.mikephil.charting.charts.PieChart
-                            android:id="@+id/donutChart"
-                            android:layout_width="110dp"
-                            android:layout_height="110dp"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintBottom_toBottomOf="parent" />
-
-                        <!-- Legends -->
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:layout_marginStart="20dp"
-                            app:layout_constraintStart_toEndOf="@id/donutChart"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintBottom_toBottomOf="parent">
-
-                            <!-- Hembras -->
-                            <RelativeLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginBottom="8dp">
-                                <View
-                                    android:id="@+id/dotHembras"
-                                    android:layout_width="8dp"
-                                    android:layout_height="8dp"
-                                    android:layout_centerVertical="true"
-                                    android:background="@drawable/punto_verde" />
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_toEndOf="@id/dotHembras"
-                                    android:layout_marginStart="8dp"
-                                    android:text="Vacas / Hembras"
-                                    android:textColor="@color/text_gray" />
-                                <TextView
-                                    android:id="@+id/tvCountHembras"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_alignParentEnd="true"
-                                    android:text="0"
-                                    android:textStyle="bold"
-                                    android:textColor="?android:textColorPrimary" />
-                            </RelativeLayout>
-
-                            <!-- Machos -->
-                            <RelativeLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginBottom="8dp">
-                                <View
-                                    android:id="@+id/dotMachos"
-                                    android:layout_width="8dp"
-                                    android:layout_height="8dp"
-                                    android:layout_centerVertical="true"
-                                    android:background="@drawable/punto_marron" />
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_toEndOf="@id/dotMachos"
-                                    android:layout_marginStart="8dp"
-                                    android:text="Toros / Machos"
-                                    android:textColor="@color/text_gray" />
-                                <TextView
-                                    android:id="@+id/tvCountMachos"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_alignParentEnd="true"
-                                    android:text="0"
-                                    android:textStyle="bold"
-                                    android:textColor="?android:textColorPrimary" />
-                            </RelativeLayout>
-
-                            <!-- Terneros -->
-                            <RelativeLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content">
-                                <View
-                                    android:id="@+id/dotTerneros"
-                                    android:layout_width="8dp"
-                                    android:layout_height="8dp"
-                                    android:layout_centerVertical="true"
-                                    android:background="@drawable/punto_melocoton" />
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_toEndOf="@id/dotTerneros"
-                                    android:layout_marginStart="8dp"
-                                    android:text="Terneros / Novillas"
-                                    android:textColor="@color/text_gray" />
-                                <TextView
-                                    android:id="@+id/tvCountTerneros"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_alignParentEnd="true"
-                                    android:text="0"
-                                    android:textStyle="bold"
-                                    android:textColor="?android:textColorPrimary" />
-                            </RelativeLayout>
-                        </LinearLayout>
-                    </androidx.constraintlayout.widget.ConstraintLayout>
+                        android:layout_marginStart="8dp"
+                        android:text="Machos"
+                        android:textColor="@color/text_gray"
+                        android:textSize="13sp"
+                        android:maxLines="1"
+                        android:ellipsize="end"/>
                 </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
 
-            <!-- 2. Search and Filter Box -->
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                app:cardBackgroundColor="@color/white"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="2dp"
-                app:strokeColor="@color/divider"
-                app:strokeWidth="1dp">
-
+                <!-- Hembras -->
                 <LinearLayout
-                    android:layout_width="match_parent"
+                    android:id="@+id/llFilterHembras"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="8dp"
                     android:orientation="horizontal"
-                    android:padding="12dp"
                     android:gravity="center_vertical"
-                    android:weightSum="3">
-
-                    <!-- Search by Arete -->
-                    <com.google.android.material.textfield.TextInputLayout
-                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1.8"
-                        android:layout_marginEnd="8dp"
-                        android:hint="Buscar arete..."
-                        app:startIconDrawable="@android:drawable/ic_menu_search"
-                        app:startIconTint="@color/text_gray">
+                    android:background="@drawable/bg_filter_button_selector"
+                    android:padding="4dp"
+                    android:clickable="true"
+                    android:focusable="true">
+                    
+                    <TextView
+                        android:id="@+id/tvCountHembras"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:background="@drawable/bg_circle_solid"
+                        android:backgroundTint="#9C27B0"
+                        android:gravity="center"
+                        android:text="0"
+                        android:textColor="@color/white"
+                        android:textStyle="bold"
+                        android:textSize="14sp"/>
                         
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/etSearchArete"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:inputType="text"
-                            android:textSize="14sp" />
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <!-- Filter by Sex -->
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1.2"
-                        android:orientation="vertical"
-                        android:gravity="center_vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Filtrar Sexo:"
-                            android:textSize="10sp"
-                            android:textColor="@color/text_gray"
-                            android:textStyle="bold"
-                            android:layout_marginStart="4dp" />
-
-                        <Spinner
-                            android:id="@+id/spinnerFilterSexo"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@android:drawable/btn_dropdown"
-                            android:spinnerMode="dropdown" />
-                    </LinearLayout>
-
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:text="Hembras"
+                        android:textColor="@color/text_gray"
+                        android:textSize="13sp"
+                        android:maxLines="1"
+                        android:ellipsize="end"/>
                 </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+
+                <!-- Lotes -->
+                <LinearLayout
+                    android:id="@+id/llFilterLotes"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:background="@drawable/bg_filter_button_selector"
+                    android:padding="4dp"
+                    android:clickable="true"
+                    android:focusable="true">
+                    
+                    <TextView
+                        android:id="@+id/tvCountLotes"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:background="@drawable/bg_circle_solid"
+                        android:backgroundTint="#4CAF50"
+                        android:gravity="center"
+                        android:text="0"
+                        android:textColor="@color/white"
+                        android:textStyle="bold"
+                        android:textSize="14sp"/>
+                        
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:text="Lotes"
+                        android:textColor="@color/text_gray"
+                        android:textSize="13sp"
+                        android:maxLines="1"
+                        android:ellipsize="end"/>
+                </LinearLayout>
+            </LinearLayout>
 
             <!-- 3. Tabla de Animales Card -->
             <com.google.android.material.card.MaterialCardView
@@ -451,7 +372,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
-        app:backgroundTint="#D32F2F"
+        app:backgroundTint="?attr/colorPrimary"
         app:srcCompat="@android:drawable/ic_input_add"
         app:tint="@color/white"
         app:elevation="6dp" />
