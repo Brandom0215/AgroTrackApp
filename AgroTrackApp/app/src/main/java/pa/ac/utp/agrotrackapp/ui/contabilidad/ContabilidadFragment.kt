@@ -103,4 +103,9 @@ class ContabilidadFragment : Fragment(R.layout.fragment_contabilidad) {
             tvTotalGanancia.setTextColor(requireContext().getColor(R.color.status_green))
         }
     }
+
+    override fun onResume() {
+        super.onResume()
+        cargarDatos()
+    }
 }
