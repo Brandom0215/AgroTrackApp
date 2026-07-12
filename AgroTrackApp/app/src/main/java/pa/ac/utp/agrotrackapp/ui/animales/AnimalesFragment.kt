@@ -13,6 +13,10 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.textfield.TextInputEditText
+import com.github.mikephil.charting.charts.PieChart
+import com.github.mikephil.charting.data.PieData
+import com.github.mikephil.charting.data.PieDataSet
+import com.github.mikephil.charting.data.PieEntry
 import pa.ac.utp.agrotrackapp.R
 import pa.ac.utp.agrotrackapp.data.animal.SqliteAnimalRepository
 import pa.ac.utp.agrotrackapp.domain.model.Animal
@@ -28,7 +32,6 @@ class AnimalesFragment : Fragment(R.layout.fragment_animales) {
     private lateinit var tvHeaderMachos: TextView
     private lateinit var tvHeaderHembras: TextView
     
-    private lateinit var tvDonutTotal: TextView
     private lateinit var tvCountHembras: TextView
     private lateinit var tvCountMachos: TextView
     private lateinit var tvCountTerneros: TextView
@@ -49,7 +52,6 @@ class AnimalesFragment : Fragment(R.layout.fragment_animales) {
         // Enlazar vistas de cabecera e inventario
         tvHeaderMachos = view.findViewById(R.id.tvHeaderMachosCount)
         tvHeaderHembras = view.findViewById(R.id.tvHeaderHembrasCount)
-        tvDonutTotal = view.findViewById(R.id.tvDonutTotal)
         tvCountHembras = view.findViewById(R.id.tvCountHembras)
         tvCountMachos = view.findViewById(R.id.tvCountMachos)
         tvCountTerneros = view.findViewById(R.id.tvCountTerneros)
@@ -127,10 +129,43 @@ class AnimalesFragment : Fragment(R.layout.fragment_animales) {
         // Actualizar UI del inventario
         tvHeaderMachos.text = "$machosHeader Machos"
         tvHeaderHembras.text = "$hembrasHeader Hembras"
-        tvDonutTotal.text = "Total\n$totalCount"
         tvCountHembras.text = "$hembrasCount"
         tvCountMachos.text = "$machosCount"
         tvCountTerneros.text = "$ternerosCount"
+
+        val pieChart = view?.findViewById<PieChart>(R.id.donutChart)
+        if (pieChart != null) {
+            pieChart.setNoDataText("Sin datos")
+            pieChart.setNoDataTextColor(Color.parseColor("#999999"))
+
+            val entries = ArrayList<PieEntry>()
+            if (machosCount > 0) entries.add(PieEntry(machosCount.toFloat(), "Machos"))
+            if (hembrasCount > 0) entries.add(PieEntry(hembrasCount.toFloat(), "Hembras"))
+            if (ternerosCount > 0) entries.add(PieEntry(ternerosCount.toFloat(), "Crías"))
+            
+            if (entries.isNotEmpty()) {
+                val dataSet = PieDataSet(entries, "")
+                dataSet.colors = listOf(Color.parseColor("#4CAF50"), Color.parseColor("#81C784"), Color.parseColor("#A5D6A7"))
+                dataSet.setDrawValues(false) // No numbers inside the slices
+                
+                pieChart.data = PieData(dataSet)
+                pieChart.description.isEnabled = false
+                pieChart.legend.isEnabled = false
+                pieChart.isDrawHoleEnabled = true
+                pieChart.holeRadius = 70f
+                pieChart.setHoleColor(Color.TRANSPARENT)
+                
+                // Set the center text to the total amount
+                pieChart.centerText = "Total\n$totalCount"
+                pieChart.setCenterTextSize(14f)
+                pieChart.setCenterTextColor(Color.BLACK)
+                
+                pieChart.animateY(1000)
+                pieChart.invalidate()
+            } else {
+                pieChart.clear()
+            }
+        }
 
         // Actualizar la lista de la tabla con los filtros actuales
         filtrarAnimales()
