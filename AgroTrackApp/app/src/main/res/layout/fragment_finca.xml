@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -12,10 +12,7 @@
         android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fitsSystemWindows="true"
-        app:liftOnScroll="false"
-        style="@style/Widget.MaterialComponents.AppBarLayout.PrimarySurface"
-        app:elevation="0dp">
+        android:fitsSystemWindows="true" app:liftOnScroll="false" style="@style/Widget.MaterialComponents.AppBarLayout.PrimarySurface" app:elevation="0dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -196,7 +193,7 @@
                             android:layout_toEndOf="@id/donutChart"
                             android:layout_marginStart="12dp">
 
-                            <!-- Vacas (Verde) -->
+                            <!-- Vacas (Hembras - Morado) -->
                             <LinearLayout
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -206,7 +203,8 @@
                                 <View
                                     android:layout_width="8dp"
                                     android:layout_height="8dp"
-                                    android:background="@drawable/punto_verde" />
+                                    android:background="@drawable/bg_circle_solid"
+                                    android:backgroundTint="#9C27B0" />
                                 <TextView
                                     android:id="@+id/tvVacasCount"
                                     android:layout_width="wrap_content"
@@ -216,7 +214,7 @@
                                     android:textColor="@color/text_gray" />
                             </LinearLayout>
 
-                            <!-- Toros (Marrón) -->
+                            <!-- Toros (Machos - Azul) -->
                             <LinearLayout
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -226,7 +224,8 @@
                                 <View
                                     android:layout_width="8dp"
                                     android:layout_height="8dp"
-                                    android:background="@drawable/punto_marron" />
+                                    android:background="@drawable/bg_circle_solid"
+                                    android:backgroundTint="#03A9F4" />
                                 <TextView
                                     android:id="@+id/tvTorosCount"
                                     android:layout_width="wrap_content"
@@ -236,7 +235,7 @@
                                     android:textColor="@color/text_gray" />
                             </LinearLayout>
 
-                            <!-- Terneros/Novillas (Peach) -->
+                            <!-- Lotes (Verde) -->
                             <LinearLayout
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -245,12 +244,13 @@
                                 <View
                                     android:layout_width="8dp"
                                     android:layout_height="8dp"
-                                    android:background="@drawable/punto_melocoton" />
+                                    android:background="@drawable/bg_circle_solid"
+                                    android:backgroundTint="#4CAF50" />
                                 <TextView
-                                    android:id="@+id/tvTernerosCount"
+                                    android:id="@+id/tvLotesCount"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text=" Total Registros: 0"
+                                    android:text=" Lotes: 0"
                                     android:textSize="11sp"
                                     android:textColor="@color/text_gray" />
                             </LinearLayout>

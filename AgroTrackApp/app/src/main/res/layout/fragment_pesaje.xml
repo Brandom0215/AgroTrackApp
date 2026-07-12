@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -8,13 +8,10 @@
     android:background="?android:colorBackground">
 
     <com.google.android.material.appbar.AppBarLayout
-        app:liftOnScroll="false"
-        style="@style/Widget.MaterialComponents.AppBarLayout.PrimarySurface"
-        app:elevation="0dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fitsSystemWindows="true"
-        android:background="?attr/colorPrimary">
+        android:background="?attr/colorPrimary" app:liftOnScroll="false" style="@style/Widget.MaterialComponents.AppBarLayout.PrimarySurface" app:elevation="0dp">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
@@ -119,13 +116,17 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cardFiltroSexo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
+                    android:clickable="true"
+                    android:focusable="true"
                     app:cardCornerRadius="8dp"
                     app:strokeColor="@color/divider"
                     app:strokeWidth="1dp">
                     <TextView
+                        android:id="@+id/tvFiltroSexo"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:paddingHorizontal="16dp"
