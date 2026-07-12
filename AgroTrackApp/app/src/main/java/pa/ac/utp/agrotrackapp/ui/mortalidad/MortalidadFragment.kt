@@ -58,7 +58,8 @@ class MortalidadFragment : Fragment() {
         mortalidadRepository = SqliteMortalidadRepository(requireContext())
 
         // Vincular vistas de la barra superior
-        view.findViewById<ImageButton>(R.id.btnMenu)?.setOnClickListener {
+        val toolbar = view.findViewById<androidx.appcompat.widget.Toolbar>(R.id.toolbar)
+        toolbar?.setNavigationOnClickListener {
             (requireActivity() as MainActivity).openDrawer()
         }
 
