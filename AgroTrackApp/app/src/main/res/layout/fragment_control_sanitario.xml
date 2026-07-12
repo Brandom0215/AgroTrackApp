@@ -174,16 +174,15 @@
 
     </LinearLayout>
 
-    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabAddSanidad"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
-        android:text="Nuevo"
-        app:icon="@drawable/ic_add"
-        app:iconTint="@android:color/white"
-        android:textColor="@android:color/white"
-        android:backgroundTint="#48BB78" />
+        app:backgroundTint="?attr/colorPrimary"
+        app:srcCompat="@android:drawable/ic_input_add"
+        app:tint="@color/white"
+        app:elevation="6dp" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -65,8 +65,7 @@ class PesajeFragment : Fragment() {
         produccionRepository = SqliteProduccionRepository(requireContext())
 
         // Configurar Barra Superior
-        val toolbar = view.findViewById<Toolbar>(R.id.toolbar)
-        toolbar.setNavigationOnClickListener {
+        view.findViewById<ImageButton>(R.id.btnMenu)?.setOnClickListener {
             (requireActivity() as MainActivity).openDrawer()
         }
 

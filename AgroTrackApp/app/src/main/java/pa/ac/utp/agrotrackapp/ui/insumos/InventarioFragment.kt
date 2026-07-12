@@ -298,7 +298,7 @@ class InventarioFragment : Fragment(R.layout.fragment_inventario) {
         val rbIndividual = dialogView.findViewById<RadioButton>(R.id.rbIndividual)
         
         val tilIdentificadorConsumo = dialogView.findViewById<TextInputLayout>(R.id.tilIdentificadorConsumo)
-        val etIdentificadorConsumo = dialogView.findViewById<TextInputEditText>(R.id.etIdentificadorConsumo)
+        val etIdentificadorConsumo = dialogView.findViewById<AutoCompleteTextView>(R.id.etIdentificadorConsumo)
 
         // Configurar dropdown de selección de productos
         val nombresProductos = items.map { it.nombre }
@@ -317,11 +317,32 @@ class InventarioFragment : Fragment(R.layout.fragment_inventario) {
             }
         }
 
+        // Cargar datos para el autocompletado del identificador
+        val animalRepository = SqliteAnimalRepository(requireContext())
+        val todosLosAnimales = animalRepository.getAnimals()
+        val aretes = todosLosAnimales.map { it.numeroAnimal }
+        val mangas = todosLosAnimales.map { it.manga }.filter { it.isNotEmpty() }.distinct()
+
+        val idAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, ArrayList(aretes))
+        etIdentificadorConsumo.setAdapter(idAdapter)
+        etIdentificadorConsumo.threshold = 1 // Mostrar sugerencias desde el primer carácter
+
+        // Mostrar todas las opciones al hacer clic
+        etIdentificadorConsumo.setOnTouchListener { _, _ ->
+            etIdentificadorConsumo.showDropDown()
+            false
+        }
+
         rgAlcanceConsumo.setOnCheckedChangeListener { _, checkedId ->
+            etIdentificadorConsumo.setText("") // Limpiar al cambiar modo
             if (checkedId == R.id.rbIndividual) {
                 tilIdentificadorConsumo.hint = "Número de Arete *"
+                val newAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, aretes)
+                etIdentificadorConsumo.setAdapter(newAdapter)
             } else {
-                tilIdentificadorConsumo.hint = "Manga, Lote o Destino *"
+                tilIdentificadorConsumo.hint = "Manga o Lote *"
+                val newAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, mangas)
+                etIdentificadorConsumo.setAdapter(newAdapter)
             }
         }
 
@@ -371,7 +392,6 @@ class InventarioFragment : Fragment(R.layout.fragment_inventario) {
 
             // 3. Validar existencia del animal en caso de alcance individual
             if (isIndividual) {
-                val animalRepository = SqliteAnimalRepository(requireContext())
                 val animal = animalRepository.getAnimal(identificador)
                 if (animal == null) {
                     tilIdentificadorConsumo.error = "El arete de animal '$identificador' no existe en el sistema"
