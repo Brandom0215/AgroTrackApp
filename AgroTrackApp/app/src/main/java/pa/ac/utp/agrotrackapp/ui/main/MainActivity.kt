@@ -51,7 +51,19 @@ class MainActivity : AppCompatActivity() {
         actualizarHeaderUsuario()
 
         if (savedInstanceState == null) {
-            bottomNavigation.selectedItemId = R.id.nav_finca
+            if (intent.getBooleanExtra("OPEN_ALERTAS", false)) {
+                bottomNavigation.selectedItemId = R.id.nav_alertas
+            } else {
+                bottomNavigation.selectedItemId = R.id.nav_finca
+            }
+        }
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        if (intent.getBooleanExtra("OPEN_ALERTAS", false)) {
+            bottomNavigation.selectedItemId = R.id.nav_alertas
         }
     }
 

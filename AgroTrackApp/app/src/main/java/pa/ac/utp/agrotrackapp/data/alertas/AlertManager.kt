@@ -226,6 +226,9 @@ class AlertManager(private val context: Context) {
                 )
             }
         }
+
+        // Update home screen widget
+        pa.ac.utp.agrotrackapp.ui.alertas.AlertasWidgetProvider.updateAllWidgets(context)
     }
 
     private fun processCondition(refId: String, isMet: Boolean, createAlerta: () -> Alerta) {
