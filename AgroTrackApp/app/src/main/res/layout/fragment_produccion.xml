@@ -41,10 +41,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:text="Dashboard de Producción"
-                android:textColor="@android:color/white"
+                android:text="Producción"
+                android:textColor="?attr/colorOnPrimary"
                 android:textStyle="bold"
-                android:textSize="18sp" />
+                android:textSize="20sp" />
 
         </RelativeLayout>
     </com.google.android.material.appbar.AppBarLayout>

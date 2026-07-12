@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.button.MaterialButtonToggleGroup
-import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import pa.ac.utp.agrotrackapp.R
@@ -73,7 +73,7 @@ class ControlSanitarioFragment : Fragment(R.layout.fragment_control_sanitario) {
             }
         }
 
-        view.findViewById<ExtendedFloatingActionButton>(R.id.fabAddSanidad).setOnClickListener {
+        view.findViewById<FloatingActionButton>(R.id.fabAddSanidad).setOnClickListener {
             mostrarDialogNuevoRegistro()
         }
 
