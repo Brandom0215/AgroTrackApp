@@ -75,6 +75,11 @@ class MortalidadFragment : Fragment() {
         cargarDatos()
     }
 
+    override fun onResume() {
+        super.onResume()
+        cargarDatos()
+    }
+
     private fun cargarDatos() {
         val records = mortalidadRepository.getMortalidadRecords()
         adapter.submitList(records.reversed()) // Mostrar primero los más recientes

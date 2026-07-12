@@ -97,6 +97,11 @@ class ControlSanitarioFragment : Fragment(R.layout.fragment_control_sanitario) {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        cargarDatos()
+    }
+
     /** Groups records by grupoId, each legacy record (empty grupoId) becomes its own group.
      *  Groups are sorted by the MOST RECENT dose date in each group (newest group at top). */
     private fun agruparPorGrupoId(all: List<RegistroSanitario>): List<List<RegistroSanitario>> {

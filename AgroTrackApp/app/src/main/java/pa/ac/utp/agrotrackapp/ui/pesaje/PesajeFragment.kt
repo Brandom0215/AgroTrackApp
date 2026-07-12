@@ -118,6 +118,14 @@ class PesajeFragment : Fragment() {
         filteredAnimalsList = allAnimalsList
     }
 
+    override fun onResume() {
+        super.onResume()
+        cargarAnimales()
+        if (::adapter.isInitialized) {
+            adapter.submitList(filteredAnimalsList)
+        }
+    }
+
     private fun filtrarAnimales(query: String) {
         filteredAnimalsList = if (query.isEmpty()) {
             allAnimalsList

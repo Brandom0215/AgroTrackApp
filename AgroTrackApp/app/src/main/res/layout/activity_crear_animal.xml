@@ -367,8 +367,8 @@
                         android:id="@+id/etNumeroAnimal"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:maxLength="30"
-                        android:inputType="text" />
+                        android:maxLength="4"
+                        android:inputType="number" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <!-- Trazabilidad -->
@@ -384,8 +384,8 @@
                         android:id="@+id/etTrazabilidad"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:maxLength="30"
-                        android:inputType="text" />
+                        android:maxLength="4"
+                        android:inputType="number" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <!-- Número de chip -->
@@ -401,8 +401,8 @@
                         android:id="@+id/etNumeroChip"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:maxLength="30"
-                        android:inputType="text" />
+                        android:maxLength="4"
+                        android:inputType="number" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <!-- Información básica Header -->

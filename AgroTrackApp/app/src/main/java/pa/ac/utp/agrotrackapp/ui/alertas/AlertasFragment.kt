@@ -162,4 +162,9 @@ class AlertasFragment : Fragment(R.layout.fragment_alertas) {
             }
         }
     }
+
+    override fun onResume() {
+        super.onResume()
+        cargarAlertas()
+    }
 }
