@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Registrar Consumo Animal"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="#E65100"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Selector de Producto -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilSelectProductoConsumo"
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
+        android:hint="Seleccione el producto *">
+        <AutoCompleteTextView
+            android:id="@+id/etSelectProductoConsumo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="none" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Contenedor Resumen Producto (Oculto al inicio) -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cardResumenProductoConsumo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="0dp"
+        app:strokeWidth="1dp"
+        app:strokeColor="#CFD8DC"
+        app:cardBackgroundColor="#F8F9FA"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="12dp">
+
+            <TextView
+                android:id="@+id/tvStockConsumoResumen"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Stock Disponible: 0"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:textColor="#37474F" />
+
+            <TextView
+                android:id="@+id/tvTipoConsumoResumen"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Tipo: Alimento"
+                android:textSize="13sp"
+                android:textColor="#37474F"
+                android:layout_marginTop="4dp" />
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilCantidadConsumo"
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:hint="Cantidad a consumir *">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etCantidadConsumo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Alcance del consumo:"
+        android:textStyle="bold"
+        android:textSize="12sp"
+        android:textColor="@color/text_gray"
+        android:layout_marginBottom="8dp" />
+
+    <RadioGroup
+        android:id="@+id/rgAlcanceConsumo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="2"
+        android:layout_marginBottom="16dp">
+
+        <RadioButton
+            android:id="@+id/rbIndividual"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="Individual"
+            android:checked="true" />
+
+        <RadioButton
+            android:id="@+id/rbMasivo"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="Colectivo / Manga" />
+    </RadioGroup>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilIdentificadorConsumo"
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Número de Arete *">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etIdentificadorConsumo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textCapCharacters" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+</LinearLayout>

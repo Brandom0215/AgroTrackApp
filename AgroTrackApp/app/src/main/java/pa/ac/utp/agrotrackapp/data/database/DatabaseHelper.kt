@@ -8,7 +8,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
 
     companion object {
         const val DATABASE_NAME = "AgroTrack.db"
-        const val DATABASE_VERSION = 5
+        const val DATABASE_VERSION = 6
 
         // Table Names
         const val TABLE_USUARIOS = "usuarios"
@@ -19,6 +19,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         const val TABLE_INVENTARIO_ITEMS = "inventario_items"
         const val TABLE_ALERTAS = "alertas"
         const val TABLE_SANITARIA = "registros_sanitarios"
+        const val TABLE_TRANSACCIONES = "transacciones"
 
         // Usuarios Columns
         const val COL_USER_USUARIO = "usuario"
@@ -116,6 +117,17 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         const val COL_SAN_NOTAS = "notas"
         const val COL_SAN_ESTADO = "estado"
         const val COL_SAN_GRUPO_ID = "grupo_id"
+
+        // Transacciones Columns
+        const val COL_TRANS_ID = "id"
+        const val COL_TRANS_TIPO = "tipo"
+        const val COL_TRANS_PROD_ID = "producto_id"
+        const val COL_TRANS_PROD_NOMBRE = "producto_nombre"
+        const val COL_TRANS_CANTIDAD = "cantidad"
+        const val COL_TRANS_PRECIO_UNIT = "precio_unitario"
+        const val COL_TRANS_COSTO_UNIT = "costo_unitario"
+        const val COL_TRANS_FECHA = "fecha"
+        const val COL_TRANS_DETALLES = "detalles"
     }
 
     override fun onCreate(db: SQLiteDatabase) {
@@ -239,6 +251,20 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
                 $COL_SAN_GRUPO_ID TEXT
             )
         """)
+
+        db.execSQL("""
+            CREATE TABLE IF NOT EXISTS $TABLE_TRANSACCIONES (
+                $COL_TRANS_ID TEXT PRIMARY KEY,
+                $COL_TRANS_TIPO TEXT,
+                $COL_TRANS_PROD_ID TEXT,
+                $COL_TRANS_PROD_NOMBRE TEXT,
+                $COL_TRANS_CANTIDAD REAL,
+                $COL_TRANS_PRECIO_UNIT REAL,
+                $COL_TRANS_COSTO_UNIT REAL,
+                $COL_TRANS_FECHA TEXT,
+                $COL_TRANS_DETALLES TEXT
+            )
+        """)
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
@@ -270,6 +296,21 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
                 db.execSQL("ALTER TABLE $TABLE_SANITARIA ADD COLUMN $COL_SAN_GRUPO_ID TEXT DEFAULT ''")
             } catch (e: Exception) { /* column may already exist */ }
         }
+        if (oldVersion < 6) {
+            db.execSQL("""
+                CREATE TABLE IF NOT EXISTS $TABLE_TRANSACCIONES (
+                    $COL_TRANS_ID TEXT PRIMARY KEY,
+                    $COL_TRANS_TIPO TEXT,
+                    $COL_TRANS_PROD_ID TEXT,
+                    $COL_TRANS_PROD_NOMBRE TEXT,
+                    $COL_TRANS_CANTIDAD REAL,
+                    $COL_TRANS_PRECIO_UNIT REAL,
+                    $COL_TRANS_COSTO_UNIT REAL,
+                    $COL_TRANS_FECHA TEXT,
+                    $COL_TRANS_DETALLES TEXT
+                )
+            """)
+        }
     }
 
     fun clearAllTables() {
@@ -284,7 +325,166 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
             db.delete(TABLE_INVENTARIO_ITEMS, null, null)
             db.delete(TABLE_ALERTAS, null, null)
             db.delete(TABLE_SANITARIA, null, null)
+            db.delete(TABLE_TRANSACCIONES, null, null)
             db.setTransactionSuccessful()
+        } finally {
+            db.endTransaction()
+        }
+    }
+
+    override fun onOpen(db: SQLiteDatabase) {
+        super.onOpen(db)
+        preloadSeedDataIfEmpty(db)
+    }
+
+    private fun preloadSeedDataIfEmpty(db: SQLiteDatabase) {
+        db.beginTransaction()
+        try {
+            // 1. Seed Users
+            val userCursor = db.rawQuery("SELECT COUNT(*) FROM $TABLE_USUARIOS", null)
+            var userCount = 0
+            if (userCursor.moveToFirst()) {
+                userCount = userCursor.getInt(0)
+            }
+            userCursor.close()
+            
+            if (userCount == 0) {
+                db.execSQL("""
+                    INSERT INTO $TABLE_USUARIOS (
+                        $COL_USER_USUARIO, $COL_USER_NOMBRE, $COL_USER_APELLIDO, 
+                        $COL_USER_CONTRASENA, $COL_USER_NOMBRE_FINCA, $COL_USER_CONTRASENA_FINCA, 
+                        $COL_USER_LUGAR, $COL_USER_ROL, $COL_USER_PROFILE_IMAGE
+                    ) VALUES (
+                        'admin', 'Juan', 'Pérez', 'password123', 'Finca La Esmeralda', 'finca123', 'Chiriquí, Panamá', 'Administrador', ''
+                    )
+                """)
+            }
+
+            // 2. Seed Animals
+            val animalCursor = db.rawQuery("SELECT COUNT(*) FROM $TABLE_ANIMALES", null)
+            var animalCount = 0
+            if (animalCursor.moveToFirst()) {
+                animalCount = animalCursor.getInt(0)
+            }
+            animalCursor.close()
+
+            if (animalCount == 0) {
+                db.execSQL("""
+                    INSERT INTO $TABLE_ANIMALES (
+                        $COL_ANIMAL_NUMERO, $COL_ANIMAL_SEXO, $COL_ANIMAL_TRAZABILIDAD, 
+                        $COL_ANIMAL_CHIP, $COL_ANIMAL_FECHA_NACIMIENTO, $COL_ANIMAL_RAZA, 
+                        $COL_ANIMAL_PROPOSITO, $COL_ANIMAL_MANGA, $COL_ANIMAL_PESO, 
+                        $COL_ANIMAL_PADRE, $COL_ANIMAL_MADRE, $COL_ANIMAL_NOTAS, $COL_ANIMAL_IMAGEN
+                    ) VALUES 
+                    ('1001', 'Macho', '740000000000001', 'CHIP1001', '15/05/2024', 'Brahman', 'Carne', 'Lote 1', '420', 'Padre 1', 'Madre 1', 'Macho Brahman para ceba', ''),
+                    ('1002', 'Hembra', '740000000000002', 'CHIP1002', '10/01/2024', 'Holando', 'Leche', 'Lote 2', '380', 'Padre 2', 'Madre 2', 'Vaca lechera alta producción', ''),
+                    ('1003', 'Hembra', '740000000000003', 'CHIP1003', '20/02/2024', 'Jersey', 'Leche', 'Lote 2', '350', 'Padre 3', 'Madre 3', 'Novilla lechera primeriza', ''),
+                    ('1004', 'Hembra', '740000000000004', 'CHIP1004', '05/03/2024', 'Gyr', 'Doble propósito', 'Lote 1', '390', 'Padre 4', 'Madre 4', 'Doble propósito adaptada', '')
+                """)
+            }
+
+            // 3. Seed Leche Records
+            val lecheCursor = db.rawQuery("SELECT COUNT(*) FROM $TABLE_LECHE_RECORDS", null)
+            var lecheCount = 0
+            if (lecheCursor.moveToFirst()) {
+                lecheCount = lecheCursor.getInt(0)
+            }
+            lecheCursor.close()
+
+            if (lecheCount == 0) {
+                db.execSQL("""
+                    INSERT INTO $TABLE_LECHE_RECORDS (
+                        $COL_LECHE_NUMERO, $COL_LECHE_FECHA, $COL_LECHE_TURNO, $COL_LECHE_LITROS, 
+                        $COL_LECHE_FECHA_PARTO, $COL_LECHE_LACTANCIAS, $COL_LECHE_DEL, $COL_LECHE_PROMEDIO, $COL_LECHE_ACTIVO
+                    ) VALUES 
+                    ('1002', '12/07/2026', 'Mañana', 18.5, '10/01/2024', 1, 915, 18.5, 1),
+                    ('1003', '12/07/2026', 'Mañana', 15.0, '20/02/2024', 1, 874, 15.0, 1)
+                """)
+            }
+
+            // 4. Seed Carne Records
+            val carneCursor = db.rawQuery("SELECT COUNT(*) FROM $TABLE_CARNE_RECORDS", null)
+            var carneCount = 0
+            if (carneCursor.moveToFirst()) {
+                carneCount = carneCursor.getInt(0)
+            }
+            carneCursor.close()
+
+            if (carneCount == 0) {
+                db.execSQL("""
+                    INSERT INTO $TABLE_CARNE_RECORDS (
+                        $COL_CARNE_NUMERO, $COL_CARNE_RAZA, $COL_CARNE_FECHA_ACTUAL, $COL_CARNE_PESO_ACTUAL, 
+                        $COL_CARNE_FECHA_ANTERIOR, $COL_CARNE_PESO_ANTERIOR, $COL_CARNE_PESO_ENTRADA, 
+                        $COL_CARNE_GANANCIA, $COL_CARNE_DIAS, $COL_CARNE_GDP, $COL_CARNE_SALUD, $COL_CARNE_ACTIVO
+                    ) VALUES (
+                        '1001', 'Brahman', '12/07/2026', 420.0, '12/06/2026', 390.0, 200.0, 220.0, 30, 1.0, 'Bueno', 1
+                    )
+                """)
+            }
+
+            // 5. Seed Inventario Items (Medicinas, Alimentos)
+            val invCursor = db.rawQuery("SELECT COUNT(*) FROM $TABLE_INVENTARIO_ITEMS", null)
+            var invCount = 0
+            if (invCursor.moveToFirst()) {
+                invCount = invCursor.getInt(0)
+            }
+            invCursor.close()
+
+            if (invCount == 0) {
+                db.execSQL("""
+                    INSERT INTO $TABLE_INVENTARIO_ITEMS (
+                        $COL_INV_ID, $COL_INV_NOMBRE, $COL_INV_TIPO, $COL_INV_TIPO_OTRO, 
+                        $COL_INV_FOTO, $COL_INV_STOCK, $COL_INV_LIMITE, $COL_INV_UNIDAD, 
+                        $COL_INV_COSTO, $COL_INV_PRECIO, $COL_INV_FECHA
+                    ) VALUES 
+                    ('inv_001', 'Ivermectina 1%', 'Medicamento', '', '', 15.0, 5.0, 'Frasco', 25.0, 30.0, '12/07/2026 10:00'),
+                    ('inv_002', 'Penicilina G', 'Medicamento', '', '', 3.0, 5.0, 'Frasco', 15.0, 20.0, '12/07/2026 10:05'),
+                    ('inv_003', 'Concentrado Ordeño', 'Alimento', '', '', 50.0, 10.0, 'Saco', 18.0, 22.0, '12/07/2026 10:10')
+                """)
+            }
+
+            // 6. Seed Registros Sanitarios (Control Sanitario)
+            val sanCursor = db.rawQuery("SELECT COUNT(*) FROM $TABLE_SANITARIA", null)
+            var sanCount = 0
+            if (sanCursor.moveToFirst()) {
+                sanCount = sanCursor.getInt(0)
+            }
+            sanCursor.close()
+
+            if (sanCount == 0) {
+                db.execSQL("""
+                    INSERT INTO $TABLE_SANITARIA (
+                        $COL_SAN_ID, $COL_SAN_IDENTIFICADOR, $COL_SAN_ALCANCE, $COL_SAN_CATEGORIA, 
+                        $COL_SAN_DETALLE, $COL_SAN_PRODUCTO, $COL_SAN_DOSIS, $COL_SAN_FECHA, 
+                        $COL_SAN_PROXIMA_DOSIS, $COL_SAN_VETERINARIO, $COL_SAN_NOTAS, $COL_SAN_ESTADO, $COL_SAN_GRUPO_ID
+                    ) VALUES (
+                        'san_001', '1002', 'Individual', 'Desparasitante', 'Desparasitación de rutina', 'Ivermectina 1%', '10 ml', '10/07/2026', '10/10/2026', 'Dr. Carlos Gómez', 'Ninguna', 'Completado', ''
+                    )
+                """)
+            }
+
+            // 7. Seed Transacciones (Contabilidad)
+            val transCursor = db.rawQuery("SELECT COUNT(*) FROM $TABLE_TRANSACCIONES", null)
+            var transCount = 0
+            if (transCursor.moveToFirst()) {
+                transCount = transCursor.getInt(0)
+            }
+            transCursor.close()
+
+            if (transCount == 0) {
+                db.execSQL("""
+                    INSERT INTO $TABLE_TRANSACCIONES (
+                        $COL_TRANS_ID, $COL_TRANS_TIPO, $COL_TRANS_PROD_ID, $COL_TRANS_PROD_NOMBRE, 
+                        $COL_TRANS_CANTIDAD, $COL_TRANS_PRECIO_UNIT, $COL_TRANS_COSTO_UNIT, $COL_TRANS_FECHA, $COL_TRANS_DETALLES
+                    ) VALUES 
+                    ('trans_001', 'Egreso', 'inv_001', 'Ivermectina 1%', 5.0, 0.0, 25.0, '12/07/2026', 'Compra de medicamentos para inventario'),
+                    ('trans_002', 'Ingreso', 'leche_1002', 'Venta de Leche - 1002', 18.5, 0.60, 0.0, '12/07/2026', 'Venta de producción diaria')
+                """)
+            }
+
+            db.setTransactionSuccessful()
+        } catch (e: Exception) {
+            e.printStackTrace()
         } finally {
             db.endTransaction()
         }

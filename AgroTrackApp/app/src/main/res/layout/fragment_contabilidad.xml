@@ -91,7 +91,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:columnCount="2"
-                        android:rowCount="2">
+                        android:rowCount="3">
 
                         <!-- Total Costo -->
                         <LinearLayout
@@ -102,7 +102,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Costo Total"
+                                android:text="Costo en Stock"
                                 android:textSize="12sp"
                                 android:textColor="@color/text_gray" />
                             <TextView
@@ -137,7 +137,76 @@
                                 android:textColor="@color/md_theme_light_primary" />
                         </LinearLayout>
 
-                        <!-- Ganancia Estimada -->
+                        <!-- Ganancia Total -->
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_columnWeight="1"
+                            android:layout_marginTop="16dp"
+                            android:orientation="vertical">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Ganancia Total"
+                                android:textSize="12sp"
+                                android:textColor="@color/text_gray" />
+                            <TextView
+                                android:id="@+id/tvTotalGanancia"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="$0.00"
+                                android:textSize="18sp"
+                                android:textStyle="bold"
+                                android:textColor="@color/status_green" />
+                        </LinearLayout>
+
+                        <!-- Rentabilidad / Margen Promedio -->
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_columnWeight="1"
+                            android:layout_marginTop="16dp"
+                            android:orientation="vertical">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Rentabilidad (Margen)"
+                                android:textSize="12sp"
+                                android:textColor="@color/text_gray" />
+                            <TextView
+                                android:id="@+id/tvMargenTotal"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="0%"
+                                android:textSize="18sp"
+                                android:textStyle="bold"
+                                android:textColor="@color/md_theme_light_secondary" />
+                        </LinearLayout>
+
+                        <!-- Ganancia Realizada (Ventas) -->
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_columnWeight="1"
+                            android:layout_marginTop="16dp"
+                            android:orientation="vertical">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Ventas Realizadas"
+                                android:textSize="12sp"
+                                android:textColor="@color/text_gray" />
+                            <TextView
+                                android:id="@+id/tvGananciaRealizada"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="$0.00"
+                                android:textSize="18sp"
+                                android:textStyle="bold"
+                                android:textColor="#2E7D32" />
+                        </LinearLayout>
+
+                        <!-- Ganancia Estimada (Stock) -->
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
@@ -151,36 +220,13 @@
                                 android:textSize="12sp"
                                 android:textColor="@color/text_gray" />
                             <TextView
-                                android:id="@+id/tvTotalGanancia"
+                                android:id="@+id/tvGananciaEstimada"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="$0.00"
                                 android:textSize="18sp"
                                 android:textStyle="bold"
-                                android:textColor="@color/status_green" />
-                        </LinearLayout>
-
-                        <!-- Margen Promedio -->
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_columnWeight="1"
-                            android:layout_marginTop="16dp"
-                            android:orientation="vertical">
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Margen Total"
-                                android:textSize="12sp"
-                                android:textColor="@color/text_gray" />
-                            <TextView
-                                android:id="@+id/tvMargenTotal"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="0%"
-                                android:textSize="18sp"
-                                android:textStyle="bold"
-                                android:textColor="@color/md_theme_light_secondary" />
+                                android:textColor="#F57C00" />
                         </LinearLayout>
 
                     </GridLayout>
