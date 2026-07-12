@@ -1,3 +1,15 @@
 <resources>
     <string name="app_name">GanaDEX</string>
+
+    <string-array name="sanitaria_categorias">
+        <item>Vacunación</item>
+        <item>Tratamiento</item>
+        <item>Mastitis</item>
+    </string-array>
+
+    <string-array name="sanitaria_repeticiones">
+        <item>Única</item>
+        <item>Diaria</item>
+        <item>Semanal</item>
+    </string-array>
 </resources>

@@ -8,15 +8,17 @@ data class Alerta(
     val fecha: String,
     val prioridad: PrioridadAlerta = PrioridadAlerta.MEDIA,
     val isDismissed: Boolean = false,
-    val destinationId: Int? = null, // Resource ID of the menu item to navigate to
-    val referenceId: String? = null // Origin reference id, e.g. "stock_1"
+    val destinationId: Int? = null,
+    val referenceId: String? = null,
+    val fechaProgramada: String? = null // Fecha de próxima dosis (solo para SANIDAD_PENDIENTE)
 )
 
 enum class TipoAlerta {
     STOCK_MINIMO,
     MORTALIDAD_ALTA,
     PESAJE_PENDIENTE,
-    RECORDATORIO
+    RECORDATORIO,
+    SANIDAD_PENDIENTE
 }
 
 enum class PrioridadAlerta {

@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginVertical="8dp"
+    app:cardCornerRadius="14dp"
+    app:cardElevation="3dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Header: icon + identificador + chip categoria -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:id="@+id/ivIconoCategoria"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:src="@drawable/gestion_sanitaria"/>
+
+            <TextView
+                android:id="@+id/tvIdentificador"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="10dp"
+                android:text="Arete / Manga"
+                android:textColor="#1A202C"
+                android:textSize="17sp"
+                android:textStyle="bold" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipCategoria"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Vacunación"
+                android:textSize="12sp"
+                app:chipMinHeight="26dp"
+                app:chipCornerRadius="8dp"/>
+        </LinearLayout>
+
+        <!-- Divider -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#E2E8F0"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"/>
+
+        <!-- Detalle: "Vacuna: nombre" -->
+        <TextView
+            android:id="@+id/tvDetalle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Vacuna: Nombre de la vacuna"
+            android:textColor="#2D3748"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
+        <!-- Fecha/Programado row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp"
+            android:gravity="center_vertical">
+
+            <!-- Date chip / label -->
+            <TextView
+                android:id="@+id/tvFecha"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Programado para: 2024-07-20"
+                android:textSize="13sp"
+                android:textColor="#4A5568"
+                android:textStyle="bold" />
+
+            <!-- Completar button — visible only in Próximas mode -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnMarcarAplicado"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Completar"
+                android:textColor="@android:color/white"
+                android:textSize="12sp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                app:backgroundTint="#38A169"
+                app:cornerRadius="20dp"
+                app:paddingStart="14dp"
+                app:paddingEnd="14dp"
+                android:visibility="gone" />
+
+            <!-- Eye icon — visible only in Historial mode -->
+            <ImageButton
+                android:id="@+id/btnVerDetalle"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@android:drawable/ic_menu_view"
+                android:contentDescription="Ver detalles"
+                android:visibility="gone" />
+        </LinearLayout>
+
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

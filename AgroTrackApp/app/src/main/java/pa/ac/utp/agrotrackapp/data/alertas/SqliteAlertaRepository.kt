@@ -61,6 +61,7 @@ class SqliteAlertaRepository(context: Context) : AlertaRepository {
             put(DatabaseHelper.COL_ALERTA_DISMISSED, if (alerta.isDismissed) 1 else 0)
             put(DatabaseHelper.COL_ALERTA_DEST, alerta.destinationId ?: -1)
             put(DatabaseHelper.COL_ALERTA_REF, alerta.referenceId)
+            put(DatabaseHelper.COL_ALERTA_FECHA_PROG, alerta.fechaProgramada)
         }
 
         db.insertWithOnConflict(
@@ -109,7 +110,8 @@ class SqliteAlertaRepository(context: Context) : AlertaRepository {
             prioridad = PrioridadAlerta.valueOf(cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_ALERTA_PRIO))),
             isDismissed = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_ALERTA_DISMISSED)) == 1,
             destinationId = destinationId,
-            referenceId = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_ALERTA_REF))
+            referenceId = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_ALERTA_REF)),
+            fechaProgramada = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_ALERTA_FECHA_PROG))
         )
     }
 }

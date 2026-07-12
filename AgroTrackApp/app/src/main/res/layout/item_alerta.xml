@@ -15,73 +15,116 @@
         android:orientation="horizontal"
         android:padding="16dp">
 
+        <!-- Priority color bar -->
         <View
             android:id="@+id/viewPrioridad"
             android:layout_width="4dp"
             android:layout_height="match_parent"
             android:background="@color/md_theme_light_primary"
-            android:layout_marginEnd="16dp"/>
+            android:layout_marginEnd="14dp"/>
 
+        <!-- Full-width content column -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/tvAlertaTitulo"
-                android:layout_width="wrap_content"
+            <!-- Title row: icon + title -->
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Título de la Alerta"
-                android:textColor="?android:textColorPrimary"
-                android:textSize="16sp"
-                android:textStyle="bold" />
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:id="@+id/ivAlertaIcon"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginEnd="8dp"
+                    android:src="@drawable/ic_alertas"
+                    app:tint="?attr/colorPrimary" />
+
+                <TextView
+                    android:id="@+id/tvAlertaTitulo"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Título de la Alerta"
+                    android:textColor="?android:textColorPrimary"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/tvAlertaDescripcion"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
+                android:layout_marginTop="6dp"
                 android:text="Descripción detallada de la alerta que se está mostrando."
                 android:textColor="?android:textColorSecondary"
-                android:textSize="14sp" />
+                android:textSize="13sp" />
 
             <TextView
                 android:id="@+id/tvAlertaFecha"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="6dp"
                 android:text="20/05/2024"
                 android:textColor="?android:textColorSecondary"
                 android:textSize="12sp"
                 android:textStyle="italic" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnIr"
-                android:layout_width="wrap_content"
+            <!-- Bottom action row -->
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:text="IR A GESTIÓN"
-                android:textSize="11sp"
-                android:textColor="@android:color/white"
-                android:insetTop="0dp"
-                android:insetBottom="0dp"
-                app:backgroundTint="#2E7D32"
-                app:cornerRadius="24dp"
-                app:icon="@drawable/ic_produccion"
-                app:iconSize="14dp"
-                app:iconTint="@android:color/white"
-                app:paddingStart="12dp"
-                app:paddingEnd="12dp" />
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp"
+                android:gravity="center_vertical">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnIr"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="IR A GESTIÓN"
+                    android:textSize="11sp"
+                    android:textColor="@android:color/white"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    app:backgroundTint="#2E7D32"
+                    app:cornerRadius="24dp"
+                    app:icon="@drawable/ic_produccion"
+                    app:iconSize="14dp"
+                    app:iconTint="@android:color/white"
+                    app:paddingStart="12dp"
+                    app:paddingEnd="12dp" />
+
+                <!-- Flexible spacer -->
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1"/>
+
+                <!-- Fecha programada badge — right-aligned, only for Sanidad -->
+                <TextView
+                    android:id="@+id/tvFechaProgramada"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="#1A3A86C2"
+                    android:paddingHorizontal="10dp"
+                    android:paddingVertical="5dp"
+                    android:text="Programada: 2024-07-20"
+                    android:textColor="#1565C0"
+                    android:textSize="11sp"
+                    android:textStyle="bold"
+                    android:visibility="gone"/>
+
+            </LinearLayout>
+
         </LinearLayout>
 
-        <ImageView
-            android:id="@+id/ivAlertaIcon"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_gravity="center_vertical"
-            android:src="@drawable/ic_alertas"
-            app:tint="?attr/colorPrimary" />
-
     </LinearLayout>
+
 </com.google.android.material.card.MaterialCardView>
