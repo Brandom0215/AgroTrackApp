@@ -4,6 +4,7 @@ import android.app.DatePickerDialog
 import android.os.Bundle
 import android.view.View
 import android.widget.*
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -57,7 +58,11 @@ class ControlSanitarioFragment : Fragment(R.layout.fragment_control_sanitario) {
         proximasAdapter = SanidadAdapter { registro ->
             marcarComoAplicado(registro)
         }
-        historialAdapter = SanidadHistorialAdapter()
+        
+        // Instanciar adapter con callback de eliminación
+        historialAdapter = SanidadHistorialAdapter { grupo ->
+            confirmarEliminacionGrupo(grupo)
+        }
 
         rvSanidad.layoutManager = LinearLayoutManager(requireContext())
 
@@ -76,6 +81,36 @@ class ControlSanitarioFragment : Fragment(R.layout.fragment_control_sanitario) {
         actualizarKPIs()
     }
 
+    private fun confirmarEliminacionGrupo(grupo: List<RegistroSanitario>) {
+        if (grupo.isEmpty()) return
+        
+        val ref = grupo.first()
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setTitle("Eliminar Registro")
+        builder.setMessage("¿Está seguro de que desea eliminar este registro sanitario y todo su historial de dosis para '${ref.identificador}'?")
+        
+        builder.setPositiveButton("Eliminar") { dialog, _ ->
+            // Eliminar todas las dosis asociadas a este grupo
+            grupo.forEach { registro ->
+                sanidadRepository.deleteRegistro(registro.id)
+            }
+            
+            // Actualizar alertas del sistema después de la eliminación
+            AlertManager(requireContext()).checkAlerts()
+            
+            Toast.makeText(requireContext(), "Registro eliminado", Toast.LENGTH_SHORT).show()
+            cargarRegistros()
+            actualizarKPIs()
+            dialog.dismiss()
+        }
+        
+        builder.setNegativeButton("Cancelar") { dialog, _ ->
+            dialog.dismiss()
+        }
+        
+        builder.show()
+    }
+
     private fun cargarRegistros() {
         if (isProximasMode) {
             proximasAdapter.isProximasMode = true
@@ -87,7 +122,6 @@ class ControlSanitarioFragment : Fragment(R.layout.fragment_control_sanitario) {
             rvSanidad.visibility = if (proximas.isEmpty()) View.GONE else View.VISIBLE
         } else {
             rvSanidad.adapter = historialAdapter
-            // Group ALL records by grupoId (most recent groups first)
             val all = sanidadRepository.getAllRegistros()
             val groups = agruparPorGrupoId(all)
             historialAdapter.submitList(groups)
@@ -102,9 +136,6 @@ class ControlSanitarioFragment : Fragment(R.layout.fragment_control_sanitario) {
         cargarRegistros()
         actualizarKPIs()
     }
-
-    /** Groups records by grupoId, each legacy record (empty grupoId) becomes its own group.
-     *  Groups are sorted by the MOST RECENT dose date in each group (newest group at top). */
     private fun agruparPorGrupoId(all: List<RegistroSanitario>): List<List<RegistroSanitario>> {
         val map = linkedMapOf<String, MutableList<RegistroSanitario>>()
         all.forEach { r ->
@@ -112,14 +143,12 @@ class ControlSanitarioFragment : Fragment(R.layout.fragment_control_sanitario) {
             map.getOrPut(key) { mutableListOf() }.add(r)
         }
         return map.values
-            // Sort each group's doses chronologically (earliest dose first)
             .map { group ->
                 group.sortedBy { r ->
                     val d = if (r.estado == "aplicado") r.fecha else r.proximaDosis
                     d.ifEmpty { "0000-00-00" }
                 }
             }
-            // Sort groups: the group with the LATEST dose date comes first
             .sortedByDescending { group ->
                 group.maxOfOrNull { r ->
                     val d = if (r.estado == "aplicado") r.fecha else r.proximaDosis
@@ -144,7 +173,6 @@ class ControlSanitarioFragment : Fragment(R.layout.fragment_control_sanitario) {
     private fun marcarComoAplicado(registro: RegistroSanitario) {
         val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
         val fechaActual = sdf.format(Date())
-        // Update the existing record in-place: set estado=aplicado, fecha=hoy
         sanidadRepository.marcarAplicado(registro.id, fechaActual)
         AlertManager(requireContext()).checkAlerts()
         Toast.makeText(requireContext(), "Registro marcado como aplicado", Toast.LENGTH_SHORT).show()
@@ -218,13 +246,29 @@ class ControlSanitarioFragment : Fragment(R.layout.fragment_control_sanitario) {
         // Set today as default for "Única"
         etFechaUnica.setText(sdf.format(today.time))
         etFechaUnica.setOnClickListener {
-            DatePickerDialog(requireContext(), { _, y, m, d ->
+            val datePickerDialog = DatePickerDialog(requireContext(), { _, y, m, d ->
                 etFechaUnica.setText(String.format(Locale.getDefault(), "%04d-%02d-%02d", y, m + 1, d))
-            }, today.get(Calendar.YEAR), today.get(Calendar.MONTH), today.get(Calendar.DAY_OF_MONTH)).show()
+            }, today.get(Calendar.YEAR), today.get(Calendar.MONTH), today.get(Calendar.DAY_OF_MONTH))
+
+            // Configurar límites: desde el año 2020 y hasta 2 años en el futuro
+            val datePicker = datePickerDialog.datePicker
+            
+            val minCal = Calendar.getInstance().apply {
+                set(Calendar.YEAR, 2020)
+                set(Calendar.MONTH, Calendar.JANUARY)
+                set(Calendar.DAY_OF_MONTH, 1)
+            }
+            datePicker.minDate = minCal.timeInMillis
+            
+            val maxCal = Calendar.getInstance().apply {
+                add(Calendar.YEAR, 2)
+            }
+            datePicker.maxDate = maxCal.timeInMillis
+
+            datePickerDialog.show()
         }
 
         fun buildDateCheckboxes(dates: List<Pair<String, String>>) {
-            // dates = list of (label, isoDate)
             llFechas.removeAllViews()
             val labelView = TextView(requireContext()).apply {
                 text = "Selecciona las fechas:"
@@ -283,7 +327,6 @@ class ControlSanitarioFragment : Fragment(R.layout.fragment_control_sanitario) {
             }
         }
 
-        // Show "Única" by default
         spRepeticion.setText(repeticiones[0], false)
         tilFechaUnica.visibility = View.VISIBLE
         llFechas.visibility      = View.GONE
@@ -295,6 +338,20 @@ class ControlSanitarioFragment : Fragment(R.layout.fragment_control_sanitario) {
             val dosis    = etDosis.text.toString().trim()
             val vet      = etVeterinario.text.toString().trim()
             val rep      = spRepeticion.text.toString()
+
+            // --- VALIDACIONES DE LONGITUD (MÁXIMO 15 CARACTERES) ---
+            if (identificador.length > 15) {
+                Toast.makeText(requireContext(), "El identificador no puede superar los 15 caracteres", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            if (dosis.length > 15) {
+                Toast.makeText(requireContext(), "La dosis no puede superar los 15 caracteres", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            if (vet.length > 15) {
+                Toast.makeText(requireContext(), "El veterinario no puede superar los 15 caracteres", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
 
             if (identificador.isEmpty() || !currentList.contains(identificador)) {
                 Toast.makeText(requireContext(), "Seleccione un Identificador válido de la lista", Toast.LENGTH_SHORT).show()
@@ -310,31 +367,85 @@ class ControlSanitarioFragment : Fragment(R.layout.fragment_control_sanitario) {
             when (categoria) {
                 "Vacunación" -> {
                     detalle = etVacuna.text.toString().trim()
-                    if (detalle.isEmpty()) { Toast.makeText(requireContext(), "Especifique la Vacuna", Toast.LENGTH_SHORT).show(); return@setOnClickListener }
+                    if (detalle.isEmpty()) { 
+                        Toast.makeText(requireContext(), "Especifique la Vacuna", Toast.LENGTH_SHORT).show()
+                        return@setOnClickListener 
+                    }
+                    if (detalle.length > 15) {
+                        Toast.makeText(requireContext(), "La vacuna no puede superar los 15 caracteres", Toast.LENGTH_SHORT).show()
+                        return@setOnClickListener
+                    }
+                    val alphaNumericRegex = Regex("^[a-zA-Z0-9áéíóúÁÉÍÓÚüÜñÑ ]+$")
+                    if (!alphaNumericRegex.matches(detalle)) {
+                        Toast.makeText(requireContext(), "El nombre de la vacuna solo permite letras y números", Toast.LENGTH_LONG).show()
+                        return@setOnClickListener
+                    }
                 }
                 "Tratamiento" -> {
                     val tipo = etTipoTrat.text.toString().trim()
                     val prop = etProposito.text.toString().trim()
                     producto = etProducto.text.toString().trim()
-                    if (tipo.isEmpty() || prop.isEmpty() || producto.isEmpty()) { Toast.makeText(requireContext(), "Complete todos los campos del tratamiento", Toast.LENGTH_SHORT).show(); return@setOnClickListener }
+                    if (tipo.isEmpty() || prop.isEmpty() || producto.isEmpty()) { 
+                        Toast.makeText(requireContext(), "Complete todos los campos del tratamiento", Toast.LENGTH_SHORT).show()
+                        return@setOnClickListener 
+                    }
+                    if (tipo.length > 15) {
+                        Toast.makeText(requireContext(), "El tipo de tratamiento no puede superar los 15 caracteres", Toast.LENGTH_SHORT).show()
+                        return@setOnClickListener
+                    }
+                    if (prop.length > 15) {
+                        Toast.makeText(requireContext(), "El propósito no puede superar los 15 caracteres", Toast.LENGTH_SHORT).show()
+                        return@setOnClickListener
+                    }
+                    if (producto.length > 15) {
+                        Toast.makeText(requireContext(), "El producto no puede superar los 15 caracteres", Toast.LENGTH_SHORT).show()
+                        return@setOnClickListener
+                    }
                     detalle = "$tipo - $prop"
                 }
                 "Mastitis" -> {
                     val cuartos = listOf(cbAD, cbPD, cbAI, cbPI).filter { it.isChecked }.map { it.text.toString() }
                     producto = etProducto.text.toString().trim()
-                    if (cuartos.isEmpty()) { Toast.makeText(requireContext(), "Seleccione al menos un cuarto afectado", Toast.LENGTH_SHORT).show(); return@setOnClickListener }
-                    if (producto.isEmpty()) { Toast.makeText(requireContext(), "Ingrese el medicamento", Toast.LENGTH_SHORT).show(); return@setOnClickListener }
+                    if (cuartos.isEmpty()) { 
+                        Toast.makeText(requireContext(), "Seleccione al menos un cuarto afectado", Toast.LENGTH_SHORT).show()
+                        return@setOnClickListener 
+                    }
+                    if (producto.isEmpty()) { 
+                        Toast.makeText(requireContext(), "Ingrese el medicamento", Toast.LENGTH_SHORT).show()
+                        return@setOnClickListener 
+                    }
+                    if (producto.length > 15) {
+                        Toast.makeText(requireContext(), "El medicamento no puede superar los 15 caracteres", Toast.LENGTH_SHORT).show()
+                        return@setOnClickListener
+                    }
                     detalle = "Cuartos: ${cuartos.joinToString(", ")}"
                 }
             }
 
-            // Dosis: required and must be numeric
+            // Dosis: required, must be in ml or mg format (eg. 5.00 ml or 10mg) and max value 50
             if (dosis.isEmpty()) {
                 Toast.makeText(requireContext(), "Ingrese la dosis", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-            if (dosis.toDoubleOrNull() == null) {
-                Toast.makeText(requireContext(), "La dosis debe ser un número válido", Toast.LENGTH_SHORT).show()
+            if (dosis.length < 4) {
+                Toast.makeText(requireContext(), "La dosis debe contener al menos 4 caracteres (ej. 5 ml)", Toast.LENGTH_LONG).show()
+                return@setOnClickListener
+            }
+            
+            val dosisRegex = Regex("^([0-9]+(?:\\.[0-9]+)?)\\s*(ml|mg)$", RegexOption.IGNORE_CASE)
+            val matchResult = dosisRegex.matchEntire(dosis)
+            if (matchResult == null) {
+                Toast.makeText(requireContext(), "La dosis debe ser en ml o mg (ej: 10 ml, 25 mg)", Toast.LENGTH_LONG).show()
+                return@setOnClickListener
+            }
+            val valorDosis = matchResult.groupValues[1].toDoubleOrNull()
+            val unidadDosis = matchResult.groupValues[2].lowercase(Locale.getDefault())
+            if (valorDosis == null) {
+                Toast.makeText(requireContext(), "Dosis numérica inválida", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            if (valorDosis > 50.0) {
+                Toast.makeText(requireContext(), "La dosis no puede superar el estándar de 50 $unidadDosis", Toast.LENGTH_LONG).show()
                 return@setOnClickListener
             }
 
@@ -345,10 +456,9 @@ class ControlSanitarioFragment : Fragment(R.layout.fragment_control_sanitario) {
             }
             val vetRegex = Regex("^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$")
             if (!vetRegex.matches(vet)) {
-                Toast.makeText(requireContext(), "El nombre del veterinario solo puede contener letras, espacios y tildes", Toast.LENGTH_LONG).show()
+                Toast.makeText(requireContext(), "El veterinario solo permite letras (sin números ni caracteres especiales)", Toast.LENGTH_LONG).show()
                 return@setOnClickListener
             }
-
 
             // All doses in this plan share the same grupoId
             val grupoId = UUID.randomUUID().toString()
@@ -393,7 +503,6 @@ class ControlSanitarioFragment : Fragment(R.layout.fragment_control_sanitario) {
             cargarRegistros()
             actualizarKPIs()
         }
-
 
         dialog.show()
     }

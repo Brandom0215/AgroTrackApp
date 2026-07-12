@@ -45,6 +45,17 @@
                 android:textSize="12sp"
                 app:chipMinHeight="26dp"
                 app:chipCornerRadius="8dp"/>
+
+            <ImageView
+                android:id="@+id/btnEliminarRegistro"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginStart="8dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/eliminar"
+                android:contentDescription="Eliminar registro"
+                android:clickable="true"
+                android:focusable="true"/>
         </LinearLayout>
 
         <!-- Divider -->

@@ -4,6 +4,7 @@ import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -19,7 +20,7 @@ import pa.ac.utp.agrotrackapp.domain.model.RegistroSanitario
  * Adapter para la vista de Historial en Control Sanitario.
  * Cada item representa un GRUPO de dosis (mismo grupoId) con su timeline.
  */
-class SanidadHistorialAdapter :
+class SanidadHistorialAdapter(private val onDeleteGroup: (grupo: List<RegistroSanitario>) -> Unit) :
     ListAdapter<List<RegistroSanitario>, SanidadHistorialAdapter.GrupoViewHolder>(GrupoDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GrupoViewHolder {
@@ -29,7 +30,7 @@ class SanidadHistorialAdapter :
     }
 
     override fun onBindViewHolder(holder: GrupoViewHolder, position: Int) {
-        holder.bind(getItem(position))
+        holder.bind(getItem(position), onDeleteGroup)
     }
 
     class GrupoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -38,9 +39,10 @@ class SanidadHistorialAdapter :
         private val tvDetalle: TextView = itemView.findViewById(R.id.tvHDetalle)
         private val tvDosis: TextView = itemView.findViewById(R.id.tvHDosis)
         private val tvVet: TextView = itemView.findViewById(R.id.tvHVet)
+        private val btnEliminarRegistro: ImageView = itemView.findViewById(R.id.btnEliminarRegistro)
         private val llDosisContainer: LinearLayout = itemView.findViewById(R.id.llDosisContainer)
 
-        fun bind(grupo: List<RegistroSanitario>) {
+        fun bind(grupo: List<RegistroSanitario>, onDeleteGroup: (grupo: List<RegistroSanitario>) -> Unit) {
             if (grupo.isEmpty()) return
             val ref = grupo.first() // use first dose for header info
 
@@ -66,6 +68,11 @@ class SanidadHistorialAdapter :
                 "Vacunación"  -> { chipCategoria.setChipBackgroundColorResource(R.color.md_theme_light_primaryContainer); chipCategoria.setTextColor(Color.parseColor("#3182CE")) }
                 "Tratamiento" -> { chipCategoria.setChipBackgroundColorResource(R.color.md_theme_light_secondaryContainer); chipCategoria.setTextColor(Color.parseColor("#38A169")) }
                 "Mastitis"    -> { chipCategoria.setChipBackgroundColorResource(R.color.md_theme_light_errorContainer); chipCategoria.setTextColor(Color.parseColor("#E53E3E")) }
+            }
+
+            // Click para eliminar el grupo completo del historial
+            btnEliminarRegistro.setOnClickListener {
+                onDeleteGroup(grupo)
             }
 
             // Build dose timeline
