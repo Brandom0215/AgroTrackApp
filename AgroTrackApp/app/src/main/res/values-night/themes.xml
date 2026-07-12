@@ -1,9 +1,0 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Base.Theme.AgroTrackApp" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Barra de estado verde -->
-        <item name="android:statusBarColor">#1A5C38</item>
-        <!-- Íconos de status bar claros (false = íconos blancos) -->
-        <item name="android:windowLightStatusBar">false</item>
-    </style>
-</resources>

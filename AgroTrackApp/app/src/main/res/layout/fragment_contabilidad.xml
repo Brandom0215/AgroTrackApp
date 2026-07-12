@@ -7,6 +7,8 @@
     android:background="@color/bg_light">
 
     <com.google.android.material.appbar.AppBarLayout
+        app:liftOnScroll="false"
+        style="@style/Widget.MaterialComponents.AppBarLayout.PrimarySurface"
         android:id="@+id/appBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
