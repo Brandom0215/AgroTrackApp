@@ -1,4 +1,4 @@
-package pa.ac.utp.agrotrackapp.ui.auth
+﻿package pa.ac.utp.agrotrackapp.ui.auth
 
 import android.content.Intent
 import android.os.Bundle
@@ -51,7 +51,7 @@ class LoginActivity : AppCompatActivity() {
         authRepository = SqliteAuthRepository(this)
         biometricService = BiometricService(this)
 
-        // Configuración de botones
+        // ConfiguraciÃ³n de botones
         btnIngresar.setOnClickListener {
             realizarLogin()
         }
@@ -65,8 +65,8 @@ class LoginActivity : AppCompatActivity() {
             mostrarDialogoRecuperacion()
         }
 
-        // Configurar detección biométrica (Sujeto a habilitación bajo Ley N° 81)
-        val prefs = getSharedPreferences("GanaDEXAuthPrefs", MODE_PRIVATE)
+        // Configurar detecciÃ³n biomÃ©trica (Sujeto a habilitaciÃ³n bajo Ley NÂ° 81)
+        val prefs = pa.ac.utp.agrotrackapp.data.auth.AuthPrefsHelper.getAuthPrefs(this)
         val biometricEnabled = prefs.getBoolean("biometric_enabled", false)
 
         if (biometricService.isBiometricAvailable() && biometricEnabled) {
@@ -78,7 +78,7 @@ class LoginActivity : AppCompatActivity() {
             btnBiometria.visibility = android.view.View.GONE
         }
 
-        // Verificar consentimiento de privacidad de la Ley N° 81
+        // Verificar consentimiento de privacidad de la Ley NÂ° 81
         verificarConsentimientoPrivacidad()
     }
 
@@ -92,12 +92,12 @@ class LoginActivity : AppCompatActivity() {
         var hasError = false
 
         if (usuario.isEmpty()) {
-            tilUsuario.error = "Ingresa tu usuario o correo electrónico"
+            tilUsuario.error = "Ingresa tu usuario o correo electrÃ³nico"
             hasError = true
         }
 
         if (contrasena.isEmpty()) {
-            tilContrasena.error = "Ingresa tu contraseña"
+            tilContrasena.error = "Ingresa tu contraseÃ±a"
             hasError = true
         }
 
@@ -107,7 +107,7 @@ class LoginActivity : AppCompatActivity() {
 
         resultado.fold(
             onSuccess = { user ->
-                Toast.makeText(this, "¡Bienvenido de vuelta, ${user.nombre}!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Â¡Bienvenido de vuelta, ${user.nombre}!", Toast.LENGTH_SHORT).show()
                 val intent = Intent(this, MainActivity::class.java)
                 startActivity(intent)
                 finish()
@@ -121,39 +121,39 @@ class LoginActivity : AppCompatActivity() {
     private fun realizarLoginBiometrico() {
         val lastUsername = authRepository.getLastUsername()
         if (lastUsername.isNullOrEmpty()) {
-            Toast.makeText(this, "Inicie sesión con contraseña al menos una vez antes de usar huella dactilar.", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, "Inicie sesiÃ³n con contraseÃ±a al menos una vez antes de usar huella dactilar.", Toast.LENGTH_LONG).show()
             return
         }
 
         biometricService.showBiometricPrompt(
             activity = this,
-            title = "Inicio de Sesión",
-            subtitle = "Acceso biométrico para: $lastUsername",
+            title = "Inicio de SesiÃ³n",
+            subtitle = "Acceso biomÃ©trico para: $lastUsername",
             description = "Coloque su huella en el lector para ingresar",
             onSuccess = {
                 val resultado = authRepository.loginWithUsername(lastUsername)
                 resultado.fold(
                     onSuccess = { user ->
-                        Toast.makeText(this, "¡Autenticación biométrica exitosa! Bienvenido, ${user.nombre}.", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, "Â¡AutenticaciÃ³n biomÃ©trica exitosa! Bienvenido, ${user.nombre}.", Toast.LENGTH_SHORT).show()
                         val intent = Intent(this, MainActivity::class.java)
                         startActivity(intent)
                         finish()
                     },
                     onFailure = { error ->
-                        Toast.makeText(this, "Error de inicio biométrico: ${error.message}", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, "Error de inicio biomÃ©trico: ${error.message}", Toast.LENGTH_SHORT).show()
                     }
                 )
             },
             onError = { errorString ->
-                Toast.makeText(this, "Biometría cancelada o fallida: $errorString", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "BiometrÃ­a cancelada o fallida: $errorString", Toast.LENGTH_SHORT).show()
             }
         )
     }
 
     private fun mostrarDialogoRecuperacion() {
         val builder = AlertDialog.Builder(this)
-        builder.setTitle("Recuperar Contraseña")
-        builder.setMessage("Ingrese su usuario o correo electrónico registrado:")
+        builder.setTitle("Recuperar ContraseÃ±a")
+        builder.setMessage("Ingrese su usuario o correo electrÃ³nico registrado:")
 
         val input = EditText(this)
         input.inputType = android.text.InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS
@@ -172,12 +172,12 @@ class LoginActivity : AppCompatActivity() {
                 return@setPositiveButton
             }
             
-            val prefs = getSharedPreferences("GanaDEXAuthPrefs", MODE_PRIVATE)
+            val prefs = pa.ac.utp.agrotrackapp.data.auth.AuthPrefsHelper.getAuthPrefs(this)
             val savedPassword = prefs.getString("user_${username}_password", null)
             if (savedPassword != null) {
                 AlertDialog.Builder(this)
-                    .setTitle("Contraseña Encontrada")
-                    .setMessage("Su contraseña registrada para el usuario '$username' es:\n\n$savedPassword")
+                    .setTitle("ContraseÃ±a Encontrada")
+                    .setMessage("Su contraseÃ±a registrada para el usuario '$username' es:\n\n$savedPassword")
                     .setPositiveButton("Aceptar") { innerDialog, _ -> innerDialog.dismiss() }
                     .show()
             } else {
@@ -193,7 +193,7 @@ class LoginActivity : AppCompatActivity() {
         builder.show()
     }
     private fun verificarConsentimientoPrivacidad() {
-        val prefs = getSharedPreferences("GanaDEXAuthPrefs", MODE_PRIVATE)
+        val prefs = pa.ac.utp.agrotrackapp.data.auth.AuthPrefsHelper.getAuthPrefs(this)
         val consentido = prefs.getBoolean("privacy_policy_accepted", false)
         if (!consentido) {
             mostrarDialogoPrivacidad(obligatorio = true)
@@ -219,7 +219,7 @@ class LoginActivity : AppCompatActivity() {
         }
 
         btnAccept.setOnClickListener {
-            val prefs = getSharedPreferences("GanaDEXAuthPrefs", MODE_PRIVATE)
+            val prefs = pa.ac.utp.agrotrackapp.data.auth.AuthPrefsHelper.getAuthPrefs(this)
             prefs.edit().putBoolean("privacy_policy_accepted", true).apply()
             dialog.dismiss()
         }
@@ -235,3 +235,4 @@ class LoginActivity : AppCompatActivity() {
         dialog.show()
     }
 }
+

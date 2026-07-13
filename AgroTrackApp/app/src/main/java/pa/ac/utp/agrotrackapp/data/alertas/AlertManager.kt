@@ -36,7 +36,7 @@ class AlertManager(private val context: Context) {
     }
 
     fun checkAlerts() {
-        val authPrefs = context.getSharedPreferences("GanaDEXAuthPrefs", Context.MODE_PRIVATE)
+        val authPrefs = pa.ac.utp.agrotrackapp.data.auth.AuthPrefsHelper.getAuthPrefs(context)
         val alertsEnabled = authPrefs.getBoolean("alerts_enabled", true)
         if (!alertsEnabled) {
             return
@@ -127,7 +127,7 @@ class AlertManager(private val context: Context) {
                     Alerta(
                         id = UUID.randomUUID().toString(),
                         titulo = "Pesaje Pendiente: ${record.numeroAnimal}",
-                        descripcion = "Lleva $daysDiff días sin ser pesado.",
+                        descripcion = "Lleva $daysDiff dÃ­as sin ser pesado.",
                         tipo = TipoAlerta.PESAJE_PENDIENTE,
                         fecha = todayStr,
                         prioridad = if (daysDiff > 45) PrioridadAlerta.ALTA else PrioridadAlerta.BAJA,
@@ -169,26 +169,26 @@ class AlertManager(private val context: Context) {
                     val diasAtraso = Math.abs(diasRestantes)
 
                     val titulo = when {
-                        isAtrasada -> "⚠️ ${registro.categoria} ATRASADA: ${registro.identificador}"
-                        isHoy      -> "📅 ${registro.categoria} para HOY: ${registro.identificador}"
+                        isAtrasada -> "âš ï¸ ${registro.categoria} ATRASADA: ${registro.identificador}"
+                        isHoy      -> "ðŸ“… ${registro.categoria} para HOY: ${registro.identificador}"
                         else       -> "${registro.categoria} Pendiente: ${registro.identificador}"
                     }
 
                     val desc = when {
                         isAtrasada && diasAtraso == 1L ->
-                            "Debía aplicarse ${registro.detalle} AYER (${registro.proximaDosis}). Por favor aplícala cuanto antes."
+                            "DebÃ­a aplicarse ${registro.detalle} AYER (${registro.proximaDosis}). Por favor aplÃ­cala cuanto antes."
                         isAtrasada ->
-                            "Debía aplicarse ${registro.detalle} hace $diasAtraso días (${registro.proximaDosis}). Está atrasada."
+                            "DebÃ­a aplicarse ${registro.detalle} hace $diasAtraso dÃ­as (${registro.proximaDosis}). EstÃ¡ atrasada."
                         isHoy ->
-                            "La aplicación de ${registro.detalle} está programada para HOY (${registro.proximaDosis})."
+                            "La aplicaciÃ³n de ${registro.detalle} estÃ¡ programada para HOY (${registro.proximaDosis})."
                         diasRestantes == 1L ->
-                            "La aplicación de ${registro.detalle} es MAÑANA (${registro.proximaDosis})."
+                            "La aplicaciÃ³n de ${registro.detalle} es MAÃ‘ANA (${registro.proximaDosis})."
                         diasRestantes <= 5 ->
-                            "Faltan $diasRestantes días para aplicar ${registro.detalle} (${registro.proximaDosis})."
+                            "Faltan $diasRestantes dÃ­as para aplicar ${registro.detalle} (${registro.proximaDosis})."
                         diasRestantes <= 14 ->
-                            "En $diasRestantes días: aplicación de ${registro.detalle} (${registro.proximaDosis})."
+                            "En $diasRestantes dÃ­as: aplicaciÃ³n de ${registro.detalle} (${registro.proximaDosis})."
                         else ->
-                            "Aplicación de ${registro.detalle} programada para ${registro.proximaDosis}."
+                            "AplicaciÃ³n de ${registro.detalle} programada para ${registro.proximaDosis}."
                     }
 
                     val prioridad = when {
@@ -241,7 +241,7 @@ class AlertManager(private val context: Context) {
             sendSystemNotification(alerta)
             prefs.edit().putBoolean("cond_$refId", true).apply()
         } else if (isMet && lastMet) {
-            // Condición sigue presente, actualizamos valores si cambiaron
+            // CondiciÃ³n sigue presente, actualizamos valores si cambiaron
             val activeAlerts = alertaRepo.getAlertas(includeDismissed = false).filter { it.referenceId == refId }
             val newAlertaData = createAlerta()
             
@@ -277,7 +277,7 @@ class AlertManager(private val context: Context) {
                 }
             }
         } else if (!isMet && lastMet) {
-            // Condición resuelta, eliminar posibles alertas activas
+            // CondiciÃ³n resuelta, eliminar posibles alertas activas
             val allAlerts = alertaRepo.getAlertas(includeDismissed = false)
             allAlerts.filter { it.referenceId == refId }.forEach {
                 alertaRepo.dismissAlerta(it.id)
@@ -314,7 +314,7 @@ class AlertManager(private val context: Context) {
         )
 
         val notification = NotificationCompat.Builder(context, CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_alertas) // Asegúrate de que este drawable sea válido
+            .setSmallIcon(R.drawable.ic_alertas) // AsegÃºrate de que este drawable sea vÃ¡lido
             .setContentTitle(alerta.titulo)
             .setContentText(alerta.descripcion)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
@@ -327,3 +327,4 @@ class AlertManager(private val context: Context) {
         notificationManager.notify(alerta.id.hashCode(), notification)
     }
 }
+
