@@ -68,24 +68,53 @@ class ProduccionFragment : Fragment(R.layout.fragment_produccion) {
         tvKpiLecheCount.text = if (lecheCount == 1) "1 Vaca" else "$lecheCount Vacas"
 
         val recordsLeche = produccionRepository.getLecheRecords().filter { it.activo }.sortedBy { it.fechaRegistro }
-        val entries = ArrayList<Entry>()
+        val entriesLeche = ArrayList<Entry>()
         for ((index, record) in recordsLeche.withIndex()) {
-            entries.add(Entry(index.toFloat(), record.litros.toFloat()))
+            entriesLeche.add(Entry(index.toFloat(), record.litros.toFloat()))
+        }
+
+        val recordsCarne = produccionRepository.getCarneRecords().filter { it.activo }.sortedBy { it.fechaPesajeActual }
+        val entriesCarne = ArrayList<Entry>()
+        for ((index, record) in recordsCarne.withIndex()) {
+            entriesCarne.add(Entry(index.toFloat(), record.pesoActual.toFloat()))
         }
         
-        lineChart.setNoDataText("Sin datos")
+        lineChart.setNoDataText("Sin datos de producción")
         lineChart.setNoDataTextColor(Color.parseColor("#999999"))
 
-        if (entries.isNotEmpty()) {
-            val dataSet = LineDataSet(entries, "Litros de Leche")
-            dataSet.color = Color.parseColor("#4CAF50")
-            dataSet.valueTextColor = Color.BLACK
-            dataSet.lineWidth = 2f
-            dataSet.circleRadius = 4f
-            dataSet.setCircleColor(Color.parseColor("#388E3C"))
-            dataSet.mode = LineDataSet.Mode.CUBIC_BEZIER
+        val lineData = LineData()
+        var hasData = false
 
-            lineChart.data = LineData(dataSet)
+        if (entriesLeche.isNotEmpty()) {
+            val dataSetLeche = LineDataSet(entriesLeche, "Leche (Lts)").apply {
+                color = Color.parseColor("#4CAF50")
+                valueTextColor = Color.BLACK
+                lineWidth = 2.5f
+                circleRadius = 4f
+                setCircleColor(Color.parseColor("#388E3C"))
+                mode = LineDataSet.Mode.CUBIC_BEZIER
+                setDrawValues(true)
+            }
+            lineData.addDataSet(dataSetLeche)
+            hasData = true
+        }
+
+        if (entriesCarne.isNotEmpty()) {
+            val dataSetCarne = LineDataSet(entriesCarne, "Carne (Kg)").apply {
+                color = Color.parseColor("#2196F3")
+                valueTextColor = Color.BLACK
+                lineWidth = 2.5f
+                circleRadius = 4f
+                setCircleColor(Color.parseColor("#1976D2"))
+                mode = LineDataSet.Mode.CUBIC_BEZIER
+                setDrawValues(true)
+            }
+            lineData.addDataSet(dataSetCarne)
+            hasData = true
+        }
+
+        if (hasData) {
+            lineChart.data = lineData
             lineChart.description.isEnabled = false
             lineChart.xAxis.position = XAxis.XAxisPosition.BOTTOM
             lineChart.xAxis.setDrawGridLines(false)
@@ -94,6 +123,7 @@ class ProduccionFragment : Fragment(R.layout.fragment_produccion) {
             lineChart.invalidate()
         } else {
             lineChart.clear()
+            lineChart.invalidate()
         }
     }
 }
