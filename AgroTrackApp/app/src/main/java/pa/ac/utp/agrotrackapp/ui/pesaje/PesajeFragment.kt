@@ -89,9 +89,7 @@ class PesajeFragment : Fragment() {
         etFecha.setText(currentDate)
         etHora.setText(currentTime)
 
-        // Configurar diálogos interactivos de Fecha y Hora
-        setupDatePickerField(etFecha)
-        setupTimePickerField(etHora)
+        // Fecha y hora del sistema fijadas y no editables (lectura únicamente)
 
         // Cargar listado de animales
         cargarAnimales()
@@ -173,42 +171,6 @@ class PesajeFragment : Fragment() {
         adapter.submitList(filteredAnimalsList)
     }
 
-    private fun setupDatePickerField(editText: TextInputEditText) {
-        editText.setOnClickListener {
-            val calendar = Calendar.getInstance()
-            val year = calendar.get(Calendar.YEAR)
-            val month = calendar.get(Calendar.MONTH)
-            val day = calendar.get(Calendar.DAY_OF_MONTH)
-
-            val datePicker = DatePickerDialog(requireContext(), { _, selectedYear, selectedMonth, selectedDay ->
-                val dateString = String.format("%02d/%02d/%04d", selectedDay, selectedMonth + 1, selectedYear)
-                editText.setText(dateString)
-            }, year, month, day)
-
-            // La fecha no se puede elegir una fecha futura
-            datePicker.datePicker.maxDate = System.currentTimeMillis()
-            datePicker.show()
-        }
-    }
-
-    private fun setupTimePickerField(editText: TextInputEditText) {
-        editText.setOnClickListener {
-            val calendar = Calendar.getInstance()
-            val hour = calendar.get(Calendar.HOUR_OF_DAY)
-            val minute = calendar.get(Calendar.MINUTE)
-
-            TimePickerDialog(requireContext(), { _, selectedHour, selectedMinute ->
-                val amPm = if (selectedHour < 12) "AM" else "PM"
-                val displayHour = when {
-                    selectedHour == 0 -> 12
-                    selectedHour > 12 -> selectedHour - 12
-                    else -> selectedHour
-                }
-                val timeString = String.format(Locale.getDefault(), "%d:%02d %s", displayHour, selectedMinute, amPm)
-                editText.setText(timeString)
-            }, hour, minute, false).show()
-        }
-    }
 
     private fun limpiarFormulario() {
         selectedAnimal = null
