@@ -6,16 +6,23 @@ import android.content.SharedPreferences
 import pa.ac.utp.agrotrackapp.data.database.DatabaseHelper
 import pa.ac.utp.agrotrackapp.domain.model.User
 import pa.ac.utp.agrotrackapp.domain.repository.AuthRepository
+import androidx.security.crypto.EncryptedSharedPreferences
+import androidx.security.crypto.MasterKey
+import java.security.MessageDigest
 
 class SqliteAuthRepository(context: Context) : AuthRepository {
 
     private val dbHelper = DatabaseHelper(context)
-    private val sessionPrefs: SharedPreferences =
-        context.getSharedPreferences("GanaDEXAuthPrefs", Context.MODE_PRIVATE)
+    private val sessionPrefs: SharedPreferences = AuthPrefsHelper.getAuthPrefs(context)
 
     companion object {
         private const val KEY_ACTIVE_USER = "active_user_username"
         private const val KEY_LAST_USERNAME = "last_logged_in_username"
+    }
+
+    private fun hashPassword(password: String): String {
+        val bytes = MessageDigest.getInstance("SHA-256").digest(password.toByteArray())
+        return bytes.joinToString("") { "%02x".format(it) }
     }
 
     override fun registerUser(user: User): Result<Unit> {
@@ -31,9 +38,9 @@ class SqliteAuthRepository(context: Context) : AuthRepository {
                 put(DatabaseHelper.COL_USER_USUARIO, username)
                 put(DatabaseHelper.COL_USER_NOMBRE, user.nombre)
                 put(DatabaseHelper.COL_USER_APELLIDO, user.apellido)
-                put(DatabaseHelper.COL_USER_CONTRASENA, user.contrasena)
+                put(DatabaseHelper.COL_USER_CONTRASENA, hashPassword(user.contrasena))
                 put(DatabaseHelper.COL_USER_NOMBRE_FINCA, user.nombreFinca)
-                put(DatabaseHelper.COL_USER_CONTRASENA_FINCA, user.contrasenaFinca)
+                put(DatabaseHelper.COL_USER_CONTRASENA_FINCA, hashPassword(user.contrasenaFinca))
                 put(DatabaseHelper.COL_USER_LUGAR, user.lugar)
                 put(DatabaseHelper.COL_USER_ROL, user.rol)
                 put(DatabaseHelper.COL_USER_PROFILE_IMAGE, user.profileImagePath)
@@ -54,7 +61,7 @@ class SqliteAuthRepository(context: Context) : AuthRepository {
             val username = usuario.trim().lowercase()
             val user = getUserFromDb(username) ?: return Result.failure(Exception("El usuario ingresado no existe"))
 
-            if (user.contrasena != contrasena) {
+            if (user.contrasena != hashPassword(contrasena)) {
                 return Result.failure(Exception("La contraseña ingresada es incorrecta"))
             }
 
@@ -91,6 +98,13 @@ class SqliteAuthRepository(context: Context) : AuthRepository {
             val values = ContentValues().apply {
                 put(DatabaseHelper.COL_USER_NOMBRE, user.nombre)
                 put(DatabaseHelper.COL_USER_APELLIDO, user.apellido)
+                
+                // Si la contraseña viene sin hash (por ejemplo si se editó desde el perfil), hay que aplicarle hash.
+                // Como el perfil no permite editar contraseñas fácilmente sin saber el original,
+                // vamos a asumir que updateUser recibe la contraseña correcta y ya estaba en hash si no se cambió.
+                // En un flujo ideal, el usuario confirma la vieja contraseña antes de cambiarla. 
+                // Por ahora, actualizamos los datos básicos. No hasheamos de nuevo porque
+                // la contraseña de `user` ya está en hash proveniente de la DB.
                 put(DatabaseHelper.COL_USER_CONTRASENA, user.contrasena)
                 put(DatabaseHelper.COL_USER_NOMBRE_FINCA, user.nombreFinca)
                 put(DatabaseHelper.COL_USER_CONTRASENA_FINCA, user.contrasenaFinca)

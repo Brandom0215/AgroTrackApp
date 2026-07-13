@@ -1,4 +1,4 @@
-package pa.ac.utp.agrotrackapp.ui.auth
+﻿package pa.ac.utp.agrotrackapp.ui.auth
 
 import android.content.Intent
 import android.graphics.Bitmap
@@ -158,20 +158,20 @@ class PerfilUsuarioActivity : AppCompatActivity() {
             mostrarAvisoPrivacidadTransparencia()
         }
 
-        // Bind and initialize privacy switches (Ley N° 81 - Oposición)
+        // Bind and initialize privacy switches (Ley NÂ° 81 - OposiciÃ³n)
         switchBiometria = findViewById(R.id.switchBiometria)
         switchAlertas = findViewById(R.id.switchAlertas)
 
-        val authPrefs = getSharedPreferences("GanaDEXAuthPrefs", MODE_PRIVATE)
+        val authPrefs = pa.ac.utp.agrotrackapp.data.auth.AuthPrefsHelper.getAuthPrefs(this)
         switchBiometria.isChecked = authPrefs.getBoolean("biometric_enabled", false)
         switchAlertas.isChecked = authPrefs.getBoolean("alerts_enabled", true)
 
         switchBiometria.setOnCheckedChangeListener { _, isChecked ->
             authPrefs.edit().putBoolean("biometric_enabled", isChecked).apply()
             if (isChecked) {
-                Toast.makeText(this, "Acceso biométrico activado", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Acceso biomÃ©trico activado", Toast.LENGTH_SHORT).show()
             } else {
-                Toast.makeText(this, "Acceso biométrico desactivado", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Acceso biomÃ©trico desactivado", Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -252,20 +252,20 @@ class PerfilUsuarioActivity : AppCompatActivity() {
     }
 
     private fun mostrarOpcionesImagen() {
-        val opciones = arrayOf<CharSequence>("Tomar Foto (Cámara)", "Seleccionar de Galería", "Cancelar")
+        val opciones = arrayOf<CharSequence>("Tomar Foto (CÃ¡mara)", "Seleccionar de GalerÃ­a", "Cancelar")
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Foto de perfil")
         builder.setItems(opciones) { dialog, item ->
             when {
-                opciones[item] == "Tomar Foto (Cámara)" -> {
+                opciones[item] == "Tomar Foto (CÃ¡mara)" -> {
                     val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
                     try {
                         startActivityForResult(intent, REQUEST_IMAGE_CAPTURE)
                     } catch (e: Exception) {
-                        Toast.makeText(this, "No se pudo abrir la cámara: ${e.message}", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, "No se pudo abrir la cÃ¡mara: ${e.message}", Toast.LENGTH_SHORT).show()
                     }
                 }
-                opciones[item] == "Seleccionar de Galería" -> {
+                opciones[item] == "Seleccionar de GalerÃ­a" -> {
                     val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
                     intent.type = "image/*"
                     startActivityForResult(intent, REQUEST_IMAGE_PICK)
@@ -291,7 +291,7 @@ class PerfilUsuarioActivity : AppCompatActivity() {
                             ivPerfilPreview.setImageBitmap(optBitmap ?: bitmap)
                             ivPerfilPreview.imageTintList = null
                         } else {
-                            Toast.makeText(this, "Error al optimizar foto de la cámara", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(this, "Error al optimizar foto de la cÃ¡mara", Toast.LENGTH_SHORT).show()
                         }
                     }
                 } else if (requestCode == REQUEST_IMAGE_PICK) {
@@ -304,7 +304,7 @@ class PerfilUsuarioActivity : AppCompatActivity() {
                             ivPerfilPreview.setImageBitmap(optBitmap)
                             ivPerfilPreview.imageTintList = null
                         } else {
-                            Toast.makeText(this, "Error al optimizar foto de la galería", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(this, "Error al optimizar foto de la galerÃ­a", Toast.LENGTH_SHORT).show()
                         }
                     }
                 }
@@ -346,15 +346,15 @@ class PerfilUsuarioActivity : AppCompatActivity() {
         } else tilFincaNombre.error = null
 
         if (lugar.isEmpty()) {
-            tilLugar.error = "Ingrese la ubicación"
+            tilLugar.error = "Ingrese la ubicaciÃ³n"
             return
         } else tilLugar.error = null
 
-        // Mostrar Dialog de Confirmación
+        // Mostrar Dialog de ConfirmaciÃ³n
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Confirmar Cambios")
-        builder.setMessage("¿Está seguro de que desea guardar los cambios en su perfil?")
-        builder.setPositiveButton("Sí") { dialog, _ ->
+        builder.setMessage("Â¿EstÃ¡ seguro de que desea guardar los cambios en su perfil?")
+        builder.setPositiveButton("SÃ­") { dialog, _ ->
             val updatedUser = currentUser!!.copy(
                 nombre = nombre,
                 apellido = apellido,
@@ -367,8 +367,8 @@ class PerfilUsuarioActivity : AppCompatActivity() {
             val result = authRepository.updateUser(updatedUser)
             if (result.isSuccess) {
                 currentUser = authRepository.getCurrentUser() // Recargar datos locales
-                Toast.makeText(this, "Perfil actualizado con éxito", Toast.LENGTH_SHORT).show()
-                setEditModeEnabled(false) // Regresar a modo visualización
+                Toast.makeText(this, "Perfil actualizado con Ã©xito", Toast.LENGTH_SHORT).show()
+                setEditModeEnabled(false) // Regresar a modo visualizaciÃ³n
             } else {
                 Toast.makeText(this, "Error al actualizar perfil: ${result.exceptionOrNull()?.message}", Toast.LENGTH_SHORT).show()
             }
@@ -382,16 +382,16 @@ class PerfilUsuarioActivity : AppCompatActivity() {
 
     private fun destruirDatosPersonalesYFinca() {
         val builder = AlertDialog.Builder(this)
-        builder.setTitle("⚠️ DESTRUCCIÓN DE DATOS")
-        builder.setMessage("Esta acción es irreversible y eliminará de forma permanente:\n\n" +
-                "• Su cuenta de usuario y contraseña\n" +
-                "• Todos los datos registrados de la finca\n" +
-                "• Todo el inventario e historial contable\n" +
-                "• Todas las fotos de perfil y productos\n\n" +
-                "¿Está completamente seguro de que desea proceder?")
+        builder.setTitle("âš ï¸ DESTRUCCIÃ“N DE DATOS")
+        builder.setMessage("Esta acciÃ³n es irreversible y eliminarÃ¡ de forma permanente:\n\n" +
+                "â€¢ Su cuenta de usuario y contraseÃ±a\n" +
+                "â€¢ Todos los datos registrados de la finca\n" +
+                "â€¢ Todo el inventario e historial contable\n" +
+                "â€¢ Todas las fotos de perfil y productos\n\n" +
+                "Â¿EstÃ¡ completamente seguro de que desea proceder?")
         builder.setPositiveButton("ELIMINAR TODO") { dialog, _ ->
-            // 1. Borrar SharedPreferences de Autenticación
-            val authPrefs = getSharedPreferences("GanaDEXAuthPrefs", MODE_PRIVATE)
+            // 1. Borrar SharedPreferences de AutenticaciÃ³n
+            val authPrefs = pa.ac.utp.agrotrackapp.data.auth.AuthPrefsHelper.getAuthPrefs(this)
             authPrefs.edit().clear().apply()
 
             // 2. Borrar SharedPreferences de Inventario
@@ -408,7 +408,7 @@ class PerfilUsuarioActivity : AppCompatActivity() {
                 }
             }
 
-            Toast.makeText(this, "Datos destruidos y sesión cerrada.", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, "Datos destruidos y sesiÃ³n cerrada.", Toast.LENGTH_LONG).show()
 
             // 4. Redirigir al Login y limpiar pila de actividades
             val intent = Intent(this, LoginActivity::class.java)
@@ -420,7 +420,7 @@ class PerfilUsuarioActivity : AppCompatActivity() {
         builder.setNegativeButton("Cancelar") { dialog, _ ->
             dialog.dismiss()
         }
-        // Colorear el botón positivo de rojo para alertar peligro
+        // Colorear el botÃ³n positivo de rojo para alertar peligro
         val alert = builder.create()
         alert.show()
         alert.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(android.graphics.Color.RED)
@@ -439,16 +439,16 @@ class PerfilUsuarioActivity : AppCompatActivity() {
         val btnDecline = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnDeclineConsent)
         val tvText = dialogView.findViewById<TextView>(R.id.tvDialogText)
 
-        tvText.text = "De conformidad con la Ley N° 81 de 2019 de la República de Panamá:\n\n" +
-                "1. Responsable del Tratamiento: Los datos son recopilados por la aplicación AgroTrackApp de forma local.\n" +
-                "2. Finalidad del Tratamiento: Gestionar la producción, ganado, inventario y alertas del usuario para fines de monitoreo personal en su finca.\n" +
-                "3. Destinatarios: Los datos no se transfieren a terceros ni se almacenan en servidores externos sin su previa autorización.\n" +
+        tvText.text = "De conformidad con la Ley NÂ° 81 de 2019 de la RepÃºblica de PanamÃ¡:\n\n" +
+                "1. Responsable del Tratamiento: Los datos son recopilados por la aplicaciÃ³n AgroTrackApp de forma local.\n" +
+                "2. Finalidad del Tratamiento: Gestionar la producciÃ³n, ganado, inventario y alertas del usuario para fines de monitoreo personal en su finca.\n" +
+                "3. Destinatarios: Los datos no se transfieren a terceros ni se almacenan en servidores externos sin su previa autorizaciÃ³n.\n" +
                 "4. Derechos ARCO:\n" +
-                "• Acceso: Puede consultar sus historiales en las pantallas respectivas.\n" +
-                "• Rectificación: Puede corregir sus datos mediante este formulario de perfil.\n" +
-                "• Cancelación: Al pulsar 'Destrucción de Datos', se borrará toda su información sin dejar rastro.\n" +
-                "• Oposición: Puede activar o desactivar el módulo de alertas e inicio biométrico desde los controles en esta pantalla.\n\n" +
-                "Contacto: Para consultas o ejercicio de sus derechos, contacte al responsable de la aplicación en: soporte@agrotrack.pa"
+                "â€¢ Acceso: Puede consultar sus historiales en las pantallas respectivas.\n" +
+                "â€¢ RectificaciÃ³n: Puede corregir sus datos mediante este formulario de perfil.\n" +
+                "â€¢ CancelaciÃ³n: Al pulsar 'DestrucciÃ³n de Datos', se borrarÃ¡ toda su informaciÃ³n sin dejar rastro.\n" +
+                "â€¢ OposiciÃ³n: Puede activar o desactivar el mÃ³dulo de alertas e inicio biomÃ©trico desde los controles en esta pantalla.\n\n" +
+                "Contacto: Para consultas o ejercicio de sus derechos, contacte al responsable de la aplicaciÃ³n en: soporte@agrotrack.pa"
 
         btnAccept.text = "Entendido"
         btnAccept.setOnClickListener {
@@ -467,3 +467,4 @@ class PerfilUsuarioActivity : AppCompatActivity() {
         }
     }
 }
+
