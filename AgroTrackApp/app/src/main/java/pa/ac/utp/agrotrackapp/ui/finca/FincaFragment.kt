@@ -109,12 +109,12 @@ class FincaFragment : Fragment(R.layout.fragment_finca) {
             if (entries.isNotEmpty()) {
                 val dataSet = PieDataSet(entries, "")
                 dataSet.colors = chartColors
-                dataSet.setDrawValues(false) // No mostrar valores dentro para evitar amontonamiento
+                dataSet.valueTextColor = Color.WHITE
+                dataSet.valueTextSize = 12f
                 
                 pieChart.data = PieData(dataSet)
                 pieChart.description.isEnabled = false
                 pieChart.legend.isEnabled = false
-                pieChart.setDrawEntryLabels(false) // Quitar etiquetas "Macho/Hembra" de adentro
                 pieChart.isDrawHoleEnabled = true
                 pieChart.setHoleColor(Color.TRANSPARENT)
                 pieChart.setTransparentCircleRadius(0f)
